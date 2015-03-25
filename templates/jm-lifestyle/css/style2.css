@@ -1,0 +1,64 @@
+.dj-main li.hover a.dj-up_a,
+.dj-main li.active a.dj-up_a {
+  color: #7ab317;
+}
+.dj-main li.hover ul.dj-submenu {
+  border-top: 5px solid #7ab317;
+}
+.dj-main li:hover ul.dj-submenu:after,
+.dj-main li.hover ul.dj-submenu:after {
+  border-bottom: 5px dashed #7ab317;
+}
+.dj-main li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover li.hover li.hover ul {
+  border-top: 5px solid #7ab317;
+}
+.jm-text-color {
+  color: #7ab317;
+}
+ul li,
+.categories-list ul li h4,
+.cat-children ul li span.item-title,
+.categories-list ul li span.item-title,
+.categories-module li h4,
+.category-module li h4,
+ul.newsfeed ul li h5.feed-link {
+  background: url("../images/style2/li.png") no-repeat left center;
+}
+.jm-rotate1-left:before,
+.jm-rotate2-left:before {
+  background: #15a4b9;
+}
+.jm-rotate1-right:before,
+.jm-rotate2-right:before {
+  background: #7ab317;
+}
+.btn.btn-color {
+  background-color: #15a4b9;
+}
+.btn {
+  background-color: #7ab317;
+  *background-color: #7ab317;
+}
+.dropdown-menu li > a:hover,
+.dropdown-menu li > a:focus,
+.dropdown-submenu:hover > a,
+.dropdown-menu .active > a,
+.dropdown-menu .active > a:hover {
+  background-color: #7ab317;
+}
+a,
+a:hover {
+  color: #7ab317;
+}
+.nav.menu > li a {
+  background-image: url(../images/style2/menu_li.png);
+}
+.nav.menu > li.active > a,
+#jm-top-bar .nav.menu > li.active > a,
+#jm-top .nav.menu > li.active > a,
+#jm-footer .nav.menu > li.active > a {
+  background-color: #7ab317;
+}

@@ -1,0 +1,165 @@
+/*--------------------------------------------------------------
+# Copyright (C) joomla-monster.com
+# License: http://www.joomla-monster.com/license.html Joomla-Monster Proprietary Use License
+# Website: http://www.joomla-monster.com
+# Support: info@joomla-monster.com
+---------------------------------------------------------------*/
+
+/* ==========================================================================
+   VARIABLES import
+   ========================================================================== */
+  
+@import "template_variables.less";
+
+/* ==========================================================================
+   MIXINS import
+   ========================================================================== */
+
+@import "template_mixins.less";
+@import "../../../plugins/system/jmframework/includes/assets/template/bootstrap/less/mixins.less";
+
+/* ==========================================================================
+   EDITOR styles
+   ========================================================================== */
+
+/* first */
+
+.view-first img {
+  .transition(all 0.2s ease-in);
+}
+
+.view-first .mask {
+  background-color: rgba(221, 221, 221, 0.9);
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity = 0);
+  opacity: 0;  
+  .transition(all 0.2s 0.4s ease-in-out);
+}
+
+.view-first h2 {
+  .transition(all 0.2s ease-in-out);
+}
+
+.view-first p {
+  .transition(all 0.2s ease-in-out);
+}
+
+.view-first a.info {
+  .transition(all 0.2s ease-in-out);  
+}
+
+.view-first:hover .mask {
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity = 100);
+  opacity: 1;
+  .transition-delay(0s);     
+}
+
+.view-first:hover h2 {
+  .transition-delay(0.5s);
+}
+
+.view-first:hover p {
+  .transition-delay(0.4s);
+}
+
+.view-first:hover a.info {
+  .transition-delay(0.3s);
+}
+
+/* second */
+
+.view-second img {
+  .transition(all 0.3s ease-in-out);  
+}
+
+.view-second .mask {
+  background-color: rgba(221, 221, 221, 0.7);
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity = 100);
+  opacity: 1;
+  .transition(all 0.3s ease-in-out);  
+}
+
+.view-second h2 {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+.view-second p {
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity = 0);
+  opacity: 0;
+  .transition(all 0.2s linear); 
+}
+
+.view-second:hover p {
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity = 100);
+  opacity: 1;
+}
+
+/** third **/
+
+.view-third img {
+  .transition(all 0.7s ease-in-out);
+}
+
+.view-third .mask {
+  background-color: rgba(221, 221, 221, 0.7);
+  .transition(all 0.5s linear);   
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity = 0);
+  opacity: 0;
+}
+
+.view-third h2 {
+  background: rgba(255, 255, 255, 0.5);
+  margin: (@baseSize * 2) (@baseSize * 4) 0 (@baseSize * 4);
+  .transition(all 0.5s linear);     
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity = 0);
+  opacity: 0;
+}
+
+.view-third p {
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity = 0);
+  opacity: 0;
+  .transition(all 0.5s linear); 
+}
+
+.view-third a.info {
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity = 0);
+  opacity: 0;
+  .transition(all 0.5s linear); 
+}
+
+.view-third:hover img {
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=0)";
+  filter: alpha(opacity = 0);
+  opacity: 0;
+}
+
+.view-third:hover .mask {
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity = 100);
+  opacity: 1;
+}
+
+.view-third:hover h2, .view-third:hover p, .view-third:hover a.info {
+  -ms-filter: "progid: DXImageTransform.Microsoft.Alpha(Opacity=100)";
+  filter: alpha(opacity = 100);
+  opacity: 1;
+}
+
+/* safari hover fix */
+.view-first .content,
+.view-second .mask {
+  display: none;
+}
+
+.view-first:hover .content,
+.view-second:hover .mask {
+  display: block;
+}

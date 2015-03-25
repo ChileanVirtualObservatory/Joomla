@@ -1,0 +1,133 @@
+@media (min-width: 768px) and (max-width: 979px) {
+  img {
+    max-width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  .view {
+    max-width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  #jm-back-top {
+    display: none !important;
+  }
+  input,
+  button {
+    -webkit-appearance: none;
+  }
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  .jm-module-in {
+    height: auto !important;
+  }
+  .pull-left,
+  .pull-right {
+    max-width: 100%;
+  }
+}
+@media (max-width: 767px) {
+  .container-fluid {
+    max-width: 100% !important;
+  }
+  img {
+    max-width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  .view {
+    max-width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  #jm-back-top {
+    display: none !important;
+  }
+  input,
+  button {
+    -webkit-appearance: none;
+  }
+  input,
+  select,
+  textarea {
+    max-width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+  }
+  .jm-module-in {
+    height: auto !important;
+  }
+  .pull-left,
+  .pull-right {
+    max-width: 100%;
+  }
+  .item-image,
+  .item-image.pull-left {
+    margin-bottom: 20px;
+  }
+  #jm-bar .row,
+  #jm-bar .row-fluid {
+    text-align: center;
+  }
+  #jm-djmenu.pull-right {
+    float: none;
+  }
+  .container {
+    padding: 0 20px;
+  }
+  #jm-poweredby-styleswitcher.pull-right {
+    float: none;
+  }
+  #jm-footer,
+  #jm-styleswitcher {
+    text-align: center;
+  }
+  #jm-header-mods {
+    width: auto;
+  }
+  #jm-main #jm-content,
+  #jm-main .row-fluid #jm-left[class*="span"],
+  #jm-main .row-fluid #jm-right[class*="span"],
+  #jm-main .row-fluid #jm-content[class*="span"] {
+    margin: 0 !important;
+  }
+  #jm-header-mods {
+    position: static;
+  }
+  #jm-top-bar {
+    padding-top: 20px;
+  }
+  #jm-header.notop {
+    margin-bottom: 20px;
+  }
+  #jm-top {
+    padding-top: 20px;
+    margin-bottom: 20px;
+  }
+  #jm-maincontent {
+    margin-bottom: 20px;
+  }
+  #jm-bottom {
+    padding-top: 20px;
+  }
+  #jm-footer {
+    padding-top: 20px;
+  }
+  #jm-poweredby-styleswitcher {
+    padding-bottom: 20px;
+  }
+  .jm-module {
+    margin-bottom: 20px;
+  }
+}

@@ -1,0 +1,28 @@
+/*--------------------------------------------------------------
+# Copyright (C) joomla-monster.com
+# License: http://www.joomla-monster.com/license.html Joomla-Monster Proprietary Use License
+# Website: http://www.joomla-monster.com
+# Support: info@joomla-monster.com
+---------------------------------------------------------------*/
+
+/* ==========================================================================
+   IE8 styles
+   ========================================================================== */
+
+#jm-back-top span {
+  background-color: #aaa;
+}
+
+#jm-back-top a:hover span {
+  background-color: #ccc;
+}
+
+.view-first .mask,
+.view-second .mask {
+  display: none;
+}
+
+.view-first:hover .mask,
+.view-second:hover .mask {
+  display: block;
+}

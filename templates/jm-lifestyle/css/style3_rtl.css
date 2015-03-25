@@ -1,0 +1,64 @@
+.dj-main li.hover a.dj-up_a,
+.dj-main li.active a.dj-up_a {
+  color: #f58f0c;
+}
+.dj-main li.hover ul.dj-submenu {
+  border-top: 5px solid #f58f0c;
+}
+.dj-main li:hover ul.dj-submenu:after,
+.dj-main li.hover ul.dj-submenu:after {
+  border-bottom: 5px dashed #f58f0c;
+}
+.dj-main li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover li.hover li.hover ul {
+  border-top: 5px solid #f58f0c;
+}
+.jm-text-color {
+  color: #f58f0c;
+}
+ul li,
+.categories-list ul li h4,
+.cat-children ul li span.item-title,
+.categories-list ul li span.item-title,
+.categories-module li h4,
+.category-module li h4,
+ul.newsfeed ul li h5.feed-link {
+  background: url("../images/style3/li.png") no-repeat left center;
+}
+.jm-rotate1-left:before,
+.jm-rotate2-left:before {
+  background: #15a4b9;
+}
+.jm-rotate1-right:before,
+.jm-rotate2-right:before {
+  background: #f58f0c;
+}
+.btn.btn-color {
+  background-color: #15a4b9;
+}
+.btn {
+  background-color: #f58f0c;
+  *background-color: #f58f0c;
+}
+.dropdown-menu li > a:hover,
+.dropdown-menu li > a:focus,
+.dropdown-submenu:hover > a,
+.dropdown-menu .active > a,
+.dropdown-menu .active > a:hover {
+  background-color: #f58f0c;
+}
+a,
+a:hover {
+  color: #f58f0c;
+}
+.nav.menu > li a {
+  background-image: url(../images/style3/menu_li_rtl.png);
+}
+.nav.menu > li.active > a,
+#jm-top-bar .nav.menu > li.active > a,
+#jm-top .nav.menu > li.active > a,
+#jm-footer .nav.menu > li.active > a {
+  background-color: #f58f0c;
+}

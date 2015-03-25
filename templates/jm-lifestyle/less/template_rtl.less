@@ -1,0 +1,433 @@
+/*--------------------------------------------------------------
+# Copyright (C) joomla-monster.com
+# License: http://www.joomla-monster.com/license.html Joomla-Monster Proprietary Use License
+# Website: http://www.joomla-monster.com
+# Support: info@joomla-monster.com
+---------------------------------------------------------------*/
+
+/* ==========================================================================
+   VARIABLES import
+   ========================================================================== */
+  
+@import "template_variables.less";
+
+/* ==========================================================================
+   MIXINS import
+   ========================================================================== */
+  
+@import "template_mixins.less";
+
+/* ==========================================================================
+   DJ-MENU styles
+   ========================================================================== */
+
+body .dj-main li {
+  float: right;
+  margin: 0 (@baseSize * 5) 0 0;
+}
+
+body .dj-main li a.dj-up_a {
+  padding: (@baseSize * 3.2) 0 0 @baseSize;
+  float: right;
+  border-right: none;
+  border-left: (@baseSize / 10) solid #c1c1c0;
+}
+
+body .dj-main li span.image-title {
+  padding: 0 @baseSize 0 0;
+}
+
+body .dj-main li:hover ul.dj-submenu, 
+body .dj-main li.hover ul.dj-submenu {
+  left: auto;
+  right: 0;
+}
+
+body .dj-main li ul.dj-submenu:after {
+  left: auto;
+  right: (@baseSize * 3);
+}
+
+body .dj-main li.last ul.dj-submenu:after {
+  right: (@baseSize * 3);
+}
+
+body .dj-main li:hover ul.dj-submenu li, 
+body .dj-main li.hover ul.dj-submenu li {
+  float: right;
+}
+
+body .dj-main li:hover ul.dj-submenu li a, 
+body .dj-main li.hover ul.dj-submenu li a {
+  text-align: right;
+}
+
+body .dj-main li:hover ul, 
+body .dj-main li:hover li:hover ul, 
+body .dj-main li:hover li:hover li:hover ul, 
+body .dj-main li:hover li:hover li:hover li:hover ul, 
+body .dj-main li:hover li:hover li:hover li:hover li:hover ul, 
+body .dj-main li.hover ul, 
+body .dj-main li.hover li.hover ul, 
+body .dj-main li.hover li.hover li.hover ul, 
+body .dj-main li.hover li.hover li.hover li.hover ul, 
+body .dj-main li.hover li.hover li.hover li.hover li.hover ul {
+  left: auto;
+  right: 220px;
+}
+
+body .dj-main ul, 
+body .dj-main li:hover ul ul, 
+body .dj-main li:hover li:hover ul ul, 
+body .dj-main li:hover li:hover li:hover ul ul, 
+body .dj-main li:hover li:hover li:hover li:hover ul ul, 
+body .dj-main ul, 
+body .dj-main li.hover ul ul, 
+body .dj-main li.hover li.hover ul ul, 
+body .dj-main li.hover li.hover li.hover ul ul, 
+body .dj-main li.hover li.hover li.hover li.hover ul ul {
+  left: auto;
+  right: 0;
+}
+
+/* ==========================================================================
+   LAYOUT styles
+   ========================================================================== */
+
+.jm-rotate-wrap-right {
+  text-align: left;
+}
+
+#jm-font-switcher {
+  text-align: left;
+}
+
+.lcr.scheme3 .row-fluid #jm-right,
+.lcr.scheme2.noleft .row-fluid #jm-right,
+.clr.scheme3 .row-fluid #jm-right,
+.clr.scheme2.noleft .row-fluid #jm-right,
+.clr.scheme2.noright .row-fluid #jm-left {
+  margin-right: 0;
+} 
+
+#jm-styleswitcher {
+  text-align: left;
+}
+
+#jm-back-top {
+  right: auto;
+  left: 0;
+  margin-right: 0;
+  margin-left: (@baseSize * 5);
+}
+
+/* ==========================================================================
+   DETAILS OF LAYOUT styles
+   ========================================================================== */
+
+#jm-styleswitcher a span {
+  margin: 0 (@baseSize / 2) 0 0;
+}
+
+/* ==========================================================================
+   EDITOR COMPONENT styles
+   ========================================================================== */
+  
+.jm-block {
+  padding: 0 (@baseSize * 6) 0 0;
+}
+
+.jm-block span {
+  right: 0;
+  left: auto;
+}
+
+.jm-code {
+  border-left: none;
+  border-right: (@baseSize / 2) solid #dddddd;
+}
+
+/* ==========================================================================
+   MODULE styles
+   ========================================================================== */
+
+.jm-rotate1-left,
+.jm-rotate2-left {
+  float: right;
+}
+
+.jm-rotate1-right,
+.jm-rotate2-right {
+  float: left;
+}
+
+.jm-rotate2-left {
+  margin: 0 @baseSize 0 0;
+}
+
+.jm-rotate2-right {
+  margin: 0 0 0 @baseSize;
+}
+
+.jm-rotate1-left:before {
+  .rotate(2deg); 
+}
+
+.jm-rotate2-left:before {
+  .rotate(-1deg); 
+}
+
+.jm-rotate1-right:before {
+  .rotate(-2deg);  
+}
+
+.jm-rotate2-right:before {
+  .rotate(1deg); 
+}
+
+/* ==========================================================================
+   JOOMLA COMPONENT styles
+   ========================================================================== */
+  
+/* all articles */
+
+.tags span a.label {
+  display: inline-block;
+}
+
+//tag-category
+.tag-category .form-inline label {
+  margin-right: 0;
+  margin-left: 10px;  
+}
+
+.article-info a {
+  display: inline-block;
+}
+
+.item-image.pull-left {
+    margin: (@baseSize / 2) 0 0 (@baseSize * 3);
+}
+
+/* article categories */
+
+.categories-list .collapse {
+  padding: 0 (@baseSize * 3) 0 0;
+}
+
+h3.item-title,
+h4.item-title {
+  clear: both;
+}
+
+h3.item-title a,
+h4.item-title a {
+  display: inline-block;
+}
+
+/* article category list */
+
+.filters .btn-group label,
+.filters .btn-group label span.label {
+  margin-right: 0;
+  margin-left: @baseSize;
+  display: inline-block;
+}
+
+/* contact categories*/
+
+.categories-list ul li h4 {
+  padding: 0 (@baseSize * 2) 0 0;
+}
+
+/* contact single category */
+
+.contact-category .btn-group label,
+.contact-category .btn-group span.label {
+  margin-right: 0;
+  margin-left: @baseSize;
+  display: inline-block;
+}
+
+/* weblinks single category */
+
+.weblink-category .btn-group label,
+.weblink-category .btn-group span.label {
+  margin-right: 0;
+  margin-left: @baseSize;
+  display: inline-block;
+}
+
+.cat-children ul li span.item-title {
+  padding: 0 (@baseSize * 2) 0 0;
+}
+
+.weblink-count dt,
+.weblink-count dd {
+  float: right;
+}
+
+/* weblink categories */
+
+.categories-list ul li span.item-title {
+  padding: 0 (@baseSize * 2) 0 0;
+}
+
+/* news feed categories */
+
+.newsfeed-count dt,
+.newsfeed-count dd {
+  float: right;
+}
+
+/* news feed category */
+
+.newsfeed-category .btn-group label,
+.newsfeed-category .btn-group span.label {
+  margin-right: 0;
+  margin-left: @baseSize;
+  display: inline-block;
+}
+
+.phrases-box,
+fieldset.only {
+  label {
+    margin-right: 0;
+    margin-left: 10px;
+  }  
+}
+
+/** choosen **/
+
+.chzn-container-multi .chzn-choices li {
+  float: right;
+}
+
+.chzn-container-single .chzn-single {
+  padding: 0 8px 0 0;
+}
+
+.chzn-container-single .chzn-single span {
+  margin-right: 0;
+  margin-left: 26px;
+}
+
+.chzn-container-single .chzn-single div {
+  right: auto;
+  left: 0;
+}
+
+/* ==========================================================================
+   JOOMLA MODULES styles
+   ========================================================================== */
+  
+/* article categories */
+
+.categories-module li h4 {
+  padding: 0 (@baseSize * 2) 0 0;
+}
+
+/* article category */
+
+.category-module li h4 {
+  padding: 0 (@baseSize * 2) 0 0;
+}
+
+/* breadcrumb */
+
+.breadcrumb .icon-location {
+  padding: 0;
+  margin-left: 10px;
+}
+
+/* login module */
+
+#form-login-username span [class^="icon-"], #form-login-username span [class*=" icon-"],
+#form-login-password span [class^="icon-"], #form-login-password span [class*=" icon-"] {
+  margin: 0 0 0 (@baseSize / 2);
+}
+
+/* search module */
+
+.form-search label.finder {
+  padding: 0 0 0 @baseSize;
+}
+
+/* feed display */
+
+ul.newsfeed ul ul {
+  margin: 0 (@baseSize * 2) @baseSize 0; 
+}
+
+ul.newsfeed ul li h5.feed-link {
+  padding: 0 (@baseSize * 2) 0 0;
+}
+
+/* ==========================================================================
+   BOOTSTRAP OVERRIDE styles
+   ========================================================================== */
+  
+/* buttons */
+
+.btn-large {
+  background-image: url("../images/btn_left.png");
+  background-position: 15px center;
+  padding: 0 (@baseSize * 1.5) 0 (@baseSize * 4.3); 
+}
+
+.btn-large.btn-left {
+  background-image: url("../images/btn_right.png");
+  background-position: right center;
+  padding: 0 43px 0 15px; 
+}
+
+.btn-large.btn-left:hover {
+  background-position: right center;
+}
+
+.btn-large:hover {
+  background-position: 15px center;
+}
+
+/* navs */
+
+.nav.menu > li a {
+  padding: (@baseSize * 0.6) (@baseSize * 3) (@baseSize * 0.6) 0;
+  background-position: right center;
+}
+
+.nav.menu > li.active > a {
+  background-image: url(../images/menu_li_hover_rtl.png);
+}
+
+.nav.menu .nav-child {
+  padding: 0 (@baseSize * 2.3) 0 0; 
+}
+
+/* tables */
+
+table.category {
+  border-left: none;
+  border-right: (@baseSize / 10) solid #DDDDDD;
+}
+
+table.category th, 
+table.category td {
+  border-right: none;
+  border-left: (@baseSize / 10) solid #DDDDDD;
+  text-align: right;
+}
+
+/* type */
+
+ul {
+  margin: 0 @baseSize @baseSize 0;
+}
+
+ul ul {
+  margin: 0 (@baseSize * 2) @baseSize 0;
+}  
+
+ul li {
+  padding: 0 (@baseSize * 2) 0 0;
+}

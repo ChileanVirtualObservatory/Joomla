@@ -1,0 +1,114 @@
+/*--------------------------------------------------------------
+# Copyright (C) joomla-monster.com
+# License: http://www.joomla-monster.com/license.html Joomla-Monster Proprietary Use License
+# Website: http://www.joomla-monster.com
+# Support: info@joomla-monster.com
+---------------------------------------------------------------*/
+
+/* ==========================================================================
+   VARIABLES import
+   ========================================================================== */
+  
+@import "template_variables.less";
+
+/* ==========================================================================
+   DJ-Menu styles
+   ========================================================================== */
+
+.dj-main li.hover a.dj-up_a,
+.dj-main li.active a.dj-up_a {
+  color: @style1;
+}
+
+.dj-main li.hover ul.dj-submenu {
+  border-top: (@baseSize / 2) solid @style1;
+}
+
+.dj-main li:hover ul.dj-submenu:after,
+.dj-main li.hover ul.dj-submenu:after {
+  border-bottom: (@baseSize / 2) dashed @style1;
+}
+
+.dj-main li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover li.hover li.hover ul {
+  border-top: (@baseSize / 2) solid @style1;
+}
+
+/* ==========================================================================
+   EDITOR styles
+   ========================================================================== */
+  
+.jm-text-color {
+  color: @style1;
+}
+
+/* ==========================================================================
+   TEMPLATE styles
+   ========================================================================== */
+  
+ul li,
+.categories-list ul li h4,
+.cat-children ul li span.item-title,
+.categories-list ul li span.item-title,
+.categories-module li h4,
+.category-module li h4,
+ul.newsfeed ul li h5.feed-link {
+  background: url("../images/style1/li.png") no-repeat right center;
+}
+
+.jm-rotate1-left:before,
+.jm-rotate2-left:before {
+  background: @violet; 
+}
+
+.jm-rotate1-right:before,
+.jm-rotate2-right:before {
+  background: @style1;
+}
+
+.btn.btn-color {
+  background-color: @violet;
+}
+
+/* ==========================================================================
+   BOOTSTRAP OVERRIDE styles
+   ========================================================================== */
+  
+/* buttons */
+
+.btn {
+  background-color: @style1;
+  *background-color: @style1;
+}
+
+/* dropdowns */
+
+.dropdown-menu li > a:hover,
+.dropdown-menu li > a:focus,
+.dropdown-submenu:hover > a,
+.dropdown-menu .active > a,
+.dropdown-menu .active > a:hover {
+  background-color: @style1;
+}
+
+/* scaffolding */
+
+a,
+a:hover {
+  color: @style1;
+}
+
+/* navs */
+
+.nav.menu > li a {
+  background-image: url(../images/style1/menu_li_rtl.png);
+}
+
+.nav.menu > li.active > a,
+#jm-top-bar .nav.menu > li.active > a,
+#jm-top .nav.menu > li.active > a,
+#jm-footer .nav.menu > li.active > a {
+  background-color: @style1;
+}

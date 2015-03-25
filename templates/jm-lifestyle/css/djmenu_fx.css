@@ -1,0 +1,201 @@
+/*--------------------------------------------------------------
+# Copyright (C) joomla-monster.com
+# License: http://www.joomla-monster.com/license.html Joomla-Monster Proprietary Use License
+# Website: http://www.joomla-monster.com
+# Support: info@joomla-monster.com
+---------------------------------------------------------------*/
+
+/* ==========================================================================
+   DJMENU import
+   ========================================================================== */
+
+.dj-main {
+    margin: 0;
+    background: none;
+    position: relative;
+    z-index: 500;
+    width: auto;
+}
+
+.dj-main li {
+	float: left;
+    display: block;
+	position: relative;
+	padding: 0;
+	margin: 0 0 0 50px;
+	background: none;
+}
+
+.dj-main li a.dj-up_a {
+    display: block;
+    padding: 7px 10px 0 0;
+    cursor: pointer;
+    float: left;
+	line-height: 1.8em;
+	color: rgb(4, 105, 214);
+	text-transform: uppercase;
+	border-right: 0px solid #c1c1c0;
+}
+
+.dj-main li a.dj-up_a span {
+    display: block;
+}
+
+.dj-main li a.dj-up_a span.dj-drop {}
+
+.dj-main li.hover a.dj-up_a,
+.dj-main li.active a.dj-up_a {
+    text-decoration: none;
+}
+
+.dj-main li.hover a.dj-up_a span,
+.dj-main li.active a.dj-up_a span {}
+
+.dj-main li.separator > a {
+    cursor: default;
+}
+
+.dj-main li span.image-title {
+    background: none;
+    padding: 0 0 0 10px;
+    display: inline;
+    vertical-align: middle;
+}
+
+.dj-main img {
+    border: 0;
+    margin: 0;
+    vertical-align: middle;
+}
+
+/* Default list styling */
+
+.dj-main li.hover {
+    z-index: 200;
+	position: relative;
+}
+
+.dj-main li.hover ul.dj-submenu {
+    left: 0;
+    top: 55px;
+    width: 220px;
+    height: auto;
+    z-index: 300;
+	background: rgba(1,0,71, 0.9);
+}
+
+ul.dj-submenu.hide {
+	display: block;
+}
+
+x:-o-prefocus, .dj-main li.hover ul.dj-submenu {
+    border: 1px solid transparent; /** opera fix **/	
+}
+
+.dj-main li ul.dj-submenu:after {
+    content: '';
+    position: absolute;
+    left: 30px;
+    top: -10px;
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+}
+
+.dj-main li.last ul.dj-submenu:after {
+    left: 135px;
+}
+
+.dj-main li.hover ul.dj-submenu li {
+    display: block;
+    height: auto;
+    position: relative;
+    float: left;
+    width: 190px;
+    padding: 0 15px;
+    margin: 0;
+	border: none;
+    background: none;
+}
+
+.dj-main li.hover ul.dj-submenu li.submenu_top,
+.dj-main li.hover ul.dj-submenu li.submenu_bot {
+	display: block !important;
+	height: 5px;
+}
+
+.dj-main li.hover ul.dj-submenu li a {
+    display: block;
+    font-size: 0.9em;
+    height: auto;
+    background: none;
+    padding: 10px 0;
+    width: 190px;
+    text-align: left;
+    color: #949494;
+	text-transform: uppercase;
+	border-top: 1px dashed #615e5a;
+}
+
+.dj-main li.hover ul.dj-submenu li.first > a {
+	border: none;
+}
+
+.dj-main li ul.dj-submenu li a.dj-more {}
+
+.dj-main li.hover ul.dj-submenu li a:hover,
+.dj-main li ul.dj-submenu li a.active,
+.dj-main li ul.dj-submenu li li a.active,
+.dj-main li ul.dj-submenu li li li a.active {
+	text-decoration: none;
+	color: #ffffff;
+}
+
+.dj-main li.hover ul.dj-submenu li a.dj-more:hover {}
+
+.dj-main li.hover ul.dj-submenu li a.dj-more-active {
+	color: #ffffff;
+}
+
+.dj-main li.hover ul.dj-submenu li a.dj-more-active:hover {}
+
+.dj-main li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover li.hover ul,
+.dj-main li.hover li.hover li.hover li.hover li.hover ul {
+    left: 220px;
+    top: 0px;
+    width: 220px;
+    padding: 0;
+    margin: 0;
+    z-index: 400;
+    height: auto;
+	background: #4f4c47;
+}
+
+.dj-main ul,
+.dj-main li.hover ul ul,
+.dj-main li.hover li.hover ul ul,
+.dj-main li.hover li.hover li.hover ul ul,
+.dj-main li.hover li.hover li.hover li.hover ul ul {
+    position: absolute;
+    left: -9999px;
+    top: -9999px;
+    width: 0;
+    height: 0;
+    margin: 0;
+}
+
+.dj-main li.hover li.hover a.dj-more,
+.dj-main li.hover li.hover li.hover a.dj-more,
+.dj-main li.hover li.hover li.hover li.hover a.dj-more,
+.dj-main li.hover li.hover li.hover li.hover li.hover a.dj-more {
+	color: #ffffff;
+}
+
+.dj-main li.hover li.hover li a.dj-more,
+.dj-main li.hover li.hover li.hover li a.dj-more,
+.dj-main li.hover li.hover li.hover li.hover li a.dj-more {
+    color: #949494;
+}

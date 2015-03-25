@@ -1,0 +1,109 @@
+/*--------------------------------------------------------------
+# Copyright (C) joomla-monster.com
+# License: http://www.joomla-monster.com/license.html Joomla-Monster Proprietary Use License
+# Website: http://www.joomla-monster.com
+# Support: info@joomla-monster.com
+---------------------------------------------------------------*/
+
+/* ==========================================================================
+   MIXINS styles
+   ========================================================================== */
+  
+.rounded-corners (@radius: 5px) {
+  -webkit-border-radius: @radius;
+     -moz-border-radius: @radius;
+      -ms-border-radius: @radius;
+       -o-border-radius: @radius;
+          border-radius: @radius;
+}
+
+.box-shadow (@shadow) {
+  -webkit-box-shadow: @shadow;
+     -moz-box-shadow: @shadow;
+          box-shadow: @shadow;
+}
+
+.box-sizing(@boxmodel) {
+  -webkit-box-sizing: @boxmodel;
+     -moz-box-sizing: @boxmodel;
+          box-sizing: @boxmodel;
+}
+
+.transition(@transition) {
+  -webkit-transition: @transition;
+     -moz-transition: @transition;
+      -ms-transition: @transition;
+       -o-transition: @transition;
+          transition: @transition;
+}
+
+.transition-delay(@transition-delay) {
+  -webkit-transition-delay: @transition-delay;
+     -moz-transition-delay: @transition-delay;
+       -o-transition-delay: @transition-delay;
+          transition-delay: @transition-delay;
+}
+
+.rotate(@degrees) {
+  -webkit-transform: rotate(@degrees);
+     -moz-transform: rotate(@degrees);
+      -ms-transform: rotate(@degrees);
+       -o-transform: rotate(@degrees);
+          transform: rotate(@degrees);
+}
+
+.translate(@x, @y) {
+  -webkit-transform: translate(@x, @y);
+     -moz-transform: translate(@x, @y);
+      -ms-transform: translate(@x, @y);
+       -o-transform: translate(@x, @y);
+          transform: translate(@x, @y);
+}
+
+.translateRotate(@x, @y, @z) {
+  -webkit-transform: translate(@x, @y) rotate(@z);
+     -moz-transform: translate(@x, @y) rotate(@z);
+      -ms-transform: translate(@x, @y) rotate(@z);
+       -o-transform: translate(@x, @y) rotate(@z);
+          transform: translate(@x, @y) rotate(@z);
+}
+
+.translateXRotate(@x, @y) {
+  -webkit-transform: translateX(@x) rotate(@y);
+     -moz-transform: translateX(@x) rotate(@y);
+      -ms-transform: translateX(@x) rotate(@y);
+       -o-transform: translateX(@x) rotate(@y);
+          transform: translateX(@x) rotate(@y);
+}
+
+.translateY(@x) {
+  -webkit-transform: translateY(@x);
+     -moz-transform: translateY(@x);
+      -ms-transform: translateY(@x);
+       -o-transform: translateY(@x);
+          transform: translateY(@x);
+}
+
+.translateX(@x) {
+  -webkit-transform: translateX(@x);
+     -moz-transform: translateX(@x);
+      -ms-transform: translateX(@x);
+       -o-transform: translateX(@x);
+          transform: translateX(@x);
+}
+
+.scale(@ratio) {
+  -webkit-transform: scale(@ratio);
+     -moz-transform: scale(@ratio);
+      -ms-transform: scale(@ratio);
+       -o-transform: scale(@ratio);
+          transform: scale(@ratio);
+}
+
+.scaleY(@ratio) {
+  -webkit-transform: scaleY(@ratio);
+     -moz-transform: scaleY(@ratio);
+      -ms-transform: scaleY(@ratio);
+       -o-transform: scaleY(@ratio);
+          transform: scaleY(@ratio);
+}
