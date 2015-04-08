@@ -2,151 +2,196 @@
 
 /*global window, localStorage, Cookie, altopen, altclose, big, small, rightopen, rightclose, bildauf, bildzu */
 
+Object.append(Browser.Features, {
+	localstorage: (function() {
+		return ('localStorage' in window) && window.localStorage !== null;
+	})()
+});
+
 function saveIt(name) {
-	var x = document.getElementById(name).style.display;
+	var x = document.id(name).style.display;
 
 	if (!x) {
 		alert('No cookie available');
-	} else if (localStorage) {
-		localStorage[name] = x;
+	} else {
+		if (Browser.Features.localstorage) {
+			localStorage[name] = x;
+		} else {
+			Cookie.write(name, x, {duration: 7});
+		}
 	}
 }
 
 function readIt(name) {
-	if (localStorage) {
+	if (Browser.Features.localstorage) {
 		return localStorage[name];
+	} else {
+		return Cookie.read(name);
 	}
 }
 
 function wrapperwidth(width) {
-	jQuery('#wrapper').css('width', width);
+	document.id('wrapper').setStyle('width', width);
 }
 
 // add Wai-Aria landmark-roles
-jQuery(function($) {
-	$('#nav').attr('role', 'navigation');
-	$('#mod-search-searchword').closest('form').attr('role', 'search');
-	$('#main').attr('role', 'main');
-	$('#right').attr('role', 'contentinfo');
+window.addEvent('domready', function () {
+
+	if (document.id('nav')) {
+		document.id('nav').setProperties( {
+			role : 'navigation'
+		});
+	}
+
+	if (document.id('mod-search-searchword')) {
+		document.id(document.id('mod-search-searchword').form).set( {
+			role : 'search'
+		});
+	}
+
+	if (document.id('main')) {
+		document.id('main').setProperties( {
+			role : 'main'
+		});
+	}
+
+	if (document.id('right')) {
+		document.id('right').setProperties( {
+			role : 'contentinfo'
+		});
+	}
+
 });
 
-jQuery(function($) {
+window.addEvent('domready', function() {
+
 		// get ankers
-		var $myankers = $('a.opencloselink');
-		$myankers.each(function() {
-			var $element = $(this);
-			$element.attr('role', 'tab');
-			var myid = $element.attr('id');
+		var myankers = document.id(document.body).getElements('a.opencloselink');
+		myankers.each(function(element) {
+			element.setProperty('role', 'tab');
+			var myid = element.getProperty('id');
 			myid = myid.split('_');
 			myid = 'module_' + myid[1];
-			$element.attr('aria-controls', myid);
+			document.id(element).setProperty('aria-controls', myid);
 		});
 
-		var $list = $('div.moduletable_js');
-		$list.each(function() {
-			var $element = $(this);
-			if ($element.find('div.module_content').length) {
-				var $el = $element.find('div.module_content');
-				$el.attr('role', 'tabpanel');
-				var myid = $el.attr('id');
+		var list = document.id(document.body).getElements('div.moduletable_js');
+		list.each(function(element) {
+
+			if (element.getElement('div.module_content')) {
+
+				var el = element.getElement('div.module_content');
+				el.setProperty('role', 'tabpanel');
+				var myid = el.getProperty('id');
 				myid = myid.split('_');
 				myid = 'link_' + myid[1];
-				$el.attr('aria-labelledby', myid);
-				var myclass = $el.attr('class');
+				el.setProperty('aria-labelledby', myid);
+				var myclass = el.get('class');
 				var one = myclass.split(' ');
 				// search for active menu-item
-				var $listelement = $el.find('a.active').first();
-				var unique = $el.attr('id');
+				var listelement = el.getElement('a.active');
+				var unique = el.id;
 				var nocookieset = readIt(unique);
-				if (($listelement.length) || ((one[1] == 'open') && (nocookieset == null))) {
-					$el.show();
-					var $eltern = $el.parent();
-					var $elternh = $eltern.find('h3').first();
-					var $elternbild = $eltern.find('img').first();
-					$elternbild.attr('alt', altopen).attr('src', bildzu);
-					$elternbild.focus();
+				if ((listelement) ||
+						((one[1] == 'open') && (nocookieset == null))) {
+					el.setStyle('display', 'block');
+					var eltern = el.getParent();
+					var elternh = eltern.getElement('h3');
+					var elternbild = eltern.getElement('img');
+					elternbild.setProperties( {
+						alt : altopen,
+						src : bildzu
+					});
+					elternbild.focus();
 				} else {
-					$el.hide();
-					$el.attr('aria-expanded', 'false');
+					el.setStyle('display', 'none');
+					el.setProperty('aria-expanded', 'false');
 				}
 
-				unique = $el.attr('id');
+				unique = el.id;
 				var cookieset = readIt(unique);
-				if (cookieset === 'block') {
-					$el.show();
-					$el.attr('aria-expanded', 'true');
+				if (cookieset == 'block') {
+					el.setStyle('display', 'block');
+					el.setProperty('aria-expanded', 'true');
 				}
 
 			}
 		});
 	});
 
-jQuery(function($) {
-	var $what = $('#right');
+window.addEvent('domready', function() {
+	var what = document.id('right');
 	// if rightcolumn
-	if ($what.length) {
-		var whatid = $what.attr('id');
-		var rightcookie = readIt(whatid);
-		if (rightcookie === 'none') {
-			$what.hide();
-			$('#nav').addClass('leftbigger');
-			wrapperwidth(big);
-			var $grafik = $('#bild');
-			$grafik.html(rightopen);
-			$grafik.focus();
+		if (what != null) {
+			var whatid = what.id;
+			var rightcookie = readIt(whatid);
+			if (rightcookie == 'none') {
+				what.setStyle('display', 'none');
+				document.id('nav').addClass('leftbigger');
+				wrapperwidth(big);
+				var grafik = document.id('bild');
+				grafik.innerHTML = rightopen;
+				grafik.focus();
+			}
 		}
-	}
-});
+	});
 
 function auf(key) {
-	var $ = jQuery.noConflict();
-	var $el = $('#' + key);
+	var el = document.id(key);
 
-	if (!$el.is(':visible')) {
-		$el.show();
-		$el.attr('aria-expanded', 'true');
+	if (el.style.display == 'none') {
+		el.setStyle('display', 'block');
+		el.setProperty('aria-expanded', 'true');
 
-		if (key !== 'right') {
-			$el.hide().toggle('slide');
-			$el.parent().attr('class', 'slide');
-			$eltern = $el.parent().parent();
-			$elternh = $eltern.find('h3').first();
-			$elternh.addClass('high');
-			$elternbild = $eltern.find('img').first();
-			$el.focus();
-			$elternbild.attr('alt', altopen).attr('src', bildzu);
+		if (key != 'right') {
+			el.slide('hide').slide('in');
+			el.getParent().setProperty('class', 'slide');
+			eltern = el.getParent().getParent();
+			elternh = eltern.getElement('h3');
+			elternh.addClass('high');
+			elternbild = eltern.getElement('img');
+			// elternbild.focus();
+			el.focus();
+			elternbild.setProperties( {
+				alt : altopen,
+				src : bildzu
+			});
 		}
 
-		if (key === 'right') {
-			$('#right').show();
+		if (key == 'right') {
+			document.id('right').setStyle('display', 'block');
 			wrapperwidth(small);
-			$('#nav').removeClass('leftbigger');
-			$grafik = $('#bild');
-			$('#bild').html(rightclose);
-			$grafik.focus();
+			document.id('nav').removeClass('leftbigger');
+			grafik = document.id('bild');
+			document.id('bild').innerHTML = rightclose;
+			grafik.focus();
 		}
 	} else {
-		$el.hide();
-		$el.attr('aria-expanded', 'false');
+		el.setStyle('display', 'none');
+		el.setProperty('aria-expanded', 'false');
 
-		$el.removeClass('open');
+		el.removeClass('open');
 
-		if (key !== 'right') {
-			$eltern = $el.parent().parent();
-			$elternh = $eltern.find('h3').first();
-			$elternh.removeClass('high');
-			$elternbild = $eltern.find('img').first();
-			$elternbild.attr('alt', altclose).attr('src', bildauf);
-			$elternbild.focus();
+		if (key != 'right') {
+			eltern = el.getParent().getParent();
+			elternh = eltern.getElement('h3');
+			elternh.removeClass('high');
+			elternbild = eltern.getElement('img');
+			// alert(bildauf);
+			elternbild.setProperties( {
+				alt : altclose,
+				src : bildauf
+			});
+			elternbild.focus();
 		}
 
-		if (key === 'right') {
-			$('#right').hide();
+		if (key == 'right') {
+			document.id('right').setStyle('display', 'none');
 			wrapperwidth(big);
-			$('#nav').addClass('leftbigger');
-			$grafik = $('#bild');
-			$grafik.html(rightopen);
-			$grafik.focus();
+			document.id('nav').addClass('leftbigger');
+			grafik = document.id('bild');
+			grafik.innerHTML = rightopen;
+			grafik.focus();
 		}
 	}
 	// write cookie
@@ -155,177 +200,203 @@ function auf(key) {
 
 // ########### Tabfunctions ####################
 
-jQuery(function($) {
-	var $alldivs = $('div.tabcontent');
-	var $outerdivs = $('div.tabouter');
-	//outerdivs = outerdivs.getProperty('id');
+window.addEvent('domready', function() {
+	var alldivs = document.id(document.body).getElements('div.tabcontent');
+	var outerdivs = document.id(document.body).getElements('div.tabouter');
+	outerdivs = outerdivs.getProperty('id');
 
-	$outerdivs.each(function() {
-		var $alldivs = $(this).find('div.tabcontent');
-		var count = 0;
-		var countankers = 0;
-		$alldivs.each(function() {
-		var $el = $(this);
+	for (var i = 0; i < outerdivs.length; i++) {
+		alldivs = document.id(outerdivs[i]).getElements('div.tabcontent');
+		count = 0;
+		alldivs.each(function(element) {
 			count++;
-			$el.attr('role', 'tabpanel');
-			$el.attr('aria-hidden', 'false');
-			$el.attr('aria-expanded', 'true');
-			elid = $el.attr('id');
+			var el = document.id(element);
+			el.setProperty('role', 'tabpanel');
+			el.setProperty('aria-hidden', 'false');
+			el.setProperty('aria-expanded', 'true');
+			elid = el.getProperty('id');
 			elid = elid.split('_');
 			elid = 'link_' + elid[1];
-			$el.attr('aria-labelledby', elid);
+			el.setProperty('aria-labelledby', elid);
 
-			if (count !== 1) {
-				$el.addClass('tabclosed').removeClass('tabopen');
-				$el.attr('aria-hidden', 'true');
-				$el.attr('aria-expanded', 'false');
+			if (count != 1) {
+				el.addClass('tabclosed').removeClass('tabopen');
+				el.setProperty('aria-hidden', 'true');
+				el.setProperty('aria-expanded', 'false');
 			}
 		});
 
-		$allankers = $(this).find('ul.tabs').first().find('a');
+		countankers = 0;
+		allankers = document.id(outerdivs[i]).getElement('ul.tabs').getElements('a');
 
-		$allankers.each(function() {
+		allankers.each(function(element) {
 			countankers++;
-			var $el = $(this);
-			$el.attr('aria-selected', 'true');
-			$el.attr('role', 'tab');
-			linkid = $el.attr('id');
+			var el = document.id(element);
+			el.setProperty('aria-selected', 'true');
+			el.setProperty('role', 'tab');
+			linkid = el.getProperty('id');
 			moduleid = linkid.split('_');
 			moduleid = 'module_' + moduleid[1];
-			$el.attr('aria-controls', moduleid);
+			el.setProperty('aria-controls', moduleid);
 
 			if (countankers != 1) {
-				$el.addClass('linkclosed').removeClass('linkopen');
-				$el.attr('aria-selected', 'false');
+				el.addClass('linkclosed').removeClass('linkopen');
+				el.setProperty('aria-selected', 'false');
 			}
 		});
-	});
+	}
 });
 
 function tabshow(elid) {
-	var $ = jQuery.noConflict();
-	var $el = $('#' + elid);
-	var $outerdiv = $el.parent();
+	var el = document.id(elid);
+	var outerdiv = el.getParent();
+	outerdiv = outerdiv.getProperty('id');
 
-	var $alldivs = $outerdiv.find('div.tabcontent');
-	var $liste = $outerdiv.find('ul.tabs').first();
+	var alldivs = document.id(outerdiv).getElements('div.tabcontent');
+	var liste = document.id(outerdiv).getElement('ul.tabs');
 
-	$liste.find('a').attr('aria-selected', 'false');
+	liste.getElements('a').setProperty('aria-selected', 'false');
 
-	$alldivs.each(function() {
-		var $element = $(this);
-		$element.addClass('tabclosed').removeClass('tabopen');
-		$element.attr('aria-hidden', 'true');
-		$element.attr('aria-expanded', 'false');
+	alldivs.each(function(element) {
+		element.addClass('tabclosed').removeClass('tabopen');
+		element.setProperty('aria-hidden', 'true');
+		element.setProperty('aria-expanded', 'false');
 	});
 
-	$el.addClass('tabopen').removeClass('tabclosed');
-	$el.attr('aria-hidden', 'false');
-	$el.attr('aria-expanded', 'true');
-	$el.focus();
+	el.addClass('tabopen').removeClass('tabclosed');
+	el.setProperty('aria-hidden', 'false');
+	el.setProperty('aria-expanded', 'true');
+	el.focus();
 	var getid = elid.split('_');
-	var activelink = '#link_' + getid[1];
-	$(activelink).attr('aria-selected', 'true');
-	$liste.find('a').addClass('linkclosed').removeClass('linkopen');
-	$(activelink).addClass('linkopen').removeClass('linkclosed');
+	var activelink = 'link_' + getid[1];
+	document.id(activelink).setProperty('aria-selected', 'true');
+	liste.getElements('a').addClass('linkclosed').removeClass('linkopen');
+	document.id(activelink).addClass('linkopen').removeClass('linkclosed');
 }
 
 function nexttab(el) {
-	var $ = jQuery.noConflict();
-	var $outerdiv = $('#' + el).parent();
-	var $liste = $outerdiv.find('ul.tabs').first();
+	var outerdiv = document.id(el).getParent();
+	var liste = outerdiv.getElement('ul.tabs');
 	var getid = el.split('_');
-	var activelink = '#link_' + getid[1];
-	var aktiverlink = $(activelink).attr('aria-selected');
-	var $tablinks = $liste.find('a');
+	var activelink = 'link_' + getid[1];
+	var aktiverlink = document.id(activelink).getProperty('aria-selected');
+	var tablinks = liste.getElements('a').getProperty('id');
 
-	for (var i = 0; i < $tablinks.length; i++) {
-		if ($($tablinks[i]).attr('id') === activelink) {
-			if ($($tablinks[i + 1]).length) {
-				$($tablinks[i + 1]).click();
+	for ( var i = 0; i < tablinks.length; i++) {
+
+		if (tablinks[i] == activelink) {
+
+			if (document.id(tablinks[i + 1]) != null) {
+				document.id(tablinks[i + 1]).onclick();
 				break;
 			}
 		}
 	}
 }
 
+
+
 // mobilemenuheader
-var mobileMenu = function(){
+var mobileMenu = new Class({
 
-	var $ = jQuery.noConflict(), displayed = false, $mobile, $menu, $menuWrapper;
+    displayed:false,
+    initialize:function () {
+        var self = this;
+        // create the elements once
+        self.createElements();
 
-	var getX = function() {
-		return $(document).width();
-	};
+        // show the elements if the browser size is smaller
+        if (self.getX() <= 461 && !self.displayed) {
+            self.display();
+        }
 
-	var createElements = function () {
-		var Openmenu=Joomla.JText._('TPL_BEEZ3_OPENMENU');
-		var Closemenu=Joomla.JText._('TPL_BEEZ3_CLOSEMENU');
-		$menu = $("#header").find('ul.menu').first();
-		$menuWrapper = $('<div>', {id : 'menuwrapper', role: 'menubar'});
+        // react on resize events
+        window.addEvent('resize', function () {
+            if (self.getX() >= 461) {
+                if (self.displayed) {
+                    self.mobile.setStyle('display', 'none');
+                    document.id('menuwrapper').setStyle('display', 'block');
+                    self.displayed = false;
+                }
+            }
+            if (self.getX() < 461) {
+                if(!self.displayed) {
+                    self.display();
+                }
 
-		// create the menu opener and assign events
-		$mobile = $('<div>', {id: 'mobile_select'}).html('<h2><a href=#" id="menuopener" onclick="return false;"><span>Openmenu</span></a></h2>').show();
-		$mobile.on('click', function(){
-			var state = $menuWrapper.css('display');
-			$menuWrapper.slideToggle();
+            }
+        });
+    },
 
-			if (state === 'none') {
-				$('#menuopener').html(Closemenu);
-				$('#menuwrapper').attr('aria-expanded', 'true').attr('aria-hidden','false');
-			} else {
-				$('#menuopener').html(Openmenu);
-				$('#menuwrapper').attr('aria-expanded', 'false').attr('aria-hidden', 'true');
-			}
-		});
+    getX: function() {
+        return document.body.getSize().x;
+    },
 
-		// add the menu to the dom
-		$menu.wrap($menuWrapper);
+    createElements:function () {
+        var self = this;
+        var Openmenu=Joomla.JText._('TPL_BEEZ3_OPENMENU');
+        var Closemenu=Joomla.JText._('TPL_BEEZ3_CLOSEMENU');
+        this.menu = document.id("header").getElement('ul.menu');
+        this.menuWrapper = new Element('div#menuwrapper', {
+            'role':'menubar'
+        });
 
-		// add the menuopener to the dom and hide it
-		$('#header').find('#menuwrapper').first().before($mobile.hide());
-		$menuWrapper = $('#menuwrapper');
-		$mobile = $('#mobile_select');
+        // create the menu opener and assign events
+        this.mobile = new Element('div', {
+            'id':'mobile_select',
+            html:'<h2><a href=#" id="menuopener" onclick="return false;"><span>Openmenu</span></a></h2>',
+            styles:{
+                display:'block'
+            },
+            events:{
+                click:function () {
+                    var state = self.menuWrapper.getStyle('display');
+                    self.wrapper.toggle();
 
-	};
-	var display = function () {
-		$menuWrapper.hide();
-		$mobile.show();
-		displayed = true;
-	};
+                    if (state == 'none') {
+                        document.id('menuopener').set('html', Closemenu);
+                        document.id('menuwrapper').setProperties({
+                            'aria-expanded':'true',
+                            'aria-hidden':'false'
+                        });
+                    } else {
+                        document.id('menuopener').set('html',  Openmenu);
+                        document.id('menuwrapper').setProperties({
+                            'aria-expanded':'false',
+                            'aria-hidden':'true'
+                        });
+                    }
+                }
+            }
 
-	var initialize = function () {
-		// create the elements once
-		createElements();
+        });
 
-		// show the elements if the browser size is smaller
-		if (getX() <= 461 && !displayed) {
-			display();
-		}
+        // add the menu to the dom
+        if ( this.menu != null ) {
+        	this.menuWrapper.wraps(this.menu);
+        }
+        // create the effect
+        this.wrapper = new Fx.Reveal(document.id('menuwrapper'), {
+            duration:'long',
+            transition:'bounce:out',
+            link:'chain'
+        });
+        // add the menuopener to the dom and hide it
+        if( document.id("header").getElement('#menuwrapper') != null ) {
+        	this.mobile.setStyle('display', 'none')
+            	.inject(document.id("header").getElement('#menuwrapper'), 'before');
+        }
 
-		// react on resize events
-		$(window).on('resize', function () {
-			if (getX() >= 461) {
-				if (displayed) {
-					$mobile.hide();
-					$('#menuwrapper').show();
-					displayed = false;
-				}
-			}
-			if (getX() < 461) {
-				if (!displayed) {
-					display();
-				}
+    },
+    display:function () {
+        this.menuWrapper.setStyle('display', 'none');
+        this.mobile.setStyle('display', 'block');
+        this.displayed = true;
+    }
+});
 
-			}
-		});
-	};
-
-	initialize();
-};
-
-jQuery(function () {
-	new mobileMenu();
+window.addEvent('domready', function () {
+    new mobileMenu();
 });
 
 

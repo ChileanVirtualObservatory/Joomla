@@ -13,9 +13,9 @@ class JConfig {
 	public $debug_lang = '0';
 	public $dbtype = 'mysqli';
 	public $host = 'localhost';
-	public $user = 'root';
-	public $password = '';
-	public $db = 'chivo';
+	public $user = 'u380963825_progr';
+	public $password = '2314353';
+	public $db = 'u380963825_chivo';
 	public $dbprefix = 'cho_';
 	public $live_site = '';
 	public $secret = 'lcpl6yF5r2ZsG30c';
@@ -50,12 +50,12 @@ class JConfig {
 	public $robots = '';
 	public $sef = '1';
 	public $sef_rewrite = '1';
-	public $sef_suffix = '0';
+	public $sef_suffix = '1';
 	public $unicodeslugs = '0';
 	public $feed_limit = '10';
 	public $log_path = '/mnt/data/vhosts/casite-628170.cloudaccess.net/httpdocs/logs';
 	public $tmp_path = '/mnt/data/vhosts/casite-628170.cloudaccess.net/httpdocs/tmp';
-	public $lifetime = '15';
+	public $lifetime = '60';
 	public $session_handler = 'database';
 	public $memcache_persist = '1';
 	public $memcache_compress = '0';
@@ -79,14 +79,8 @@ class JConfig {
 	public $session_memcached_server_port = '11211';
 	public $frontediting = '1';
 	public $feed_email = 'author';
-	public $helpurl = 'https://help.joomla.org/proxy/index.php?option=com_help&keyref=Help{major}{minor}:{keyref}';
+	public $helpurl = 'http://help.joomla.org/proxy/index.php?option=com_help&keyref=Help{major}{minor}:{keyref}';
 	public $cookie_domain = '';
 	public $cookie_path = '';
 	public $asset_id = '1';
-	public $redis_persist = '1';
-	public $redis_server_host = 'localhost';
-	public $redis_server_port = '6379';
-	public $redis_server_auth = '';
-	public $redis_server_db = '0';
-	public $massmailoff = '0';
 }

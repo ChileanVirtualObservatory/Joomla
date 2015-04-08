@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_admin
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Utility class working with system
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_admin
+ * @since       1.6
  */
 abstract class JHtmlSystem
 {

@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-   <location path=".">
    <system.webServer>
-       <directoryBrowse enabled="false" />
        <rewrite>
            <rules>
                <rule name="Joomla! Rule 1" stopProcessing="true">
@@ -27,5 +25,4 @@
            </rules>
        </rewrite>
    </system.webServer>
-   </location>
 </configuration>

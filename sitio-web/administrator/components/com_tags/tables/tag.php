@@ -3,25 +3,25 @@
  * @package     Joomla.Administrator
  * @subpackage  com_tags
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * Tags table
  *
- * @since  3.1
+ * @package     Joomla.Administrator
+ * @subpackage  com_tags
+ * @since       3.1
  */
 class TagsTableTag extends JTableNested
 {
 	/**
 	 * Constructor
 	 *
-	 * @param   JDatabaseDriver  $db  A database connector object
+	 * @param JDatabaseDriver A database connector object
 	 */
 	public function __construct($db)
 	{
@@ -46,28 +46,28 @@ class TagsTableTag extends JTableNested
 	{
 		if (isset($array['params']) && is_array($array['params']))
 		{
-			$registry = new Registry;
+			$registry = new JRegistry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}
 
 		if (isset($array['metadata']) && is_array($array['metadata']))
 		{
-			$registry = new Registry;
+			$registry = new JRegistry;
 			$registry->loadArray($array['metadata']);
 			$array['metadata'] = (string) $registry;
 		}
 
 		if (isset($array['urls']) && $array['urls'])
 		{
-			$registry = new Registry;
+			$registry = new JRegistry;
 			$registry->loadArray($array['urls']);
 			$array['urls'] = (string) $registry;
 		}
 
 		if (isset($array['images']) && is_array($array['images']))
 		{
-			$registry = new Registry;
+			$registry = new JRegistry;
 			$registry->loadArray($array['images']);
 			$array['images'] = (string) $registry;
 		}
@@ -95,9 +95,7 @@ class TagsTableTag extends JTableNested
 		{
 			$this->alias = $this->title;
 		}
-
 		$this->alias = JApplication::stringURLSafe($this->alias);
-
 		if (trim(str_replace('-', '', $this->alias)) == '')
 		{
 			$this->alias = JFactory::getDate()->format("Y-m-d-H-i-s");
@@ -116,15 +114,13 @@ class TagsTableTag extends JTableNested
 			// Only process if not empty
 			// Define array of characters to remove
 			$bad_characters = array("\n", "\r", "\"", "<", ">");
-
 			// Remove bad characters
 			$after_clean = JString::str_ireplace($bad_characters, "", $this->metakey);
 
 			// Create array using commas as delimiter
 			$keys = explode(',', $after_clean);
 			$clean_keys = array();
-
-			foreach ($keys as $key)
+			foreach($keys as $key)
 			{
 				if (trim($key))
 				{
@@ -138,8 +134,7 @@ class TagsTableTag extends JTableNested
 		}
 
 		// Clean up description -- eliminate quotes and <> brackets
-		if (!empty($this->metadesc))
-		{
+		if (!empty($this->metadesc)) {
 			// Only process if not empty
 			$bad_characters = array("\"", "<", ">");
 			$this->metadesc = JString::str_ireplace($bad_characters, "", $this->metadesc);
@@ -161,39 +156,30 @@ class TagsTableTag extends JTableNested
 	{
 		$date	= JFactory::getDate();
 		$user	= JFactory::getUser();
-
-		$this->modified_time		= $date->toSql();
-
-		if ($this->id)
-		{
+		if ($this->id) {
 			// Existing item
+			$this->modified_time		= $date->toSql();
 			$this->modified_user_id	= $user->get('id');
 		}
 		else
 		{
 			// New tag. A tag created and created_by field can be set by the user,
 			// so we don't touch either of these if they are set.
-			if (!(int) $this->created_time)
-			{
+			if (!(int) $this->created_time) {
 				$this->created_time = $date->toSql();
 			}
-
-			if (empty($this->created_user_id))
-			{
+			if (empty($this->created_user_id)) {
 				$this->created_user_id = $user->get('id');
 			}
 		}
 
 		// Verify that the alias is unique
 		$table = JTable::getInstance('Tag', 'TagsTable');
-
 		if ($table->load(array('alias' => $this->alias)) && ($table->id != $this->id || $this->id == 0))
 		{
 			$this->setError(JText::_('COM_TAGS_ERROR_UNIQUE_ALIAS'));
-
 			return false;
 		}
-
 		return parent::store($updateNulls);
 	}
 
@@ -206,18 +192,16 @@ class TagsTableTag extends JTableNested
 	 * @return  boolean  True on success.
 	 *
 	 * @since   3.1
-	 * @see     https://docs.joomla.org/JTableNested/delete
+	 * @see     http://docs.joomla.org/JTableNested/delete
 	 */
 	public function delete($pk = null, $children = false)
 	{
 		$return = parent::delete($pk, $children);
-
 		if ($return)
 		{
 			$helper = new JHelperTags;
 			$helper->tagDeleteInstances($pk);
 		}
-
 		return $return;
 	}
 }

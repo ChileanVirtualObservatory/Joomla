@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  com_content
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Frontpage View class
  *
- * @since  1.5
+ * @package     Joomla.Site
+ * @subpackage  com_content
+ * @since       1.5
  */
 class ContentViewFeatured extends JViewLegacy
 {
@@ -51,7 +53,6 @@ class ContentViewFeatured extends JViewLegacy
 		if (count($errors = $this->get('Errors')))
 		{
 			JError::raiseWarning(500, implode("\n", $errors));
-
 			return false;
 		}
 
@@ -86,7 +87,6 @@ class ContentViewFeatured extends JViewLegacy
 			{
 				$item->text = $item->introtext;
 			}
-
 			JPluginHelper::importPlugin('content');
 			$dispatcher->trigger('onContentPrepare', array ('com_content.featured', &$item, &$item->params, 0));
 
@@ -109,7 +109,6 @@ class ContentViewFeatured extends JViewLegacy
 
 		// The first group is the leading articles.
 		$limit = $numLeading;
-
 		for ($i = 0; $i < $limit && $i < $max; $i++)
 		{
 			$this->lead_items[$i] = &$items[$i];
@@ -117,7 +116,6 @@ class ContentViewFeatured extends JViewLegacy
 
 		// The second group is the intro articles.
 		$limit = $numLeading + $numIntro;
-
 		// Order articles across, then down (or single column mode)
 		for ($i = $numLeading; $i < $limit && $i < $max; $i++)
 		{
@@ -129,7 +127,7 @@ class ContentViewFeatured extends JViewLegacy
 
 		if ($order == 0 && $this->columns > 1)
 		{
-			// Call order down helper
+			// call order down helper
 			$this->intro_items = ContentHelperQuery::orderDownColumns($this->intro_items, $this->columns);
 		}
 
@@ -139,7 +137,7 @@ class ContentViewFeatured extends JViewLegacy
 			$this->link_items[$i] = &$items[$i];
 		}
 
-		// Escape strings for HTML output
+		//Escape strings for HTML output
 		$this->pageclass_sfx = htmlspecialchars($params->get('pageclass_sfx'));
 
 		$this->params     = &$params;
@@ -153,9 +151,7 @@ class ContentViewFeatured extends JViewLegacy
 	}
 
 	/**
-	 * Prepares the document.
-	 *
-	 * @return  void.
+	 * Prepares the document
 	 */
 	protected function _prepareDocument()
 	{

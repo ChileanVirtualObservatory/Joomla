@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_finder
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -14,7 +14,9 @@ jimport('joomla.filesystem.file');
 /**
  * Indexer class supporting PostgreSQL for the Finder indexer package.
  *
- * @since  3.0
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       3.0
  */
 class FinderIndexerDriverPostgresql extends FinderIndexer
 {
@@ -326,7 +328,6 @@ class FinderIndexerDriverPostgresql extends FinderIndexer
 			' FROM ' . $db->quoteName('#__finder_tokens_aggregate') . ' AS ta' .
 			' WHERE ta.term_id = 0'
 		);
-
 		if ($db->loadRow() == null)
 		{
 			$db->setQuery(
@@ -609,7 +610,6 @@ class FinderIndexerDriverPostgresql extends FinderIndexer
 			);
 			$values++;
 		}
-
 		$db->setQuery($query);
 		$db->execute();
 

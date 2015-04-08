@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -20,7 +20,7 @@ class JoomlalinksContent extends JObject {
      *
      * @access	protected
      */
-    public function __construct($options = array()) {
+    function __construct($options = array()) {
         
     }
 
@@ -34,7 +34,7 @@ class JoomlalinksContent extends JObject {
      * @return	JCE  The editor object.
      * @since	1.5
      */
-    public static function getInstance() {
+    function getInstance() {
         static $instance;
 
         if (!is_object($instance)) {
@@ -62,8 +62,6 @@ class JoomlalinksContent extends JObject {
 
         $items = array();
         $view = isset($args->view) ? $args->view : '';
-        
-        $language = '';
 
         switch ($view) {
             // get top-level sections / categories
@@ -78,11 +76,7 @@ class JoomlalinksContent extends JObject {
                         $id = ContentHelperRoute::getSectionRoute($section->id);
                         $view = 'section';
                     } else {
-                        if (isset($category->language)) {
-                            $language = $category->language;
-                        }
-                        
-                        $id = ContentHelperRoute::getCategoryRoute($section->slug, $language);
+                        $id = ContentHelperRoute::getCategoryRoute($section->slug);
                         $view = 'category';
                     }
 
@@ -92,9 +86,9 @@ class JoomlalinksContent extends JObject {
                     }
 
                     $items[] = array(
-                        'url'   => self::route($url),
-                        'id'    => $id,
-                        'name'  => $section->title,
+                        'url' => $url,
+                        'id' => $id,
+                        'name' => $section->title,
                         'class' => 'folder content'
                     );
                 }
@@ -123,12 +117,7 @@ class JoomlalinksContent extends JObject {
 
                 foreach ($categories as $category) {
                     $url = '';
-                    
-                    if (isset($category->language)) {
-                        $language = $category->language;
-                    }
-                    
-                    $id = ContentHelperRoute::getCategoryRoute($category->id, $args->id, $language);
+                    $id = ContentHelperRoute::getCategoryRoute($category->id, $args->id);
 
                     if (strpos($id, 'index.php?Itemid=') !== false) {
                         $url = self::_getMenuLink($id);
@@ -136,9 +125,9 @@ class JoomlalinksContent extends JObject {
                     }
 
                     $items[] = array(
-                        'url'   => self::route($url),
-                        'id'    => $id,
-                        'name'  => $category->title . ' / ' . $category->alias,
+                        'url' => $url,
+                        'id' => $id,
+                        'name' => $category->title . ' / ' . $category->alias,
                         'class' => 'folder content'
                     );
                 }
@@ -150,18 +139,12 @@ class JoomlalinksContent extends JObject {
                         if (isset($article->sectionid)) {
                             $id = ContentHelperRoute::getArticleRoute($article->slug, $article->catslug, $article->sectionid);
                         } else {
-                            if (isset($article->language)) {
-                                $language = $article->language;
-                            }
-                            
-                            $id = ContentHelperRoute::getArticleRoute($article->slug, $article->catslug, $language);
+                            $id = ContentHelperRoute::getArticleRoute($article->slug, $article->catslug);
                         }
-                        
-                        $id = self::route($id);
 
                         $items[] = array(
-                            'id'    => $id,
-                            'name'  => $article->title . ' / ' . $article->alias,
+                            'id' => $id,
+                            'name' => $article->title . ' / ' . $article->alias,
                             'class' => 'file'
                         );
 
@@ -191,14 +174,9 @@ class JoomlalinksContent extends JObject {
                         foreach ($categories as $category) {
                             // check for sub-categories					
                             $sub = WFLinkBrowser::getCategory('com_content', $category->id);
-                            
-                            // language
-                            if (isset($category->language)) {
-                                $language = $category->language;
-                            }
 
                             $url = '';
-                            $id = ContentHelperRoute::getCategoryRoute($category->id, $language);
+                            $id = ContentHelperRoute::getCategoryRoute($category->id, $args->id);
 
                             // get sub-categories
                             if (count($sub)) {
@@ -218,9 +196,9 @@ class JoomlalinksContent extends JObject {
                             }
 
                             $items[] = array(
-                                'url'   => self::route($url),
-                                'id'    => $id,
-                                'name'  => $category->title . ' / ' . $category->alias,
+                                'url' => $url,
+                                'id' => $id,
+                                'name' => $category->title . ' / ' . $category->alias,
                                 'class' => 'folder content'
                             );
                         }
@@ -233,15 +211,8 @@ class JoomlalinksContent extends JObject {
                     if (isset($article->sectionid)) {
                         $id = ContentHelperRoute::getArticleRoute($article->slug, $article->catslug, $article->sectionid);
                     } else {
-                        // language
-                        if (isset($article->language)) {
-                            $language = $article->language;
-                        }
-                        
-                        $id = ContentHelperRoute::getArticleRoute($article->slug, $article->catslug, $language);
+                        $id = ContentHelperRoute::getArticleRoute($article->slug, $article->catslug);
                     }
-                    
-                    $id = self::route($id);
 
                     $items[] = array(
                         'id' => $id,
@@ -264,15 +235,8 @@ class JoomlalinksContent extends JObject {
             case 'uncategorized':
                 $statics = self::_getUncategorized();
                 foreach ($statics as $static) {
-                    // language
-                    if (isset($static->language)) {
-                        $language = $static->language;
-                    }
-                    
-                    $id = ContentHelperRoute::getArticleRoute($static->id, 0, $language);
+                    $id = ContentHelperRoute::getArticleRoute($static->id);
 
-                    $id = self::route($id);
-                    
                     $items[] = array(
                         'id' => $id,
                         'name' => $static->title . ' / ' . $static->alias,
@@ -339,11 +303,9 @@ class JoomlalinksContent extends JObject {
         $user = JFactory::getUser();
         $wf = WFEditorPlugin::getInstance();
 
-        $query      = $db->getQuery(true);
-        $version    = new JVersion();
+        $query = $db->getQuery(true);
 
-        $language   = $version->isCompatible('3.0') ? ', a.language' : '';
-        $case       = '';
+        $case = '';
 
         if ($wf->getParam('links.joomlalinks.article_alias', 1) == 1) {
             if (is_object($query)) {
@@ -374,7 +336,7 @@ class JoomlalinksContent extends JObject {
         if (is_object($query)) {
             $groups = implode(',', $user->getAuthorisedViewLevels());
 
-            $query->select('a.id AS slug, b.id AS catslug, a.alias, a.title AS title, a.access, ' . $query->concatenate(array('a.introtext', 'a.fulltext')) . ' AS content' . $language . $case);
+            $query->select('a.id AS slug, b.id AS catslug, a.alias, a.title AS title, a.access, ' . $query->concatenate(array('a.introtext', 'a.fulltext')) . ' AS content' . $case);
             $query->from('#__content AS a');
             $query->innerJoin('#__categories AS b ON b.id = ' . (int) $id);
             $query->where('a.catid = ' . (int) $id);
@@ -400,11 +362,8 @@ class JoomlalinksContent extends JObject {
     private function _getUncategorized() {
         $db = JFactory::getDBO();
         $user = JFactory::getUser();
-        
-        $version    = new JVersion();
-        $language   = $version->isCompatible('3.0') ? ', language' : '';
 
-        $query = 'SELECT id, title, alias, access, introtext AS content' . $language
+        $query = 'SELECT id, title, alias, access, introtext AS content'
                 . ' FROM #__content'
                 . ' WHERE state = 1'
                 . ' AND access <= ' . (int) $user->get('aid') . ' AND sectionid = 0'
@@ -433,16 +392,6 @@ class JoomlalinksContent extends JObject {
         }
 
         return $anchors;
-    }
-    
-    private static function route($url) {
-        $wf = WFEditorPlugin::getInstance();
-        
-        if ($wf->getParam('links.joomlalinks.sef_url', 0)) {
-            $url = WFLinkExtension::route($url);
-        }
-        
-        return $url;
     }
 
 }

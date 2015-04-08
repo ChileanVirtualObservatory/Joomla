@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  mod_menu
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -96,13 +96,10 @@ if ($user->authorise('core.manage', 'com_users'))
 		$menu->getParent();
 	}
 
-	if (JFactory::getApplication()->get('massmailoff', 0) != 1)
-	{
-		$menu->addSeparator();
-		$menu->addChild(
-			new JMenuNode(JText::_('MOD_MENU_MASS_MAIL_USERS'), 'index.php?option=com_users&view=mail', 'class:massmail')
-		);
-	}
+	$menu->addSeparator();
+	$menu->addChild(
+		new JMenuNode(JText::_('MOD_MENU_MASS_MAIL_USERS'), 'index.php?option=com_users&view=mail', 'class:massmail')
+	);
 
 	$menu->getParent();
 }
@@ -130,10 +127,7 @@ if ($user->authorise('core.manage', 'com_menus'))
 	$menu->addSeparator();
 
 	// Menu Types
-	$menuTypes = ModMenuHelper::getMenus();
-	$menuTypes = JArrayHelper::sortObjects($menuTypes, 'title', 1, false);
-
-	foreach ($menuTypes as $menuType)
+	foreach (ModMenuHelper::getMenus() as $menuType)
 	{
 		$alt = '*' .$menuType->sef. '*';
 		if ($menuType->home == 0)
@@ -320,7 +314,7 @@ if ($showhelp == 1)
 	}
 	$lang->setDebug($debug);
 	$menu->addChild(
-		new JMenuNode(JText::_('MOD_MENU_HELP_DOCUMENTATION'), 'https://docs.joomla.org', 'class:help-docs', false, '_blank')
+		new JMenuNode(JText::_('MOD_MENU_HELP_DOCUMENTATION'), 'http://docs.joomla.org', 'class:help-docs', false, '_blank')
 	);
 	$menu->addSeparator();
 

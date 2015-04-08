@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  com_config
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -26,7 +26,19 @@ JHtml::_('formbehavior.chosen', 'select');
 	if (!empty($fieldSets['com_config'])):?>
 
 	<fieldset class="form-horizontal">
-		<?php echo $this->form->renderFieldset('com_config'); ?>
+
+<?php foreach ($this->form->getFieldset('com_config') as $field) : ?>
+			<div class="control-group">
+				<div class="control-label">
+					<?php echo $field->label; ?>
+				</div>
+				<div class="controls">
+					<?php echo $field->input; ?>
+				</div>
+			</div>
+
+<?php endforeach;	?>
+
 	</fieldset>
 
 <?php else:
@@ -41,7 +53,17 @@ JHtml::_('formbehavior.chosen', 'select');
 	?>
 
 <fieldset class="form-horizontal">
-	<?php echo $this->form->renderFieldset($name); ?>
+
+	<?php foreach ($this->form->getFieldset($name) as $field) : ?>
+		<div class="control-group">
+			<div class="control-label">
+				<?php echo $field->label; ?>
+			</div>
+			<div class="controls">
+				<?php echo $field->input; ?>
+			</div>
+		</div>
+	<?php endforeach; ?>
 </fieldset>
 	<?php endforeach;
 	endif;

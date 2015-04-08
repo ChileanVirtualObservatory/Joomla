@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_modules
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * View class for a list of modules.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_modules
+ * @since       1.6
  */
 class ModulesViewModules extends JViewLegacy
 {
@@ -24,10 +26,6 @@ class ModulesViewModules extends JViewLegacy
 
 	/**
 	 * Display the view
-	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  void
 	 */
 	public function display($tpl = null)
 	{
@@ -39,12 +37,18 @@ class ModulesViewModules extends JViewLegacy
 		if (count($errors = $this->get('Errors')))
 		{
 			JError::raiseError(500, implode("\n", $errors));
-
 			return false;
 		}
 
-		$this->addToolbar();
+		// Check if there are no matching items
+		if (!count($this->items)){
+			JFactory::getApplication()->enqueueMessage(
+				JText::_('COM_MODULES_MSG_MANAGE_NO_MODULES'),
+				'warning'
+			);
+		}
 
+		$this->addToolbar();
 		// Include the component HTML helpers.
 		JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 		parent::display($tpl);
@@ -52,8 +56,6 @@ class ModulesViewModules extends JViewLegacy
 
 	/**
 	 * Add the page title and toolbar.
-	 *
-	 * @return  void
 	 *
 	 * @since   1.6
 	 */
@@ -93,9 +95,16 @@ class ModulesViewModules extends JViewLegacy
 			JToolbarHelper::checkin('modules.checkin');
 		}
 
+		if ($state->get('filter.state') == -2 && $canDo->get('core.delete'))
+		{
+			JToolbarHelper::deleteList('', 'modules.delete', 'JTOOLBAR_EMPTY_TRASH');
+		} elseif ($canDo->get('core.edit.state'))
+		{
+			JToolbarHelper::trash('modules.trash');
+		}
+
 		// Add a batch button
-		if ($user->authorise('core.create', 'com_modules') && $user->authorise('core.edit', 'com_modules')
-			&& $user->authorise('core.edit.state', 'com_modules'))
+		if ($user->authorise('core.create', 'com_modules') && $user->authorise('core.edit', 'com_modules') && $user->authorise('core.edit.state', 'com_modules'))
 		{
 			JHtml::_('bootstrap.modal', 'collapseModal');
 			$title = JText::_('JTOOLBAR_BATCH');
@@ -107,21 +116,23 @@ class ModulesViewModules extends JViewLegacy
 			$bar->appendButton('Custom', $dhtml, 'batch');
 		}
 
-		if ($state->get('filter.state') == -2 && $canDo->get('core.delete'))
-		{
-			JToolbarHelper::deleteList('', 'modules.delete', 'JTOOLBAR_EMPTY_TRASH');
-		}
-		elseif ($canDo->get('core.edit.state'))
-		{
-			JToolbarHelper::trash('modules.trash');
-		}
-
 		if ($canDo->get('core.admin'))
 		{
 			JToolbarHelper::preferences('com_modules');
 		}
-
 		JToolbarHelper::help('JHELP_EXTENSIONS_MODULE_MANAGER');
+
+		JHtmlSidebar::addEntry(
+			JText::_('JSITE'),
+			'index.php?option=com_modules&filter_client_id=0',
+			$this->state->get('filter.client_id') == 0
+		);
+
+		JHtmlSidebar::addEntry(
+			JText::_('JADMINISTRATOR'),
+			'index.php?option=com_modules&filter_client_id=1',
+			$this->state->get('filter.client_id') == 1
+		);
 
 		JHtmlSidebar::setAction('index.php?option=com_modules');
 
@@ -142,10 +153,7 @@ class ModulesViewModules extends JViewLegacy
 		JHtmlSidebar::addFilter(
 			JText::_('COM_MODULES_OPTION_SELECT_POSITION'),
 			'filter_position',
-			JHtml::_(
-				'select.options',
-				ModulesHelper::getPositions($this->state->get('filter.client_id')), 'value', 'text', $this->state->get('filter.position')
-			)
+			JHtml::_('select.options', ModulesHelper::getPositions($this->state->get('filter.client_id')), 'value', 'text', $this->state->get('filter.position'))
 		);
 
 		JHtmlSidebar::addFilter(

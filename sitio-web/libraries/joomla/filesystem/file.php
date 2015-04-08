@@ -3,16 +3,20 @@
  * @package     Joomla.Platform
  * @subpackage  FileSystem
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
+jimport('joomla.filesystem.path');
+
 /**
  * A File handling class
  *
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  FileSystem
+ * @since       11.1
  */
 class JFile
 {
@@ -79,13 +83,11 @@ class JFile
 	 */
 	public static function copy($src, $dest, $path = null, $use_streams = false)
 	{
-		$pathObject = new JFilesystemWrapperPath;
-
 		// Prepend a base path if it exists
 		if ($path)
 		{
-			$src = $pathObject->clean($path . '/' . $src);
-			$dest = $pathObject->clean($path . '/' . $dest);
+			$src = JPath::clean($path . '/' . $src);
+			$dest = JPath::clean($path . '/' . $dest);
 		}
 
 		// Check src path
@@ -121,12 +123,12 @@ class JFile
 				// If the parent folder doesn't exist we must create it
 				if (!file_exists(dirname($dest)))
 				{
-					$folderObject = new JFilesystemWrapperFolder;
-					$folderObject->create(dirname($dest));
+					jimport('joomla.filesystem.folder');
+					JFolder::create(dirname($dest));
 				}
 
 				// Translate the destination path for the FTP account
-				$dest = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $dest), '/');
+				$dest = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $dest), '/');
 
 				if (!$ftp->store($src, $dest))
 				{
@@ -164,7 +166,6 @@ class JFile
 	public static function delete($file)
 	{
 		$FTPOptions = JClientHelper::getCredentials('ftp');
-		$pathObject = new JFilesystemWrapperPath;
 
 		if (is_array($file))
 		{
@@ -184,7 +185,7 @@ class JFile
 
 		foreach ($files as $file)
 		{
-			$file = $pathObject->clean($file);
+			$file = JPath::clean($file);
 
 			if (!is_file($file))
 			{
@@ -203,7 +204,7 @@ class JFile
 			}
 			elseif ($FTPOptions['enabled'] == 1)
 			{
-				$file = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $file), '/');
+				$file = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $file), '/');
 
 				if (!$ftp->delete($file))
 				{
@@ -238,12 +239,10 @@ class JFile
 	 */
 	public static function move($src, $dest, $path = '', $use_streams = false)
 	{
-		$pathObject = new JFilesystemWrapperPath;
-
 		if ($path)
 		{
-			$src = $pathObject->clean($path . '/' . $src);
-			$dest = $pathObject->clean($path . '/' . $dest);
+			$src = JPath::clean($path . '/' . $src);
+			$dest = JPath::clean($path . '/' . $dest);
 		}
 
 		// Check src path
@@ -275,8 +274,8 @@ class JFile
 				$ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'], $FTPOptions['pass']);
 
 				// Translate path for the FTP account
-				$src = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $src), '/');
-				$dest = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $dest), '/');
+				$src = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $src), '/');
+				$dest = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $dest), '/');
 
 				// Use FTP rename to simulate move
 				if (!$ftp->rename($src, $dest))
@@ -389,9 +388,9 @@ class JFile
 		// If the destination directory doesn't exist we need to create it
 		if (!file_exists(dirname($file)))
 		{
-			$folderObject = new JFilesystemWrapperFolder;
+			jimport('joomla.filesystem.folder');
 
-			if ($folderObject->create(dirname($file)) == false)
+			if (JFolder::create(dirname($file)) == false)
 			{
 				return false;
 			}
@@ -416,7 +415,6 @@ class JFile
 		else
 		{
 			$FTPOptions = JClientHelper::getCredentials('ftp');
-			$pathObject = new JFilesystemWrapperPath;
 
 			if ($FTPOptions['enabled'] == 1)
 			{
@@ -424,12 +422,12 @@ class JFile
 				$ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'], $FTPOptions['pass']);
 
 				// Translate path for the FTP account and use FTP write buffer to file
-				$file = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $file), '/');
+				$file = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $file), '/');
 				$ret = $ftp->write($file, $buffer);
 			}
 			else
 			{
-				$file = $pathObject->clean($file);
+				$file = JPath::clean($file);
 				$ret = is_int(file_put_contents($file, $buffer)) ? true : false;
 			}
 
@@ -440,49 +438,26 @@ class JFile
 	/**
 	 * Moves an uploaded file to a destination folder
 	 *
-	 * @param   string   $src              The name of the php (temporary) uploaded file
-	 * @param   string   $dest             The path (including filename) to move the uploaded file to
-	 * @param   boolean  $use_streams      True to use streams
-	 * @param   boolean  $allow_unsafe     Allow the upload of unsafe files
-	 * @param   boolean  $safeFileOptions  Options to JFilterInput::isSafeFile
+	 * @param   string   $src          The name of the php (temporary) uploaded file
+	 * @param   string   $dest         The path (including filename) to move the uploaded file to
+	 * @param   boolean  $use_streams  True to use streams
 	 *
 	 * @return  boolean  True on success
 	 *
 	 * @since   11.1
 	 */
-	public static function upload($src, $dest, $use_streams = false, $allow_unsafe = false, $safeFileOptions = array())
+	public static function upload($src, $dest, $use_streams = false)
 	{
-		if (!$allow_unsafe)
-		{
-			$descriptor = array(
-				'tmp_name' => $src,
-				'name'     => basename($dest),
-				'type'     => '',
-				'error'    => '',
-				'size'     => '',
-			);
-
-			$isSafe = JFilterInput::isSafeFile($descriptor, $safeFileOptions);
-
-			if (!$isSafe)
-			{
-				JLog::add(JText::sprintf('JLIB_FILESYSTEM_ERROR_WARNFS_ERR03', $dest), JLog::WARNING, 'jerror');
-
-				return false;
-			}
-		}
-
 		// Ensure that the path is valid and clean
-		$pathObject = new JFilesystemWrapperPath;
-		$dest = $pathObject->clean($dest);
+		$dest = JPath::clean($dest);
 
 		// Create the destination directory if it does not exist
 		$baseDir = dirname($dest);
 
 		if (!file_exists($baseDir))
 		{
-			$folderObject = new JFilesystemWrapperFolder;
-			$folderObject->create($baseDir);
+			jimport('joomla.filesystem.folder');
+			JFolder::create($baseDir);
 		}
 
 		if ($use_streams)
@@ -509,7 +484,7 @@ class JFile
 				$ftp = JClientFtp::getInstance($FTPOptions['host'], $FTPOptions['port'], array(), $FTPOptions['user'], $FTPOptions['pass']);
 
 				// Translate path for the FTP account
-				$dest = $pathObject->clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $dest), '/');
+				$dest = JPath::clean(str_replace(JPATH_ROOT, $FTPOptions['root'], $dest), '/');
 
 				// Copy the file to the destination directory
 				if (is_uploaded_file($src) && $ftp->store($src, $dest))
@@ -527,7 +502,7 @@ class JFile
 				if (is_writeable($baseDir) && move_uploaded_file($src, $dest))
 				{
 					// Short circuit to prevent file permission errors
-					if ($pathObject->setPermissions($dest))
+					if (JPath::setPermissions($dest))
 					{
 						$ret = true;
 					}
@@ -557,9 +532,7 @@ class JFile
 	 */
 	public static function exists($file)
 	{
-		$pathObject = new JFilesystemWrapperPath;
-
-		return is_file($pathObject->clean($file));
+		return is_file(JPath::clean($file));
 	}
 
 	/**

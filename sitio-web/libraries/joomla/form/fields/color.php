@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Form
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -13,8 +13,10 @@ defined('JPATH_PLATFORM') or die;
  * Color Form Field class for the Joomla Platform.
  * This implementation is designed to be compatible with HTML5's <input type="color">
  *
- * @link   http://www.w3.org/TR/html-markup/input.color.html
- * @since  11.3
+ * @package     Joomla.Platform
+ * @subpackage  Form
+ * @link        http://www.w3.org/TR/html-markup/input.color.html
+ * @since       11.3
  */
 class JFormFieldColor extends JFormField
 {

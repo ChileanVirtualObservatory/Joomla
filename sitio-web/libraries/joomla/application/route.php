@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Application
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Route handling class
  *
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Application
+ * @since       11.1
  */
 class JRoute
 {
@@ -25,16 +27,16 @@ class JRoute
 	private static $_router = null;
 
 	/**
-	 * Translates an internal Joomla URL to a humanly readable URL.
+	 * Translates an internal Joomla URL to a humanly readible URL.
 	 *
 	 * @param   string   $url    Absolute or Relative URI to Joomla resource.
-	 * @param   boolean  $xhtml  Replace & by &amp; for XML compliance.
+	 * @param   boolean  $xhtml  Replace & by &amp; for XML compilance.
 	 * @param   integer  $ssl    Secure state for the resolved URI.
 	 *                             0: (default) No change, use the protocol currently used in the request
 	 *                             1: Make URI secure using global secure site URI.
 	 *                             2: Make URI unsecure using the global unsecure site URI.
 	 *
-	 * @return string The translated humanly readable URL.
+	 * @return  The translated humanly readible URL.
 	 *
 	 * @since   11.1
 	 */

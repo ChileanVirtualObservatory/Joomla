@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Archive
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -20,7 +20,9 @@ jimport('joomla.filesystem.file');
  * @contributor  Michael Slusarz <slusarz@horde.org>
  * @contributor  Michael Cochrane <mike@graftonhall.co.nz>
  *
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Archive
+ * @since       11.1
  */
 class JArchiveGzip implements JArchiveExtractable
 {
@@ -168,13 +170,11 @@ class JArchiveGzip implements JArchiveExtractable
 					}
 				}
 			}
-
 			while ($this->_data);
 
 			$output->close();
 			$input->close();
 		}
-
 		return true;
 	}
 

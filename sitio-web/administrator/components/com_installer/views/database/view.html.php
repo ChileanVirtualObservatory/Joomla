@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_installer
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -14,12 +14,14 @@ include_once __DIR__ . '/../default/view.php';
 /**
  * Extension Manager Manage View
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_installer
+ * @since       1.6
  */
 class InstallerViewDatabase extends InstallerViewDefault
 {
 	/**
-	 * Display the view.
+	 * Display the view
 	 *
 	 * @param   string  $tpl  Template
 	 *
@@ -29,7 +31,7 @@ class InstallerViewDatabase extends InstallerViewDefault
 	 */
 	public function display($tpl = null)
 	{
-		// Get data from the model.
+		// Get data from the model
 		$this->state = $this->get('State');
 		$this->changeSet = $this->get('Items');
 		$this->errors = $this->changeSet->check();
@@ -46,12 +48,10 @@ class InstallerViewDatabase extends InstallerViewDefault
 		{
 			$this->errorCount++;
 		}
-
 		if (!$this->filterParams)
 		{
 			$this->errorCount++;
 		}
-
 		if (version_compare($this->updateVersion, JVERSION) != 0)
 		{
 			$this->errorCount++;
@@ -70,7 +70,7 @@ class InstallerViewDatabase extends InstallerViewDefault
 	protected function addToolbar()
 	{
 		/*
-		 * Set toolbar items for the page.
+		 * Set toolbar items for the page
 		 */
 		JToolbarHelper::custom('database.fix', 'refresh', 'refresh', 'COM_INSTALLER_TOOLBAR_DATABASE_FIX', false, false);
 		JToolbarHelper::divider();

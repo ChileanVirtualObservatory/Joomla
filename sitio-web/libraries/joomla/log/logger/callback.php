@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Log
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -15,7 +15,9 @@ defined('JPATH_PLATFORM') or die;
  * This class allows logging to be handled by a callback function.
  * This allows unprecedented flexibility in the way logging can be handled.
  *
- * @since  12.2
+ * @package     Joomla.Platform
+ * @subpackage  Log
+ * @since       12.2
  */
 class JLogLoggerCallback extends JLogLogger
 {
@@ -31,7 +33,6 @@ class JLogLoggerCallback extends JLogLogger
 	 * @param   array  &$options  Log object options.
 	 *
 	 * @since   12.2
-	 * @throws  RuntimeException
 	 */
 	public function __construct(array &$options)
 	{
@@ -39,12 +40,14 @@ class JLogLoggerCallback extends JLogLogger
 		parent::__construct($options);
 
 		// Throw an exception if there is not a valid callback
-		if (!isset($this->options['callback']) || !is_callable($this->options['callback']))
+		if (isset($this->options['callback']) && is_callable($this->options['callback']))
 		{
-			throw new RuntimeException('JLogLoggerCallback created without valid callback function.');
+			$this->callback = $this->options['callback'];
 		}
-
-		$this->callback = $this->options['callback'];
+		else
+		{
+			throw new JLogException(JText::_('JLogLoggerCallback created without valid callback function.'));
+		}
 	}
 
 	/**

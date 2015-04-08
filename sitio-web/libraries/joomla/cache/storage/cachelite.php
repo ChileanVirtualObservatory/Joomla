@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Cache
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,8 +12,10 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Cache lite storage handler
  *
- * @see    http://pear.php.net/package/Cache_Lite/
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Cache
+ * @see         http://pear.php.net/package/Cache_Lite/
+ * @since       11.1
  */
 class JCacheStorageCachelite extends JCacheStorage
 {
@@ -74,10 +76,7 @@ class JCacheStorageCachelite extends JCacheStorage
 	 */
 	protected function initCache($cloptions)
 	{
-		if (!class_exists('Cache_Lite'))
-		{
-			require_once 'Cache/Lite.php';
-		}
+		require_once 'Cache/Lite.php';
 
 		self::$CacheLiteInstance = new Cache_Lite($cloptions);
 
@@ -329,6 +328,13 @@ class JCacheStorageCachelite extends JCacheStorage
 	{
 		@include_once 'Cache/Lite.php';
 
-		return class_exists('Cache_Lite');
+		if (class_exists('Cache_Lite'))
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }

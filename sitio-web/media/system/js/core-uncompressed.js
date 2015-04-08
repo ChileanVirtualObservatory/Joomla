@@ -1,5 +1,5 @@
 /**
- * @copyright  Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright  Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license    GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -27,10 +27,7 @@ Joomla.submitform = function(task, form) {
         form.onsubmit();
     }
     if (typeof form.fireEvent == "function") {
-        form.fireEvent('onsubmit');
-    }
-    if (typeof jQuery == "function") {
-        jQuery(form).submit();
+        form.fireEvent('submit');
     }
     form.submit();
 };
@@ -121,49 +118,36 @@ Joomla.checkAll = function(checkbox, stub) {
 /**
  * Render messages send via JSON
  *
- * @param   object  messages    JavaScript object containing the messages to render. Example:
- *                              var messages = {
- *                              	"message": ["Message one", "Message two"],
- *                              	"error": ["Error one", "Error two"]
- *                              };
+ * @param   object  messages    JavaScript object containing the messages to render
  * @return  void
  */
 Joomla.renderMessages = function(messages) {
-	Joomla.removeMessages();
+    var $ = jQuery.noConflict(), $container, $div, $h4, $divList, $p;
+    Joomla.removeMessages();
+    $container = $('#system-message-container');
 
-	var messageContainer = document.getElementById('system-message-container');
+    $.each(messages, function(type, item) {
+        $div = $('<div/>', {
+            'id' : 'system-message',
+            'class' : 'alert alert-' + type
+        });
+        $container.append($div)
 
-	for (var type in messages) {
-		if (messages.hasOwnProperty(type)) {
-			// Array of messages of this type
-			var typeMessages = messages[type];
+        $h4 = $('<h4/>', {
+            'class' : 'alert-heading',
+            'text' : Joomla.JText._(type)
+        });
+        $div.append($h4);
 
-			// Create the alert box
-			var messagesBox = document.createElement('div');
-			messagesBox.className = 'alert alert-' + type;
-
-			// Title
-			var title = Joomla.JText._(type);
-
-			// Skip titles with untranslated strings
-			if (typeof title != 'undefined') {
-				var titleWrapper = document.createElement('h4');
-				titleWrapper.className = 'alert-heading';
-				titleWrapper.innerHTML = Joomla.JText._(type);
-
-				messagesBox.appendChild(titleWrapper)
-			}
-
-			// Add messages to the message box
-			for (var i = typeMessages.length - 1; i >= 0; i--) {
-				var messageWrapper = document.createElement('p');
-				messageWrapper.innerHTML = typeMessages[i];
-				messagesBox.appendChild(messageWrapper);
-			};
-
-			messageContainer.appendChild(messagesBox);
-		}
-	}
+        $divList = $('<div/>');
+        $.each(item, function(index, item) {
+            $p = $('<p/>', {
+                html : item
+            });
+            $divList.append($p);
+        });
+        $div.append($divList);
+    });
 };
 
 
@@ -173,15 +157,7 @@ Joomla.renderMessages = function(messages) {
  * @return  void
  */
 Joomla.removeMessages = function() {
-	var messageContainer = document.getElementById('system-message-container');
-
-	// Empty container with a while for Chrome performance issues
-	while (messageContainer.firstChild) messageContainer.removeChild(messageContainer.firstChild);
-
-	// Fix Chrome bug not updating element height
-	messageContainer.style.display='none';
-	messageContainer.offsetHeight;
-	messageContainer.style.display='';
+    jQuery('#system-message-container').empty();
 }
 
 /**
@@ -428,7 +404,7 @@ function submitform(pressbutton) {
         document.adminForm.onsubmit();
     }
     if (typeof document.adminForm.fireEvent == "function") {
-        document.adminForm.fireEvent('onsubmit');
+        document.adminForm.fireEvent('submit');
     }
     document.adminForm.submit();
 }

@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_plugins
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * View to edit a plugin.
  *
- * @since  1.5
+ * @package     Joomla.Administrator
+ * @subpackage  com_plugins
+ * @since       1.5
  */
 class PluginsViewPlugin extends JViewLegacy
 {
@@ -23,11 +25,7 @@ class PluginsViewPlugin extends JViewLegacy
 	protected $state;
 
 	/**
-	 * Display the view.
-	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  mixed  A string if successful, otherwise a Error object.
+	 * Display the view
 	 */
 	public function display($tpl = null)
 	{
@@ -39,7 +37,6 @@ class PluginsViewPlugin extends JViewLegacy
 		if (count($errors = $this->get('Errors')))
 		{
 			JError::raiseError(500, implode("\n", $errors));
-
 			return false;
 		}
 
@@ -49,8 +46,6 @@ class PluginsViewPlugin extends JViewLegacy
 
 	/**
 	 * Add the page title and toolbar.
-	 *
-	 * @return  void
 	 *
 	 * @since   1.6
 	 */
@@ -68,15 +63,13 @@ class PluginsViewPlugin extends JViewLegacy
 			JToolbarHelper::apply('plugin.apply');
 			JToolbarHelper::save('plugin.save');
 		}
-
 		JToolbarHelper::cancel('plugin.cancel', 'JTOOLBAR_CLOSE');
 		JToolbarHelper::divider();
-
 		// Get the help information for the plugin item.
+
 		$lang = JFactory::getLanguage();
 
 		$help = $this->get('Help');
-
 		if ($lang->hasKey($help->url))
 		{
 			$debug = $lang->setDebug(false);
@@ -87,7 +80,6 @@ class PluginsViewPlugin extends JViewLegacy
 		{
 			$url = null;
 		}
-
 		JToolbarHelper::help($help->key, false, $url);
 	}
 }

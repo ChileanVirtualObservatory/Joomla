@@ -3,7 +3,7 @@
  * @package     Joomla.Libraries
  * @subpackage  Pathway
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -14,7 +14,9 @@ defined('JPATH_PLATFORM') or die;
  *
  * The user's navigated path within the application.
  *
- * @since  1.5
+ * @package     Joomla.Libraries
+ * @subpackage  Pathway
+ * @since       1.5
  */
 class JPathway
 {

@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Facebook
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -14,8 +14,11 @@ defined('JPATH_PLATFORM') or die();
 /**
  * Facebook API Status class for the Joomla Platform.
  *
- * @see    http://developers.facebook.com/docs/reference/api/status/
- * @since  13.1
+ * @package     Joomla.Platform
+ * @subpackage  Facebook
+ *
+ * @see         http://developers.facebook.com/docs/reference/api/status/
+ * @since       13.1
  */
 class JFacebookStatus extends JFacebookObject
 {
@@ -128,4 +131,5 @@ class JFacebookStatus extends JFacebookObject
 	{
 		return $this->deleteConnection($status, 'likes');
 	}
+
 }

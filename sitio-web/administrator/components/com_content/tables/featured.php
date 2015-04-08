@@ -3,25 +3,20 @@
  * @package     Joomla.Administrator
  * @subpackage  com_content
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
 /**
- * Featured Table class.
- *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_content
  */
 class ContentTableFeatured extends JTable
 {
 	/**
-	 * Constructor
-	 *
-	 * @param   JDatabaseDriver  &$db  Database connector object
-	 *
-	 * @since   1.6
+	 * @param   JDatabaseDriver  A database connector object
 	 */
 	public function __construct(&$db)
 	{

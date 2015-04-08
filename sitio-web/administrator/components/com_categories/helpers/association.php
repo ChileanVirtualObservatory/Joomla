@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  com_categories
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -14,7 +14,9 @@ JLoader::register('CategoriesHelper', JPATH_ADMINISTRATOR . '/components/com_cat
 /**
  * Category Component Association Helper
  *
- * @since  3.0
+ * @package     Joomla.Site
+ * @subpackage  com_categories
+ * @since       3.0
  */
 abstract class CategoryHelperAssociation
 {

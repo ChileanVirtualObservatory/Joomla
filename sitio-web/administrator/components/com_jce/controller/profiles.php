@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -89,6 +89,22 @@ class WFControllerProfiles extends WFController {
         $msg = JText::sprintf('WF_PROFILES_COPIED', $n);
         $this->setRedirect('index.php?option=com_jce&view=profiles', $msg);
     }
+    /*
+     * http://www.php.net/manual/en/function.array-merge-recursive.php#92195
+     */
+    private static function array_merge_recursive_distinct(array &$array1, array &$array2) {
+        $merged = $array1;
+
+        foreach ($array2 as $key => &$value) {
+            if (is_array($value) && isset($merged [$key]) && is_array($merged [$key])) {
+                $merged [$key] = self::array_merge_recursive_distinct($merged [$key], $value);
+            } else {
+                $merged [$key] = $value;
+            }
+        }
+
+        return $merged;
+    }
 
     public function save() {
         // Check for request forgeries
@@ -124,12 +140,12 @@ class WFControllerProfiles extends WFController {
                 case 'components':
                 case 'device':
                     $value = array_filter($value);
-
+                    
                     $value = implode(',', $this->cleanInput($value));
                     break;
                 case 'usergroups':
-                    $key = 'types';
-                    $value = implode(',', $this->cleanInput($value, 'int'));
+                    $key    = 'types';
+                    $value  = implode(',', $this->cleanInput($value, 'int'));
                     break;
                 case 'users':
                     $value = implode(',', $this->cleanInput($value, 'int'));
@@ -152,17 +168,17 @@ class WFControllerProfiles extends WFController {
                     // get params
                     $params = isset($row->params) ? $row->params : '';
                     // convert params to json data array
-                    $data = (array) json_decode($params, true);
-
+                    $data   = (array) json_decode($params, true);
+                    
                     // assign editor data
                     if (array_key_exists('editor', $value)) {
                         $json['editor'] = $value['editor'];
                     }
-
+                    
                     // get plugins
                     $plugins = explode(',', $row->plugins);
-
-                    // assign plugin data
+                    
+                    // addigne plugin data
                     foreach ($plugins as $plugin) {
                         // add plugin params to array
                         if (array_key_exists($plugin, $value)) {
@@ -170,8 +186,11 @@ class WFControllerProfiles extends WFController {
                         }
                     }
 
+                    // clean data
+                    $json = $this->cleanInput($json);
+
                     // combine and encode as json string
-                    $value = json_encode(WFParameter::mergeParams($data, $json, false));
+                    $value = json_encode(self::array_merge_recursive_distinct($data, $json));
 
                     break;
             }
@@ -310,8 +329,6 @@ class WFControllerProfiles extends WFController {
     }
 
     public function export() {
-        wfimport('admin.helpers.encrypt');
-
         $mainframe = JFactory::getApplication();
         $db = JFactory::getDBO();
         $tmp = $mainframe->getCfg('tmp_path');
@@ -329,13 +346,10 @@ class WFControllerProfiles extends WFController {
 
         $cids = implode(',', $cid);
 
-        $query = $db->getQuery(true);
-        // check for name
-        if (is_object($query)) {
-            $query->select('*')->from('#__wf_profiles')->where('id IN (' . $cids . ')');
-        } else {
-            $query = 'SELECT * FROM #__wf_profiles WHERE id IN (' . $cids . ')';
-        }
+        // get froup data
+        $query = 'SELECT * FROM #__wf_profiles'
+                . ' WHERE id IN (' . $cids . ')'
+        ;
 
         $db->setQuery($query);
         $profiles = $db->loadObjectList();
@@ -355,24 +369,13 @@ class WFControllerProfiles extends WFController {
                 if ($key == 'params') {
                     $buffer .= "\n\t\t\t" . '<' . $key . '>';
                     if ($value) {
-                        // decrypt if necessary
-                        $value = WFEncryptHelper::decrypt($value);
-
-                        // check is valid json
-                        $valid = json_decode($value, false);
-
-                        // json is valid
-                        if (is_null($valid) === false) {
-                            // create array
-                            $params = explode("\n", $value);
-
-                            foreach ($params as $param) {
-                                if ($param !== '') {
-                                    $buffer .= "\n\t\t\t\t" . '<param>' . $param . '</param>';
-                                }
+                        $params = explode("\n", $value);
+                        foreach ($params as $param) {
+                            if ($param !== '') {
+                                $buffer .= "\n\t\t\t\t" . '<param>' . $param . '</param>';
                             }
-                            $buffer .= "\n\t\t\t\t";
                         }
+                        $buffer .= "\n\t\t\t\t";
                     }
                     $buffer .= '</' . $key . '>';
                 } else {
@@ -431,14 +434,11 @@ class WFControllerProfiles extends WFController {
             if (is_uploaded_file($file['tmp_name']) && $file['name']) {
                 // create destination path
                 $destination = $tmp . '/' . $file['name'];
-                
                 if (JFile::upload($file['tmp_name'], $destination)) {
                     // check it exists, was uploaded properly
                     if (JFile::exists($destination)) {
                         // process import
-                        if ($model->processImport($destination) === false) {
-                            JFile::delete($destination);
-                        }
+                        $model->processImport($destination);
                     } else {
                         $app->enqueueMessage(WFText::_('WF_PROFILES_UPLOAD_FAILED'), 'error');
                     }

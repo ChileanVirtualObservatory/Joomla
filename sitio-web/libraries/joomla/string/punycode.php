@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  String
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -18,7 +18,9 @@ JLoader::register('idna_convert', JPATH_ROOT . '/libraries/idna_convert/idna_con
  * Wraps the Punycode library
  * All functions assume the validity of utf-8 URLs.
  *
- * @since  3.1.2
+ * @package     Joomla.Platform
+ * @subpackage  String
+ * @since       3.1.2
  */
 abstract class JStringPunycode
 {
@@ -52,6 +54,7 @@ abstract class JStringPunycode
 		$idn = new idna_convert;
 
 		return $idn->decode($punycodeString);
+
 	}
 
 	/**
@@ -70,7 +73,7 @@ abstract class JStringPunycode
 		if (!isset($parsed['host']) || $parsed['host'] == '')
 		{
 			// If there is no host we do not need to convert it.
-			return $uri;
+			return '';
 		}
 
 		$host = $parsed['host'];

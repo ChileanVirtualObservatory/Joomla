@@ -3,18 +3,18 @@
  * @package     Joomla.Administrator
  * @subpackage  com_admin
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * Model for the display of system information.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_admin
+ * @since       1.6
  */
 class AdminModelSysInfo extends JModelLegacy
 {
@@ -102,7 +102,7 @@ class AdminModelSysInfo extends JModelLegacy
 	{
 		if (is_null($this->config))
 		{
-			$registry = new Registry(new JConfig);
+			$registry = new JRegistry(new JConfig);
 			$this->config = $registry->toArray();
 			$hidden = array('host', 'user', 'password', 'ftp_user', 'ftp_pass', 'smtpuser', 'smtppass');
 
@@ -127,9 +127,9 @@ class AdminModelSysInfo extends JModelLegacy
 		if (is_null($this->info))
 		{
 			$this->info = array();
-			$version    = new JVersion;
-			$platform   = new JPlatform;
-			$db         = JFactory::getDbo();
+			$version = new JVersion;
+			$platform = new JPlatform;
+			$db = JFactory::getDbo();
 
 			if (isset($_SERVER['SERVER_SOFTWARE']))
 			{
@@ -155,20 +155,6 @@ class AdminModelSysInfo extends JModelLegacy
 	}
 
 	/**
-	 * Method to get if phpinfo method is enabled from php.ini
-	 *
-	 * @return  boolean True if enabled
-	 *
-	 * @since  3.4.1
-	 */
-	public function phpinfoEnabled()
-	{
-		$disabled = explode(',', ini_get('disable_functions'));
-
-		return !in_array('phpinfo', $disabled);
-	}
-
-	/**
 	 * Method to get the PHP info
 	 *
 	 * @return  string PHP info
@@ -177,7 +163,7 @@ class AdminModelSysInfo extends JModelLegacy
 	 */
 	public function &getPHPInfo()
 	{
-		if (is_null($this->php_info) && $this->phpinfoEnabled())
+		if (is_null($this->php_info))
 		{
 			ob_start();
 			date_default_timezone_set('UTC');
@@ -193,10 +179,6 @@ class AdminModelSysInfo extends JModelLegacy
 			$output = str_replace('</table>', '</tbody></table>', $output);
 			$output = str_replace('</div>', '', $output);
 			$this->php_info = $output;
-		}
-		else
-		{
-			$this->php_info = JText::_('COM_ADMIN_PHPINFO_DISABLED');
 		}
 
 		return $this->php_info;
@@ -345,7 +327,8 @@ class AdminModelSysInfo extends JModelLegacy
 	{
 		if (is_null($this->editor))
 		{
-			$this->editor = JFactory::getConfig()->get('editor');
+			$config = JFactory::getConfig();
+			$this->editor = $config->get('editor');
 		}
 
 		return $this->editor;

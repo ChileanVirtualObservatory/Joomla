@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_users
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,18 +12,20 @@ defined('_JEXEC') or die;
 /**
  * Users mail model.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_users
+ * @since       1.6
  */
 class UsersModelMail extends JModelAdmin
 {
 	/**
 	 * Method to get the row form.
 	 *
-	 * @param   array    $data      An optional array of data for the form to interogate.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
+	 * @param   array  $data		An optional array of data for the form to interogate.
+	 * @param   boolean	$loadData	True if the form is to load its own data (default case), false if not.
+	 * 
 	 * @return  JForm	A JForm object on success, false on failure
-	 *
+	 * 
 	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
@@ -43,7 +45,7 @@ class UsersModelMail extends JModelAdmin
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return  mixed  The data for the form.
-	 *
+	 * 
 	 * @since   1.6
 	 */
 	protected function loadFormData()
@@ -57,27 +59,20 @@ class UsersModelMail extends JModelAdmin
 	}
 
 	/**
-	 * Method to preprocess the form
+	 * Override preprocessForm to load the user plugin group instead of content.
 	 *
-	 * @param   JForm   $form   A form object.
-	 * @param   mixed   $data   The data expected for the form.
-	 * @param   string  $group  The name of the plugin group to import (defaults to "content").
-	 *
-	 * @return  void
-	 *
+	 * @param   object	A form object.
+	 * @param   mixed	The data expected for the form.
+	 * 
+	 * @throws	Exception if there is an error in the form event.
+	 * 
 	 * @since   1.6
-	 * @throws  Exception if there is an error loading the form.
 	 */
 	protected function preprocessForm(JForm $form, $data, $group = 'user')
 	{
 		parent::preprocessForm($form, $data, $group);
 	}
 
-	/**
-	 * Send the email
-	 *
-	 * @return  boolean
-	 */
 	public function send()
 	{
 		$app    = JFactory::getApplication();
@@ -94,7 +89,7 @@ class UsersModelMail extends JModelAdmin
 		$disabled     = array_key_exists('disabled', $data) ? (int) $data['disabled'] : 0;
 		$message_body = array_key_exists('message', $data) ? $data['message'] : '';
 
-		// Automatically removes html formatting
+		// automatically removes html formatting
 		if (!$mode)
 		{
 			$message_body = JFilterInput::getInstance()->clean($message_body, 'string');
@@ -109,14 +104,14 @@ class UsersModelMail extends JModelAdmin
 			return false;
 		}
 
-		// Get users in the group out of the ACL
+		// get users in the group out of the acl
 		$to = $access->getUsersByGroup($grp, $recurse);
 
 		// Get all users email and group except for senders
 		$query	= $db->getQuery(true)
 			->select('email')
 			->from('#__users')
-			->where('id != ' . (int) $user->get('id'));
+			->where('id != '.(int) $user->get('id'));
 
 		if ($grp !== 0)
 		{
@@ -196,11 +191,9 @@ class UsersModelMail extends JModelAdmin
 		}
 		else
 		{
-			/**
-			 * Fill the data (specially for the 'mode', 'group' and 'bcc': they could not exist in the array
-			 * when the box is not checked and in this case, the default value would be used instead of the '0'
-			 * one)
-			 */
+			// Fill the data (specially for the 'mode', 'group' and 'bcc': they could not exist in the array
+			// when the box is not checked and in this case, the default value would be used instead of the '0'
+			// one)
 			$data['mode']    = $mode;
 			$data['subject'] = $subject;
 			$data['group']   = $grp;

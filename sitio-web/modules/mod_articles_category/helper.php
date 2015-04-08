@@ -3,13 +3,14 @@
  * @package     Joomla.Site
  * @subpackage  mod_articles_category
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
 $com_path = JPATH_SITE . '/components/com_content/';
+require_once $com_path . 'router.php';
 require_once $com_path . 'helpers/route.php';
 
 JModelLegacy::addIncludePath($com_path . '/models', 'ContentModel');
@@ -27,7 +28,7 @@ abstract class ModArticlesCategoryHelper
 	/**
 	 * Get a list of articles from a specific category
 	 *
-	 * @param   \Joomla\Registry\Registry  &$params  object holding the models parameters
+	 * @param   JRegistry  &$params  object holding the models parameters
 	 *
 	 * @return  mixed
 	 *
@@ -226,12 +227,12 @@ abstract class ModArticlesCategoryHelper
 		foreach ($items as &$item)
 		{
 			$item->slug    = $item->id . ':' . $item->alias;
-			$item->catslug = $item->catid . ':' . $item->category_alias;
+			$item->catslug = $item->catid ? $item->catid . ':' . $item->category_alias : $item->catid;
 
 			if ($access || in_array($item->access, $authorised))
 			{
 				// We know that user has the privilege to view the article
-				$item->link = JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catid, $item->language));
+				$item->link = JRoute::_(ContentHelperRoute::getArticleRoute($item->slug, $item->catslug));
 			}
 			else
 			{

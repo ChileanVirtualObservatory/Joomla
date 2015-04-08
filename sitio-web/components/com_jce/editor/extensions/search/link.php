@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -41,6 +41,16 @@ class WFLinkSearchExtension extends WFSearchExtension {
                 JPluginHelper::importPlugin('search', $plugin);
             }
         }
+    }
+
+    public function getInstance() {
+        static $instance;
+
+        if (!isset($instance)) {
+            $instance = new WFSearchExtension();
+        }
+
+        return $instance;
     }
 
     public function display() {
@@ -123,27 +133,16 @@ class WFLinkSearchExtension extends WFSearchExtension {
      * @copyright Copyright (C) 2005 - 2012 Open Source Matters, Inc. All rights reserved.
      */
     public function doSearch($query) {
-        $wf     = WFEditorPlugin::getInstance();
+        $wf = WFEditorPlugin::getInstance();
         $filter = JFilterInput::getInstance();
-        
-        if (!class_exists('JSite')) {
-            // Load JSite class
-            JLoader::register('JSite', JPATH_SITE . '/includes/application.php');
-        }
 
-        $app    = JApplication::getInstance('site');
-        $router = $app->getRouter('site');
-        
+        $app = JFactory::getApplication('site');
         // get SearchHelper
         require_once(JPATH_ADMINISTRATOR . '/components/com_search/helpers/search.php');
 
-        // get router mode
-        $sef = (int) $wf->getParam('search.link.sef_url', 0);
-        
-        // set router off so a raw url is returned by the Search plugin
-        if ($router) {
-            $router->setMode(0);
-        }
+        // set router mode to RAW
+        $router = $app->getRouter();
+        $router->setMode(0);
 
         // slashes cause errors, <> get stripped anyway later on. # causes problems.
         $searchword = trim(str_replace(array('#', '>', '<', '\\'), '', $filter->clean($query)));
@@ -163,6 +162,11 @@ class WFLinkSearchExtension extends WFSearchExtension {
             foreach ($areas as $area) {
                 $areas[] = $filter->clean($area, 'cmd');
             }
+        }
+
+        if (!class_exists('JSite')) {
+            // Load JSite class
+            JLoader::register('JSite', JPATH_SITE . '/includes/application.php');
         }
 
         $event = WF_JOOMLA15 ? 'onSearch' : 'onContentSearch';
@@ -226,22 +230,10 @@ class WFLinkSearchExtension extends WFSearchExtension {
             if (strpos($row->href, JURI::base(true)) !== false) {
                 $row->href = substr_replace($row->href, '', 0, strlen(JURI::base(true)) + 1);
             }
-            
-            // convert to SEF
-            if ($router && $sef) {
-                $router->setMode(1);
-                
-                $url        = str_replace('&amp;', '&', $row->href);
-                
-                $uri        = $router->build($url);
-                $url        = $uri->toString();
-                
-                $row->href  = str_replace('/administrator/', '/', $url);
-            }
 
-            $result->title  = $row->title;
-            $result->text   = $row->text;
-            $result->link   = $row->href;
+            $result->title = $row->title;
+            $result->text = $row->text;
+            $result->link = $row->href;
 
             $results[] = $result;
         }

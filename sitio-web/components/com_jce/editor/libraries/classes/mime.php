@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -51,7 +51,7 @@ abstract class WFMimeType {
         'application/octet-stream' => 'bin dms lha lrf lzh so iso dmg dist distz pkg bpk dump elc deploy',
         'application/oda' => 'oda',
         'application/oebps-package+xml' => 'opf',
-        'application/ogg' => 'ogx ogg ogv oga',
+        'application/ogg' => 'ogx',
         'application/onenote' => 'onetoc onetoc2 onetmp onepkg',
         'application/patch-ops-error+xml' => 'xer',
         'application/pdf' => 'pdf',
@@ -627,7 +627,7 @@ abstract class WFMimeType {
         'video/mj2' => 'mj2 mjp2',
         'video/mp4' => 'mp4 mp4v mpg4',
         'video/mpeg' => 'mpeg mpg mpe m1v m2v',
-        'video/ogg' => 'ogg ogv',
+        'video/ogg' => 'ogv',
         'video/quicktime' => 'qt mov',
         'video/vnd.fvt' => 'fvt',
         'video/vnd.mpegurl' => 'mxu m4u',
@@ -683,27 +683,31 @@ abstract class WFMimeType {
      */
     public function check($name, $path) {
         $extension = strtolower(substr($name, strrpos($name, '.') + 1));
-        $mimetype = null;
 
         if (function_exists('finfo_open')) {
-            if (!$finfo = new finfo(FILEINFO_MIME_TYPE)) {
-                return true;
+            if ($finfo = @finfo_open(FILEINFO_MIME_TYPE)) {
+                if ($mimetype = @finfo_file($finfo, $path)) {
+                    @finfo_close($finfo);
+
+                    $mime = self::getMime($mimetype);
+
+                    if ($mime) {                        
+                        return in_array($extension, $mime);
+                    }
+                }
             }
-            $mimetype = $finfo->file($path);
         } else if (function_exists('mime_content_type')) {
-            $mimetype = @mime_content_type($path);
-        }
+            if ($mimetype = @mime_content_type($path)) {
 
-        if ($mimetype) {
+                $mime = self::getMime($mimetype);
 
-            $mime = self::getMime($mimetype);
-
-            if ($mime) {
-                return in_array($extension, $mime);
+                if ($mime) {
+                    return in_array($extension, $mime);
+                }
             }
         }
-
         // server doesn't support mime type check, let it through...
         return true;
     }
+
 }

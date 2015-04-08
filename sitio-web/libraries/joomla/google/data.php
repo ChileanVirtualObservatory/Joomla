@@ -3,23 +3,23 @@
  * @package     Joomla.Platform
  * @subpackage  Google
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * Google API data class for the Joomla Platform.
  *
- * @since  12.3
+ * @package     Joomla.Platform
+ * @subpackage  Google
+ * @since       12.3
  */
 abstract class JGoogleData
 {
 	/**
-	 * @var    Registry  Options for the Google data object.
+	 * @var    JRegistry  Options for the Google data object.
 	 * @since  12.3
 	 */
 	protected $options;
@@ -33,14 +33,14 @@ abstract class JGoogleData
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry     $options  Google options object.
+	 * @param   JRegistry    $options  Google options object.
 	 * @param   JGoogleAuth  $auth     Google data http client object.
 	 *
 	 * @since   12.3
 	 */
-	public function __construct(Registry $options = null, JGoogleAuth $auth = null)
+	public function __construct(JRegistry $options = null, JGoogleAuth $auth = null)
 	{
-		$this->options = isset($options) ? $options : new Registry;
+		$this->options = isset($options) ? $options : new JRegistry;
 		$this->auth = isset($auth) ? $auth : new JGoogleAuthOauth2($this->options);
 	}
 
@@ -114,7 +114,6 @@ abstract class JGoogleData
 		{
 			$qurl .= 'pageToken=' . $token;
 		}
-
 		$jdata = $this->query($qurl);
 		$data = json_decode($jdata->body, true);
 
@@ -124,7 +123,6 @@ abstract class JGoogleData
 			{
 				$data['items'] = array_merge($data['items'], $this->listGetData($url, $maxpages - 1, $data['nextPageToken']));
 			}
-
 			return $data['items'];
 		}
 		elseif ($data)

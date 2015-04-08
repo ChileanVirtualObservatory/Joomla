@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: default.php 4 2014-05-07 18:42:25Z szymon $
+ * @version $Id: default.php 4 2013-01-14 12:43:35Z szymon $
  * @package DJ-Menu
  * @copyright Copyright (C) 2012 DJ-Extensions.com LTD, All rights reserved.
  * @license http://www.gnu.org/licenses GNU/GPL

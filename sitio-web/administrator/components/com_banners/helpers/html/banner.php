@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_banners
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_BASE') or die;
 /**
  * Banner HTML class.
  *
- * @since  2.5
+ * @package     Joomla.Administrator
+ * @subpackage  com_banners
+ * @since       2.5
  */
 abstract class JHtmlBanner
 {
@@ -29,9 +31,7 @@ abstract class JHtmlBanner
 
 		// Create the batch selector to change the client on a selection list.
 		$lines = array(
-			'<label id="batch-client-lbl" for="batch-client" class="hasTooltip" title="'
-				. JHtml::tooltipText('COM_BANNERS_BATCH_CLIENT_LABEL', 'COM_BANNERS_BATCH_CLIENT_LABEL_DESC')
-				. '">',
+			'<label id="batch-client-lbl" for="batch-client" class="hasTooltip" title="' . JHtml::tooltipText('COM_BANNERS_BATCH_CLIENT_LABEL', 'COM_BANNERS_BATCH_CLIENT_LABEL_DESC') . '">',
 			JText::_('COM_BANNERS_BATCH_CLIENT_LABEL'),
 			'</label>',
 			'<select name="batch[client_id]" id="batch-client-id">',

@@ -3,22 +3,23 @@
  * @package     Joomla.Libraries
  * @subpackage  Installer
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
-use Joomla\Registry\Registry;
-
+jimport('joomla.base.adapterinstance');
 jimport('joomla.filesystem.folder');
 
 /**
  * Language installer
  *
- * @since  3.1
+ * @package     Joomla.Libraries
+ * @subpackage  Installer
+ * @since       3.1
  */
-class JInstallerAdapterLanguage extends JInstallerAdapter
+class JInstallerAdapterLanguage extends JAdapterInstance
 {
 	/**
 	 * Core language pack flag
@@ -27,44 +28,6 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 	 * @since  12.1
 	 */
 	protected $core = false;
-
-	/**
-	 * Method to copy the extension's base files from the <files> tag(s) and the manifest file
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 * @throws  RuntimeException
-	 */
-	protected function copyBaseFiles()
-	{
-		// TODO - Refactor adapter to use common code
-	}
-
-	/**
-	 * Method to do any prechecks and setup the install paths for the extension
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	protected function setupInstallPaths()
-	{
-		// TODO - Refactor adapter to use common code
-	}
-
-	/**
-	 * Method to store the extension to the database
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 * @throws  RuntimeException
-	 */
-	protected function storeExtension()
-	{
-		// TODO - Refactor adapter to use common code
-	}
 
 	/**
 	 * Custom install method
@@ -90,10 +53,10 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 			);
 		}
 
-		$this->setManifest($this->parent->getManifest());
+		$this->manifest = $this->parent->getManifest();
 
 		// Get the client application target
-		if ($cname = (string) $this->getManifest()->attributes()->client)
+		if ($cname = (string) $this->manifest->attributes()->client)
 		{
 			// Attempt to map the client to a base path
 			$client = JApplicationHelper::getClientInfo($cname, true);
@@ -107,7 +70,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
 			$basePath = $client->path;
 			$clientId = $client->id;
-			$element = $this->getManifest()->files;
+			$element = $this->manifest->files;
 
 			return $this->_install($cname, $basePath, $clientId, $element);
 		}
@@ -117,7 +80,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 			$cname = 'site';
 			$basePath = JPATH_SITE;
 			$clientId = 0;
-			$element = $this->getManifest()->files;
+			$element = $this->manifest->files;
 
 			return $this->_install($cname, $basePath, $clientId, $element);
 		}
@@ -137,15 +100,15 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 	 */
 	protected function _install($cname, $basePath, $clientId, &$element)
 	{
-		$this->setManifest($this->parent->getManifest());
+		$this->manifest = $this->parent->getManifest();
 
 		// Get the language name
 		// Set the extensions name
-		$name = JFilterInput::getInstance()->clean((string) $this->getManifest()->name, 'cmd');
+		$name = JFilterInput::getInstance()->clean((string) $this->manifest->name, 'cmd');
 		$this->set('name', $name);
 
 		// Get the Language tag [ISO tag, eg. en-GB]
-		$tag = (string) $this->getManifest()->tag;
+		$tag = (string) $this->manifest->tag;
 
 		// Check if we found the tag - if we didn't, we may be trying to install from an older language package
 		if (!$tag)
@@ -196,7 +159,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 		else
 		{
 			// Look for an update function or update tag
-			$updateElement = $this->getManifest()->update;
+			$updateElement = $this->manifest->update;
 
 			// Upgrade manually set or update tag detected
 			if ($this->parent->isUpgrade() || $updateElement)
@@ -249,13 +212,13 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 		}
 
 		// Parse optional tags
-		$this->parent->parseMedia($this->getManifest()->media);
+		$this->parent->parseMedia($this->manifest->media);
 
 		// Copy all the necessary font files to the common pdf_fonts directory
 		$this->parent->setPath('extension_site', $basePath . '/language/pdf_fonts');
 		$overwrite = $this->parent->setOverwrite(true);
 
-		if ($this->parent->parseFiles($this->getManifest()->fonts) === false)
+		if ($this->parent->parseFiles($this->manifest->fonts) === false)
 		{
 			// Install failed, rollback changes
 			$this->parent->abort();
@@ -266,7 +229,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 		$this->parent->setOverwrite($overwrite);
 
 		// Get the language description
-		$description = (string) $this->getManifest()->description;
+		$description = (string) $this->manifest->description;
 
 		if ($description)
 		{
@@ -302,7 +265,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
 		// Clobber any possible pending updates
 		$update = JTable::getInstance('update');
-		$uid = $update->find(array('element' => $this->get('tag'), 'type' => 'language', 'folder' => ''));
+		$uid = $update->find(array('element' => $this->get('tag'), 'type' => 'language', 'client_id' => '', 'folder' => ''));
 
 		if ($uid)
 		{
@@ -323,7 +286,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 	{
 		$xml = $this->parent->getManifest();
 
-		$this->setManifest($xml);
+		$this->manifest = $xml;
 
 		$cname = $xml->attributes()->client;
 
@@ -342,7 +305,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
 		// Get the language name
 		// Set the extensions name
-		$name = (string) $this->getManifest()->name;
+		$name = (string) $this->manifest->name;
 		$name = JFilterInput::getInstance()->clean($name, 'cmd');
 		$this->set('name', $name);
 
@@ -512,8 +475,8 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
 		// We do findManifest to avoid problem when uninstalling a list of extension: getManifest cache its manifest file
 		$this->parent->findManifest();
-		$this->setManifest($this->parent->getManifest());
-		$this->parent->removeFiles($this->getManifest()->media);
+		$this->manifest = $this->parent->getManifest();
+		$this->parent->removeFiles($this->manifest->media);
 
 		// Check it exists
 		if (!JFolder::exists($path))
@@ -557,7 +520,7 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 
 		foreach ($users as $user)
 		{
-			$registry = new Registry;
+			$registry = new JRegistry;
 			$registry->loadString($user->params);
 
 			if ($registry->get($param_name) == $element)
@@ -706,6 +669,8 @@ class JInstallerAdapterLanguage extends JInstallerAdapter
 /**
  * Deprecated class placeholder. You should use JInstallerAdapterLanguage instead.
  *
+ * @package     Joomla.Libraries
+ * @subpackage  Installer
  * @since       3.1
  * @deprecated  4.0
  * @codeCoverageIgnore

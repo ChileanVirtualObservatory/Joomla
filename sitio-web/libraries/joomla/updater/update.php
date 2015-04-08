@@ -3,17 +3,18 @@
  * @package     Joomla.Platform
  * @subpackage  Updater
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
 /**
- * Update class. It is used by JUpdater::update() to install an update. Use JUpdater::findUpdates() to find updates for
- * an extension.
+ * Update class.
  *
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Updater
+ * @since       11.1
  */
 class JUpdate extends JObject
 {
@@ -186,21 +187,6 @@ class JUpdate extends JObject
 	protected $latest;
 
 	/**
-	 * The minimum stability required for updates to be taken into account. The possible values are:
-	 * 0	dev			Development snapshots, nightly builds, pre-release versions and so on
-	 * 1	alpha		Alpha versions (work in progress, things are likely to be broken)
-	 * 2	beta		Beta versions (major functionality in place, show-stopper bugs are likely to be present)
-	 * 3	rc			Release Candidate versions (almost stable, minor bugs might be present)
-	 * 4	stable		Stable versions (production quality code)
-	 *
-	 * @var    int
-	 * @since  14.1
-	 *
-	 * @see    JUpdater
-	 */
-	protected $minimum_stability = JUpdater::STABILITY_STABLE;
-
-	/**
 	 * Gets the reference to the current direct parent
 	 *
 	 * @return  object
@@ -266,7 +252,6 @@ class JUpdate extends JObject
 				{
 					$this->currentUpdate->$name = new stdClass;
 				}
-
 				$this->currentUpdate->$name->_data = '';
 
 				foreach ($attrs as $key => $data)
@@ -292,7 +277,6 @@ class JUpdate extends JObject
 	public function _endElement($parser, $name)
 	{
 		array_pop($this->stack);
-
 		switch ($name)
 		{
 			// Closing update, find the latest version and check
@@ -317,15 +301,7 @@ class JUpdate extends JObject
 						$phpMatch = false;
 					}
 
-					// Check minimum stability
-					$stabilityMatch = true;
-
-					if (isset($this->currentUpdate->stability) && ($this->currentUpdate->stability < $this->minimum_stability))
-					{
-						$stabilityMatch = false;
-					}
-
-					if ($phpMatch && $stabilityMatch)
+					if ($phpMatch)
 					{
 						if (isset($this->latest))
 						{
@@ -349,7 +325,6 @@ class JUpdate extends JObject
 					{
 						$this->$key = $val;
 					}
-
 					unset($this->latest);
 					unset($this->currentUpdate);
 				}
@@ -382,14 +357,6 @@ class JUpdate extends JObject
 
 		// Throw the data for this item together
 		$tag = strtolower($tag);
-
-		if ($tag == 'tag')
-		{
-			$this->currentUpdate->stability = $this->stabilityTagToInteger((string) $data);
-
-			return;
-		}
-
 		if (isset($this->currentUpdate->$tag))
 		{
 			$this->currentUpdate->$tag->_data .= $data;
@@ -399,14 +366,13 @@ class JUpdate extends JObject
 	/**
 	 * Loads an XML file from a URL.
 	 *
-	 * @param   string  $url                The URL.
-	 * @param   int     $minimum_stability  The minimum stability required for updating the extension {@see JUpdater}
+	 * @param   string  $url  The URL.
 	 *
 	 * @return  boolean  True on success
 	 *
 	 * @since   11.1
 	 */
-	public function loadFromXML($url, $minimum_stability = JUpdater::STABILITY_STABLE)
+	public function loadFromXML($url)
 	{
 		$http = JHttpFactory::getHttp();
 
@@ -426,8 +392,6 @@ class JUpdate extends JObject
 
 			return false;
 		}
-
-		$this->minimum_stability = $minimum_stability;
 
 		$this->xmlParser = xml_parser_create('');
 		xml_set_object($this->xmlParser, $this);
@@ -450,27 +414,5 @@ class JUpdate extends JObject
 		xml_parser_free($this->xmlParser);
 
 		return true;
-	}
-
-	/**
-	 * Converts a tag to numeric stability representation. If the tag doesn't represent a known stability level (one of
-	 * dev, alpha, beta, rc, stable) it is ignored.
-	 *
-	 * @param   string  $tag  The tag string, e.g. dev, alpha, beta, rc, stable
-	 *
-	 * @return  integer
-	 *
-	 * @since   3.4
-	 */
-	protected function stabilityTagToInteger($tag)
-	{
-		$constant = 'JUpdater::STABILITY_' . strtoupper($tag);
-
-		if (defined($constant))
-		{
-			return constant($constant);
-		}
-
-		return JUpdater::STABILITY_STABLE;
 	}
 }

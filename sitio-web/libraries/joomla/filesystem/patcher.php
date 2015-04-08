@@ -4,7 +4,7 @@
  * @package     Joomla.Platform
  * @subpackage  FileSystem
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -15,8 +15,11 @@ jimport('joomla.filesystem.file');
 /**
  * A Unified Diff Format Patcher class
  *
- * @link   http://sourceforge.net/projects/phppatcher/ This has been derived from the PhpPatcher version 0.1.1 written by Giuseppe Mazzotta
- * @since  12.1
+ * @package     Joomla.Platform
+ * @subpackage  FileSystem
+ *
+ * @link        http://sourceforge.net/projects/phppatcher/ This has been derived from the PhpPatcher version 0.1.1 written by Giuseppe Mazzotta
+ * @since       12.1
  */
 class JFilesystemPatcher
 {
@@ -282,7 +285,6 @@ class JFilesystemPatcher
 		{
 			$line = next($lines);
 		}
-
 		if ($line === false)
 		{
 			// No header found, return false
@@ -315,7 +317,6 @@ class JFilesystemPatcher
 			{
 				throw new RuntimeException('Unexpected EOF');
 			}
-
 			return true;
 		}
 	}

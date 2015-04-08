@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  mod_login
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -22,27 +22,78 @@ class ModLoginHelper
 	/**
 	 * Retrieve the url where the user should be returned after logging in
 	 *
-	 * @param   \Joomla\Registry\Registry  $params  module parameters
-	 * @param   string                     $type    return type
+	 * @param   JRegistry  $params  module parameters
+	 * @param   string     $type    return type
 	 *
 	 * @return string
 	 */
 	public static function getReturnURL($params, $type)
 	{
 		$app	= JFactory::getApplication();
-		$item   = $app->getMenu()->getItem($params->get($type));
+		$router = $app::getRouter();
+		$url = null;
 
-		if ($item)
+		if ($itemid = $params->get($type))
 		{
-			$vars = $item->query;
+			$db		= JFactory::getDbo();
+			$query	= $db->getQuery(true)
+				->select($db->quoteName('link'))
+				->from($db->quoteName('#__menu'))
+				->where($db->quoteName('published') . '=1')
+				->where($db->quoteName('id') . '=' . $db->quote($itemid));
+
+			$db->setQuery($query);
+
+			if ($link = $db->loadResult())
+			{
+				if ($router->getMode() == JROUTER_MODE_SEF)
+				{
+					$url = 'index.php?Itemid=' . $itemid;
+				}
+				else
+				{
+					$url = $link . '&Itemid=' . $itemid;
+				}
+			}
 		}
-		else
+
+		if (!$url)
 		{
 			// Stay on the same page
-			$vars = $app::getRouter()->getVars();
+			$uri = clone JUri::getInstance();
+			$vars = $router->parse($uri);
+			unset($vars['lang']);
+
+			if ($router->getMode() == JROUTER_MODE_SEF)
+			{
+				if (isset($vars['Itemid']))
+				{
+					$itemid = $vars['Itemid'];
+					$menu = $app->getMenu();
+					$item = $menu->getItem($itemid);
+					unset($vars['Itemid']);
+
+					if (isset($item) && $vars == $item->query)
+					{
+						$url = 'index.php?Itemid=' . $itemid;
+					}
+					else
+					{
+						$url = 'index.php?' . JUri::buildQuery($vars) . '&Itemid=' . $itemid;
+					}
+				}
+				else
+				{
+					$url = 'index.php?' . JUri::buildQuery($vars);
+				}
+			}
+			else
+			{
+				$url = 'index.php?' . JUri::buildQuery($vars);
+			}
 		}
 
-		return base64_encode('index.php?' . JUri::buildQuery($vars));
+		return base64_encode($url);
 	}
 
 	/**

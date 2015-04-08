@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_contact
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,8 @@ defined('_JEXEC') or die;
 /**
  * Methods supporting a list of contact records.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_contact
  */
 class ContactModelContacts extends JModelList
 {
@@ -50,7 +51,6 @@ class ContactModelContacts extends JModelList
 
 			$app = JFactory::getApplication();
 			$assoc = JLanguageAssociations::isEnabled();
-
 			if ($assoc)
 			{
 				$config['filter_fields'][] = 'association';
@@ -97,9 +97,8 @@ class ContactModelContacts extends JModelList
 		$language = $this->getUserStateFromRequest($this->context . '.filter.language', 'filter_language', '');
 		$this->setState('filter.language', $language);
 
-		// Force a language.
+		// force a language
 		$forcedLanguage = $app->input->get('forcedLanguage');
-
 		if (!empty($forcedLanguage))
 		{
 			$this->setState('filter.language', $forcedLanguage);
@@ -120,10 +119,9 @@ class ContactModelContacts extends JModelList
 	 * different modules that might need different sets of data or different
 	 * ordering requirements.
 	 *
-	 * @param   string  $id  A prefix for the store id.
+	 * @param   string  $id    A prefix for the store id.
 	 *
 	 * @return  string  A store id.
-	 *
 	 * @since   1.6
 	 */
 	protected function getStoreId($id = '')
@@ -142,7 +140,6 @@ class ContactModelContacts extends JModelList
 	 * Build an SQL query to load the list data.
 	 *
 	 * @return  JDatabaseQuery
-	 *
 	 * @since   1.6
 	 */
 	protected function getListQuery()
@@ -186,13 +183,12 @@ class ContactModelContacts extends JModelList
 
 		// Join over the associations.
 		$assoc = JLanguageAssociations::isEnabled();
-
 		if ($assoc)
 		{
 			$query->select('COUNT(asso2.id)>1 as association')
 				->join('LEFT', '#__associations AS asso ON asso.id = a.id AND asso.context=' . $db->quote('com_contact.item'))
 				->join('LEFT', '#__associations AS asso2 ON asso2.key = asso.key')
-				->group('a.id, ul.name, l.title, uc.name, ag.title, c.title');
+				->group('a.id');
 		}
 
 		// Filter by access level.
@@ -210,7 +206,6 @@ class ContactModelContacts extends JModelList
 
 		// Filter by published state
 		$published = $this->getState('filter.published');
-
 		if (is_numeric($published))
 		{
 			$query->where('a.published = ' . (int) $published);
@@ -222,7 +217,6 @@ class ContactModelContacts extends JModelList
 
 		// Filter by a single or group of categories.
 		$categoryId = $this->getState('filter.category_id');
-
 		if (is_numeric($categoryId))
 		{
 			$query->where('a.catid = ' . (int) $categoryId);
@@ -236,7 +230,6 @@ class ContactModelContacts extends JModelList
 
 		// Filter by search in name.
 		$search = $this->getState('filter.search');
-
 		if (!empty($search))
 		{
 			if (stripos($search, 'id:') === 0)
@@ -263,7 +256,6 @@ class ContactModelContacts extends JModelList
 
 		// Filter by a single tag.
 		$tagId = $this->getState('filter.tag');
-
 		if (is_numeric($tagId))
 		{
 			$query->where($db->quoteName('tagmap.tag_id') . ' = ' . (int) $tagId)
@@ -277,14 +269,13 @@ class ContactModelContacts extends JModelList
 		// Add the list ordering clause.
 		$orderCol = $this->state->get('list.ordering', 'a.name');
 		$orderDirn = $this->state->get('list.direction', 'asc');
-
 		if ($orderCol == 'a.ordering' || $orderCol == 'category_title')
 		{
 			$orderCol = 'c.title ' . $orderDirn . ', a.ordering';
 		}
-
 		$query->order($db->escape($orderCol . ' ' . $orderDirn));
 
+		//echo nl2br(str_replace('#__','jos_',$query));
 		return $query;
 	}
 }

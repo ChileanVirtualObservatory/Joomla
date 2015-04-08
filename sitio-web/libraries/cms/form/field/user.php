@@ -3,7 +3,7 @@
  * @package     Joomla.Libraries
  * @subpackage  Form
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Field to select a user ID from a modal list.
  *
- * @since  1.6
+ * @package     Joomla.Libraries
+ * @subpackage  Form
+ * @since       1.6
  */
 class JFormFieldUser extends JFormField
 {
@@ -55,11 +57,10 @@ class JFormFieldUser extends JFormField
 		$script[] = '		if (old_id != id) {';
 		$script[] = '			document.getElementById("' . $this->id . '_id").value = id;';
 		$script[] = '			document.getElementById("' . $this->id . '").value = title;';
-		$script[] = '			document.getElementById("'
-			. $this->id . '").className = document.getElementById("' . $this->id . '").className.replace(" invalid" , "");';
+		$script[] = '			document.getElementById("' . $this->id . '").className = document.getElementById("' . $this->id . '").className.replace(" invalid" , "");';
 		$script[] = '			' . $this->onchange;
 		$script[] = '		}';
-		$script[] = '		jModalClose();';
+		$script[] = '		SqueezeBox.close();';
 		$script[] = '	}';
 
 		// Add the script to the document head.

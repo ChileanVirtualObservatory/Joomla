@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_installer
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Installer helper.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_installer
+ * @since       1.6
  */
 class InstallerHelper
 {
@@ -60,11 +62,6 @@ class InstallerHelper
 			'index.php?option=com_installer&view=languages',
 			$vName == 'languages'
 		);
-		JHtmlSidebar::addEntry(
-			JText::_('COM_INSTALLER_SUBMENU_UPDATESITES'),
-			'index.php?option=com_installer&view=updatesites',
-			$vName == 'updatesites'
-		);
 	}
 
 	/**
@@ -84,7 +81,6 @@ class InstallerHelper
 		$types = $db->loadColumn();
 
 		$options = array();
-
 		foreach ($types as $type)
 		{
 			$options[] = JHtml::_('select.option', $type, 'COM_INSTALLER_TYPE_' . strtoupper($type));
@@ -112,7 +108,6 @@ class InstallerHelper
 		$folders = $db->loadColumn();
 
 		$options = array();
-
 		foreach ($folders as $folder)
 		{
 			$options[] = JHtml::_('select.option', $folder, $folder);

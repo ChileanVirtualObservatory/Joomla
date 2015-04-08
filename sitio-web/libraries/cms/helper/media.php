@@ -3,7 +3,7 @@
  * @package     Joomla.Libraries
  * @subpackage  Helper
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Media helper class
  *
- * @since  3.2
+ * @package     Joomla.Libraries
+ * @subpackage  Helper
+ * @since       3.2
  */
 class JHelperMedia
 {
@@ -100,13 +102,12 @@ class JHelperMedia
 		if (!empty($check))
 		{
 			$app->enqueueMessage(JText::_('JLIB_MEDIA_ERROR_WARNFILETYPE'), 'notice');
-
 			return false;
 		}
 
 		$filetype = array_pop($filetypes);
-		$allowable = array_map('trim', explode(',', $params->get('upload_extensions')));
-		$ignored   = array_map('trim', explode(',', $params->get('ignore_extensions')));
+		$allowable = explode(',', $params->get('upload_extensions'));
+		$ignored   = explode(',', $params->get('ignore_extensions'));
 
 		if ($filetype == '' || $filetype == false || (!in_array($filetype, $allowable) && !in_array($filetype, $ignored)))
 		{
@@ -126,7 +127,7 @@ class JHelperMedia
 
 		if ($params->get('restrict_uploads', 1))
 		{
-			$images = array_map('trim', explode(',', $params->get('image_extensions')));
+			$images = explode(',', $params->get('image_extensions'));
 
 			if (in_array($filetype, $images))
 			{
@@ -151,8 +152,8 @@ class JHelperMedia
 			elseif (!in_array($filetype, $ignored))
 			{
 				// If it's not an image, and we're not ignoring it
-				$allowed_mime = array_map('trim', explode(',', $params->get('upload_mime')));
-				$illegal_mime = array_map('trim', explode(',', $params->get('upload_mime_illegal')));
+				$allowed_mime = explode(',', $params->get('upload_mime'));
+				$illegal_mime = explode(',', $params->get('upload_mime_illegal'));
 
 				if (function_exists('finfo_open') && $params->get('check_mime', 1))
 				{
@@ -290,15 +291,15 @@ class JHelperMedia
 	}
 
 	/**
-	 * Small helper function that properly converts any
-	 * configuration options to their byte representation.
-	 *
-	 * @param   string|integer  $val  The value to be converted to bytes.
-	 *
-	 * @return integer The calculated bytes value from the input.
-	 *
-	 * @since 3.3
-	 */
+	* Small helper function that properly converts any
+	* configuration options to their byte representation.
+	*
+	* @param   string|integer  $val  The value to be converted to bytes.
+	*
+	* @return integer The calculated bytes value from the input.
+	*
+	* @since 3.3
+	*/
 	public function toBytes($val)
 	{
 		switch ($val[strlen($val) - 1])

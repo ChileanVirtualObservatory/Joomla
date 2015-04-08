@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_contact
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_BASE') or die;
 /**
  * Supports a modal contact picker.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_contact
+ * @since       1.6
  */
 class JFormFieldModal_Contact extends JFormField
 {
@@ -49,8 +51,8 @@ class JFormFieldModal_Contact extends JFormField
 
 		// Select button script
 		$script[] = '	function jSelectContact_' . $this->id . '(id, name, object) {';
-		$script[] = '		document.getElementById("' . $this->id . '_id").value = id;';
-		$script[] = '		document.getElementById("' . $this->id . '_name").value = name;';
+		$script[] = '		document.id("' . $this->id . '_id").value = id;';
+		$script[] = '		document.id("' . $this->id . '_name").value = name;';
 
 		if ($allowEdit)
 		{
@@ -62,7 +64,7 @@ class JFormFieldModal_Contact extends JFormField
 			$script[] = '		jQuery("#' . $this->id . '_clear").removeClass("hidden");';
 		}
 
-		$script[] = '		jModalClose();';
+		$script[] = '		SqueezeBox.close();';
 		$script[] = '	}';
 
 		// Clear button script
@@ -74,8 +76,7 @@ class JFormFieldModal_Contact extends JFormField
 
 			$script[] = '	function jClearContact(id) {';
 			$script[] = '		document.getElementById(id + "_id").value = "";';
-			$script[] = '		document.getElementById(id + "_name").value = "'
-				. htmlspecialchars(JText::_('COM_CONTACT_SELECT_A_CONTACT', true), ENT_COMPAT, 'UTF-8') . '";';
+			$script[] = '		document.getElementById(id + "_name").value = "'.htmlspecialchars(JText::_('COM_CONTACT_SELECT_A_CONTACT', true), ENT_COMPAT, 'UTF-8').'";';
 			$script[] = '		jQuery("#"+id + "_clear").addClass("hidden");';
 			$script[] = '		if (document.getElementById(id + "_edit")) {';
 			$script[] = '			jQuery("#"+id + "_edit").addClass("hidden");';
@@ -136,40 +137,23 @@ class JFormFieldModal_Contact extends JFormField
 		// The current contact display field.
 		$html[] = '<span class="input-append">';
 		$html[] = '<input type="text" class="input-medium" id="' . $this->id . '_name" value="' . $title . '" disabled="disabled" size="35" />';
-		$html[] = '<a'
-			. ' class="modal btn hasTooltip"'
-			. ' title="' . JHtml::tooltipText('COM_CONTACT_CHANGE_CONTACT') . '"'
-			. ' href="' . $link . '&amp;' . JSession::getFormToken() . '=1"'
-			. ' rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'
-			. '<i class="icon-file"></i> ' . JText::_('JSELECT')
-			. '</a>';
+		$html[] = '<a class="modal btn hasTooltip" title="' . JHtml::tooltipText('COM_CONTACT_CHANGE_CONTACT') . '"  href="' . $link . '&amp;' . JSession::getFormToken() . '=1" rel="{handler: \'iframe\', size: {x: 800, y: 450}}"><i class="icon-file"></i> ' . JText::_('JSELECT') . '</a>';
 
-		// Edit contact button.
+		// Edit article button
 		if ($allowEdit)
 		{
-			$html[] = '<a'
-				. ' class="btn hasTooltip' . ($value ? '' : ' hidden') . '"'
-				. ' href="index.php?option=com_contact&layout=modal&tmpl=component&task=contact.edit&id=' . $value . '"'
-				. ' target="_blank"'
-				. ' title="' . JHtml::tooltipText('COM_CONTACT_EDIT_CONTACT') . '" >'
-				. '<span class="icon-edit"></span>' . JText::_('JACTION_EDIT')
-				. '</a>';
+			$html[] = '<a class="btn hasTooltip' . ($value ? '' : ' hidden') . '" href="index.php?option=com_contact&layout=modal&tmpl=component&task=contact.edit&id=' . $value . '" target="_blank" title="' . JHtml::tooltipText('COM_CONTACT_EDIT_CONTACT') . '" ><span class="icon-edit"></span> ' . JText::_('JACTION_EDIT') . '</a>';
 		}
 
 		// Clear contact button
 		if ($allowClear)
 		{
-			$html[] = '<button'
-				. ' id="' . $this->id . '_clear"'
-				. ' class="btn' . ($value ? '' : ' hidden') . '"'
-				. ' onclick="return jClearContact(\'' . $this->id . '\')">'
-				. '<span class="icon-remove"></span>' . JText::_('JCLEAR')
-				. '</button>';
+			$html[] = '<button id="' . $this->id . '_clear" class="btn' . ($value ? '' : ' hidden') . '" onclick="return jClearContact(\'' . $this->id . '\')"><span class="icon-remove"></span> ' . JText::_('JCLEAR') . '</button>';
 		}
 
 		$html[] = '</span>';
 
-		// Note: class='required' for client side validation.
+		// class='required' for client side validation
 		$class = '';
 
 		if ($this->required)

@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Profiler
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -13,7 +13,9 @@ defined('JPATH_PLATFORM') or die;
  * Utility class to assist in the process of benchmarking the execution
  * of sections of code to understand where time is being spent.
  *
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Profiler
+ * @since       11.1
  */
 class JProfiler
 {

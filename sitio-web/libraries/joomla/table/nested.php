@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Table
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,8 +12,10 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Table class supporting modified pre-order tree traversal behavior.
  *
- * @link   https://docs.joomla.org/JTableNested
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Table
+ * @link        http://docs.joomla.org/JTableNested
+ * @since       11.1
  */
 class JTableNested extends JTable
 {
@@ -241,7 +243,7 @@ class JTableNested extends JTable
 	 *
 	 * @return  mixed    Boolean true on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/move
+	 * @link    http://docs.joomla.org/JTable/move
 	 * @since   11.1
 	 */
 	public function move($delta, $where = '')
@@ -294,7 +296,7 @@ class JTableNested extends JTable
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTableNested/moveByReference
+	 * @link    http://docs.joomla.org/JTableNested/moveByReference
 	 * @since   11.1
 	 * @throws  RuntimeException on database error.
 	 */
@@ -538,7 +540,7 @@ class JTableNested extends JTable
 		if ($this->_trackAssets)
 		{
 			$name = $this->_getAssetName();
-			$asset = JTable::getInstance('Asset', 'JTable', array('dbo', $this->getDbo()));
+			$asset = JTable::getInstance('Asset');
 
 			// Lock the table for writing.
 			if (!$asset->_lock())
@@ -557,7 +559,6 @@ class JTableNested extends JTable
 
 					return false;
 				}
-
 				$asset->_unlock();
 			}
 			else
@@ -715,7 +716,7 @@ class JTableNested extends JTable
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTableNested/store
+	 * @link    http://docs.joomla.org/JTableNested/store
 	 * @since   11.1
 	 */
 	public function store($updateNulls = false)
@@ -907,7 +908,7 @@ class JTableNested extends JTable
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTableNested/publish
+	 * @link    http://docs.joomla.org/JTableNested/publish
 	 * @since   11.1
 	 * @throws UnexpectedValueException
 	 */
@@ -1284,7 +1285,7 @@ class JTableNested extends JTable
 	 *
 	 * @return  integer  1 + value of root rgt on success, false on failure
 	 *
-	 * @link    https://docs.joomla.org/JTableNested/rebuild
+	 * @link    http://docs.joomla.org/JTableNested/rebuild
 	 * @since   11.1
 	 * @throws  RuntimeException on database error.
 	 */
@@ -1321,7 +1322,6 @@ class JTableNested extends JTable
 			{
 				$query->order('parent_id, lft');
 			}
-
 			$this->_cache['rebuild.sql'] = (string) $query;
 		}
 
@@ -1375,7 +1375,7 @@ class JTableNested extends JTable
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTableNested/rebuildPath
+	 * @link    http://docs.joomla.org/JTableNested/rebuildPath
 	 * @since   11.1
 	 */
 	public function rebuildPath($pk = null)
@@ -1679,10 +1679,8 @@ class JTableNested extends JTable
 			{
 				$buffer .= sprintf("\n| %4s | %4s | %4s | %4s |", $row[0], $row[1], $row[2], $row[3]);
 			}
-
 			$buffer .= $sep;
 		}
-
 		echo $buffer;
 	}
 

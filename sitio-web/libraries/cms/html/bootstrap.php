@@ -3,7 +3,7 @@
  * @package     Joomla.Libraries
  * @subpackage  HTML
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Utility class for Bootstrap elements.
  *
- * @since  3.0
+ * @package     Joomla.Libraries
+ * @subpackage  HTML
+ * @since       3.0
  */
 abstract class JHtmlBootstrap
 {
@@ -53,7 +55,7 @@ abstract class JHtmlBootstrap
 
 			$options = JHtml::getJSObject($opt);
 
-			// Attach affix to document
+			// Attach the carousel to document
 			JFactory::getDocument()->addScriptDeclaration(
 				"(function($){
 					$('#$selector').affix($options);
@@ -119,7 +121,7 @@ abstract class JHtmlBootstrap
 		// Include Bootstrap framework
 		static::framework();
 
-		// Attach the button to the document
+		// Attach the alerts to the document
 		JFactory::getDocument()->addScriptDeclaration(
 			"(function($){
 				$('.$selector').button();
@@ -135,8 +137,8 @@ abstract class JHtmlBootstrap
 	 * Add javascript support for Bootstrap carousels
 	 *
 	 * @param   string  $selector  Common class for the carousels.
-	 * @param   array   $params    An array of options for the carousel.
-	 *                             Options for the carousel can be:
+	 * @param   array   $params    An array of options for the modal.
+	 *                             Options for the modal can be:
 	 *                             - interval  number  The amount of time to delay between automatically cycling an item.
 	 *                                                 If false, carousel will not automatically cycle.
 	 *                             - pause     string  Pauses the cycling of the carousel on mouseenter and resumes the cycling
@@ -256,7 +258,6 @@ abstract class JHtmlBootstrap
 	 * @return  void
 	 *
 	 * @since   3.0
-	 * @deprecated  4.0  Unused, JS Not working
 	 */
 	public static function modal($selector = 'modal', $params = array())
 	{
@@ -294,35 +295,34 @@ abstract class JHtmlBootstrap
 	 *
 	 * @param   string  $selector  The ID selector for the modal.
 	 * @param   array   $params    An array of options for the modal.
-	 *                             Options for the modal can be:
-	 *                             - title     string   The modal title
-	 *                             - backdrop  mixed    A boolean select if a modal-backdrop element should be included (default = true)
-	 *                                                  The string 'static' includes a backdrop which doesn't close the modal on click.
-	 *                             - keyboard  boolean  Closes the modal when escape key is pressed (default = true)
-	 *                             - closeButton  boolean  Display modal close button (default = true)
-	 *                             - animation boolean  Fade in from the top of the page (default = true)
-	 *                             - footer    string   Optional markup for the modal footer
-	 *                             - url       string   URL of a resource to be inserted as an <iframe> inside the modal body
-	 *                             - height    string   height of the <iframe> containing the remote resource
-	 *                             - width     string   width of the <iframe> containing the remote resource
-	 * @param   string  $body      Markup for the modal body. Appended after the <iframe> if the url option is set
+	 * @param   string  $footer    Optional markup for the modal footer
 	 *
 	 * @return  string  HTML markup for a modal
 	 *
 	 * @since   3.0
 	 */
-	public static function renderModal($selector = 'modal', $params = array(), $body = '')
+	public static function renderModal($selector = 'modal', $params = array(), $footer = '')
 	{
-		// Include Bootstrap framework
-		static::framework();
+		// Ensure the behavior is loaded
+		static::modal($selector, $params);
 
-		$layoutData = array(
-			'selector' => $selector,
-			'params'   => $params,
-			'body'     => $body
-		);
+		$html = "<div class=\"modal hide fade\" id=\"" . $selector . "\">\n";
+		$html .= "<div class=\"modal-header\">\n";
+		$html .= "<button type=\"button\" class=\"close\" data-dismiss=\"modal\">×</button>\n";
+		$html .= "<h3>" . $params['title'] . "</h3>\n";
+		$html .= "</div>\n";
+		$html .= "<div id=\"" . $selector . "-container\">\n";
+		$html .= "</div>\n";
+		$html .= "</div>\n";
 
-		return JLayoutHelper::render('joomla.modal.main', $layoutData);
+		$html .= "<script>";
+		$html .= "jQuery('#" . $selector . "').on('show', function () {\n";
+		$html .= "document.getElementById('" . $selector . "-container').innerHTML = '<div class=\"modal-body\"><iframe class=\"iframe\" src=\""
+			. $params['url'] . "\" height=\"" . $params['height'] . "\" width=\"" . $params['width'] . "\"></iframe></div>" . $footer . "';\n";
+		$html .= "});\n";
+		$html .= "</script>";
+
+		return $html;
 	}
 
 	/**
@@ -391,7 +391,7 @@ abstract class JHtmlBootstrap
 	 *
 	 * @param   string  $selector  The ID selector for the ScrollSpy element.
 	 * @param   array   $params    An array of options for the ScrollSpy.
-	 *                             Options for the ScrollSpy can be:
+	 *                             Options for the modal can be:
 	 *                             - offset  number  Pixels to offset from top when calculating position of scroll.
 	 *
 	 * @return  void
@@ -556,7 +556,7 @@ abstract class JHtmlBootstrap
 
 			$options = JHtml::getJSObject($opt);
 
-			// Attach typehead to document
+			// Attach tooltips to document
 			JFactory::getDocument()->addScriptDeclaration(
 				"jQuery(document).ready(function()
 				{
@@ -787,7 +787,7 @@ abstract class JHtmlBootstrap
 			// Setup options object
 			$opt['active'] = isset($params['active']) ? (string) $params['active'] : '';
 
-			// Attach tab to document
+			// Attach tooltips to document
 			JFactory::getDocument()->addScriptDeclaration(
 				"(function($){
 					$('#$selector a').click(function (e) {

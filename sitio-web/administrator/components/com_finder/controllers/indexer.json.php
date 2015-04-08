@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_finder
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -15,7 +15,9 @@ JLoader::register('FinderIndexer', JPATH_COMPONENT_ADMINISTRATOR . '/helpers/ind
 /**
  * Indexer controller class for Finder.
  *
- * @since  2.5
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderControllerIndexer extends JControllerLegacy
 {
@@ -143,7 +145,7 @@ class FinderControllerIndexer extends JControllerLegacy
 		 * in order to work around some plugins that don't do proper environment
 		 * checks before trying to use HTML document functions.
 		 */
-		$raw = clone JFactory::getDocument();
+		$raw = clone(JFactory::getDocument());
 		$lang = JFactory::getLanguage();
 
 		// Get the document properties.
@@ -163,7 +165,7 @@ class FinderControllerIndexer extends JControllerLegacy
 		$doc = $html;
 
 		// Get the admin application.
-		$admin = clone JFactory::getApplication();
+		$admin = clone(JFactory::getApplication());
 
 		// Get the site app.
 		$site = JApplication::getInstance('site');
@@ -302,7 +304,9 @@ class FinderControllerIndexer extends JControllerLegacy
 /**
  * Finder Indexer JSON Response Class
  *
- * @since  2.5
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderIndexerResponse
 {

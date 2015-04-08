@@ -3,28 +3,22 @@
  * @package     Joomla.Administrator
  * @subpackage  com_templates
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
 /**
- * JHtml helper class.
- *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_templates
  */
 class JHtmlTemplates
 {
 	/**
 	 * Display the thumb for the template.
 	 *
-	 * @param   string	 $template  The name of the template.
-	 * @param   integer  $clientId  The application client ID the template applies to
-	 *
-	 * @return  string  The html string
-	 *
-	 * @since   1.6
+	 * @param   string	The name of the active view.
 	 */
 	public static function thumb($template, $clientId = 0)
 	{
@@ -43,12 +37,10 @@ class JHtmlTemplates
 			$clientPath = ($clientId == 0) ? '' : 'administrator/';
 			$thumb = $clientPath . 'templates/' . $template . '/template_thumbnail.png';
 			$html = JHtml::_('image', $thumb, JText::_('COM_TEMPLATES_PREVIEW'));
-
 			if (file_exists($preview))
 			{
 				$preview = $baseUrl . '/templates/' . $template . '/template_preview.png';
-				$html = '<a href="' . $preview . '" class="thumbnail pull-left modal hasTooltip" title="' .
-					JHtml::tooltipText('COM_TEMPLATES_CLICK_TO_ENLARGE') . '">' . $html . '</a>';
+				$html = '<a href="' . $preview . '" class="thumbnail pull-left modal hasTooltip" title="' . JHtml::tooltipText('COM_TEMPLATES_CLICK_TO_ENLARGE') . '">' . $html . '</a>';
 			}
 		}
 

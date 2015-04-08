@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_content
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,10 @@ defined('_JEXEC') or die;
 /**
  * Methods supporting a list of article records.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_content
+ *
+ * @since       1.6
  */
 class ContentModelArticles extends JModelList
 {
@@ -199,7 +202,7 @@ class ContentModelArticles extends JModelList
 			$query->select('COUNT(asso2.id)>1 as association')
 				->join('LEFT', '#__associations AS asso ON asso.id = a.id AND asso.context=' . $db->quote('com_content.item'))
 				->join('LEFT', '#__associations AS asso2 ON asso2.key = asso.key')
-				->group('a.id, l.title, uc.name, ag.title, c.title, ua.name');
+				->group('a.id');
 		}
 
 		// Filter by access level.

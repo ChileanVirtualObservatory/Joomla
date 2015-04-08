@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Input
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Joomla! Input Files Class
  *
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Input
+ * @since       11.1
  */
 class JInputFiles extends JInput
 {
@@ -77,21 +79,11 @@ class JInputFiles extends JInput
 				)
 			);
 
-			// Prevent returning an unsafe file unless speciffically requested
-			if ($filter != 'raw')
-			{
-				$isSafe = JFilterInput::isSafeFile($results);
-
-				if (!$isSafe)
-				{
-					return $default;
-				}
-			}
-
 			return $results;
 		}
 
 		return $default;
+
 	}
 
 	/**
@@ -113,7 +105,6 @@ class JInputFiles extends JInput
 			{
 				$result[$k] = $this->decodeData(array($data[0][$k], $data[1][$k], $data[2][$k], $data[3][$k], $data[4][$k]));
 			}
-
 			return $result;
 		}
 

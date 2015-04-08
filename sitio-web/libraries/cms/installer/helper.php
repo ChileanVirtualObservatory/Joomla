@@ -3,7 +3,7 @@
  * @package     Joomla.Libraries
  * @subpackage  Installer
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -16,7 +16,9 @@ jimport('joomla.filesystem.path');
 /**
  * Installer helper class
  *
- * @since  3.1
+ * @package     Joomla.Libraries
+ * @subpackage  Installer
+ * @since       3.1
  */
 abstract class JInstallerHelper
 {
@@ -24,7 +26,7 @@ abstract class JInstallerHelper
 	 * Downloads a package
 	 *
 	 * @param   string  $url     URL of file to download
-	 * @param   mixed   $target  Download target filename or false to get the filename from the URL
+	 * @param   string  $target  Download target filename [optional]
 	 *
 	 * @return  mixed  Path to downloaded package or boolean false on failure
 	 *
@@ -50,16 +52,7 @@ abstract class JInstallerHelper
 		$dispatcher = JEventDispatcher::getInstance();
 		$results = $dispatcher->trigger('onInstallerBeforePackageDownload', array(&$url, &$headers));
 
-		try
-		{
-			$response = $http->get($url, $headers);
-		}
-		catch (Exception $exception)
-		{
-			JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_DOWNLOAD_SERVER_CONNECT', $exception->getMessage()), JLog::WARNING, 'jerror');
-
-			return false;
-		}
+		$response = $http->get($url, $headers);
 
 		if (302 == $response->code && isset($response->headers['Location']))
 		{
@@ -128,31 +121,17 @@ abstract class JInstallerHelper
 		// Do the unpacking of the archive
 		try
 		{
-			$extract = JArchive::extract($archivename, $extractdir);
+			JArchive::extract($archivename, $extractdir);
 		}
 		catch (Exception $e)
 		{
 			if ($alwaysReturnArray)
 			{
-				return array(
-					'extractdir'  => null,
-					'packagefile' => $archivename,
-					'type'        => false
-				);
-			}
+				$retval['extractdir'] = null;
+				$retval['packagefile'] = $archivename;
+				$retval['type'] = false;
 
-			return false;
-		}
-
-		if (!$extract)
-		{
-			if ($alwaysReturnArray)
-			{
-				return array(
-					'extractdir'  => null,
-					'packagefile' => $archivename,
-					'type'        => false
-				);
+				return $retval;
 			}
 
 			return false;

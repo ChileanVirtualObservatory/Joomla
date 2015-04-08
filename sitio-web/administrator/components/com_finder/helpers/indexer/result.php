@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_finder
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -19,7 +19,9 @@ JLoader::register('FinderIndexer', __DIR__ . '/indexer.php');
  * declared will be pushed into the elements array and can be accessed
  * explicitly using the getElement() method.
  *
- * @since  2.5
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderIndexerResult
 {
@@ -421,7 +423,7 @@ class FinderIndexerResult
 	 */
 	public function setLanguage()
 	{
-		if ($this->language == '')
+		if ($this->language == '*' || $this->language == '')
 		{
 			$this->language = $this->defaultLanguage;
 		}

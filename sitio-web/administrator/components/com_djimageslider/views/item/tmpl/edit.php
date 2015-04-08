@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: edit.php 21 2015-01-14 18:40:46Z szymon $
+ * @version $Id: edit.php 5 2013-01-11 10:22:28Z szymon $
  * @package DJ-ImageSlider
  * @subpackage DJ-ImageSlider Component
  * @copyright Copyright (C) 2012 DJ-Extensions.com, All rights reserved.
@@ -42,7 +42,7 @@ if(version_compare(JVERSION, '3.0', '>=')) JHtml::_('formbehavior.chosen', 'sele
 			Joomla.submitform(task, document.getElementById('item-form'));
 		}
 		else {
-			alert("<?php echo $this->escape(JText::_('COM_DJIMAGESLIDER_VALIDATION_FORM_FAILED'));?>");
+			alert('<?php echo $this->escape(JText::_('COM_DJIMAGESLIDER_VALIDATION_FORM_FAILED'));?>');
 		}
 	}
 </script>

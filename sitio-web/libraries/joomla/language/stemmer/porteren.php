@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Language
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @copyright   Copyright (C) 2005 Richard Heyes (http://www.phpguru.org/). All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
@@ -16,7 +16,9 @@ defined('JPATH_PLATFORM') or die;
  * This class was adapted from one written by Richard Heyes.
  * See copyright and link information above.
  *
- * @since  12.1
+ * @package     Joomla.Platform
+ * @subpackage  Language
+ * @since       12.1
  */
 class JLanguageStemmerPorteren extends JLanguageStemmer
 {

@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  com_users
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Rest model class for Users.
  *
- * @since  1.6
+ * @package     Joomla.Site
+ * @subpackage  com_users
+ * @since       1.6
  */
 class UsersModelLogin extends JModelForm
 {
@@ -22,18 +24,15 @@ class UsersModelLogin extends JModelForm
 	 * The base form is loaded from XML and then an event is fired
 	 * for users plugins to extend the form with extra fields.
 	 *
-	 * @param   array    $data      An optional array of data for the form to interogate.
-	 * @param   boolean  $loadData  True if the form is to load its own data (default case), false if not.
-	 *
+	 * @param   array  $data		An optional array of data for the form to interogate.
+	 * @param   boolean	$loadData	True if the form is to load its own data (default case), false if not.
 	 * @return  JForm	A JForm object on success, false on failure
-	 *
 	 * @since   1.6
 	 */
 	public function getForm($data = array(), $loadData = true)
 	{
 		// Get the form.
 		$form = $this->loadForm('com_users.login', 'login', array('load_data' => $loadData));
-
 		if (empty($form))
 		{
 			return false;
@@ -46,7 +45,6 @@ class UsersModelLogin extends JModelForm
 	 * Method to get the data that should be injected in the form.
 	 *
 	 * @return  array  The default data is an empty array.
-	 *
 	 * @since   1.6
 	 */
 	protected function loadFormData()
@@ -74,7 +72,6 @@ class UsersModelLogin extends JModelForm
 		{
 			$data['return'] = 'index.php?option=com_users&view=profile';
 		}
-
 		$app->setUserState('users.login.form.data', $data);
 
 		$this->preprocessData('com_users.login', $data);
@@ -85,9 +82,7 @@ class UsersModelLogin extends JModelForm
 	/**
 	 * Method to auto-populate the model state.
 	 *
-	 * Calling getState in this method will result in recursion.
-	 *
-	 * @return  void
+	 * Note. Calling getState in this method will result in recursion.
 	 *
 	 * @since   1.6
 	 */

@@ -3,18 +3,18 @@
  * @package     Joomla.Administrator
  * @subpackage  com_templates
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * Template style table class.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_templates
+ * @since       1.6
  */
 class TemplatesTableStyle extends JTable
 {
@@ -44,7 +44,7 @@ class TemplatesTableStyle extends JTable
 	{
 		if (isset($array['params']) && is_array($array['params']))
 		{
-			$registry = new Registry;
+			$registry = new JRegistry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}

@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  com_search
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Routing class from com_search
  *
- * @since  3.3
+ * @package     Joomla.Site
+ * @subpackage  com_search
+ * @since       3.3
  */
 class SearchRouter extends JComponentRouterBase
 {
@@ -76,39 +78,22 @@ class SearchRouter extends JComponentRouterBase
 	}
 }
 
-
 /**
- * searchBuildRoute
+ * Search router functions
  *
- * These functions are proxies for the new router interface
+ * These functions are proxys for the new router interface
  * for old SEF extensions.
- *
- * @param   array  &$query  An array of URL arguments
- *
- * @return array
  *
  * @deprecated  4.0  Use Class based routers instead
  */
-function searchBuildRoute(&$query)
+function SearchBuildRoute(&$query)
 {
 	$router = new SearchRouter;
 
 	return $router->build($query);
 }
 
-/**
- * searchParseRoute
- *
- * These functions are proxies for the new router interface
- * for old SEF extensions.
- *
- * @param   array  $segments  The segments of the URL to parse.
- *
- * @return array
- *
- * @deprecated  4.0  Use Class based routers instead
- */
-function searchParseRoute($segments)
+function SearchParseRoute($segments)
 {
 	$router = new SearchRouter;
 

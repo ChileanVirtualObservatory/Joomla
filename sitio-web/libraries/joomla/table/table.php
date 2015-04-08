@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Table
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -16,8 +16,11 @@ jimport('joomla.filesystem.path');
  *
  * Parent class to all tables.
  *
- * @since  11.1
- * @tutorial  Joomla.Platform/jtable.cls
+ * @package     Joomla.Platform
+ * @subpackage  Table
+ * @link        http://docs.joomla.org/JTable
+ * @since       11.1
+ * @tutorial	Joomla.Platform/jtable.cls
  */
 abstract class JTable extends JObject implements JObservableInterface, JTableInterface
 {
@@ -100,13 +103,6 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 * @since  3.1.2
 	 */
 	protected $_observers;
-
-	/**
-	 * Array with alias for "special" columns such as ordering, hits etc etc
-	 *
-	 * @var    array
-	 */
-	protected $_columnAlias = array();
 
 	/**
 	 * An array of key names to be json encoded in the bind function
@@ -262,7 +258,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  mixed    A JTable object if found or boolean false if one could not be found.
 	 *
-	 * @link    https://docs.joomla.org/JTable/getInstance
+	 * @link    http://docs.joomla.org/JTable/getInstance
 	 * @since   11.1
 	 */
 	public static function getInstance($type, $prefix = 'JTable', $config = array())
@@ -313,7 +309,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  array  An array of filesystem paths to find JTable classes in.
 	 *
-	 * @link    https://docs.joomla.org/JTable/addIncludePath
+	 * @link    http://docs.joomla.org/JTable/addIncludePath
 	 * @since   11.1
 	 */
 	public static function addIncludePath($path = null)
@@ -377,7 +373,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  string  The string to use as the title in the asset table.
 	 *
-	 * @link    https://docs.joomla.org/JTable/getAssetTitle
+	 * @link    http://docs.joomla.org/JTable/getAssetTitle
 	 * @since   11.1
 	 */
 	protected function _getAssetTitle()
@@ -455,7 +451,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @since   11.1
 	 *
-	 * @link    https://docs.joomla.org/JTable/getTableName
+	 * @link    http://docs.joomla.org/JTable/getTableName
 	 */
 	public function getTableName()
 	{
@@ -469,7 +465,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  mixed  Array of primary key field names or string containing the first primary key field.
 	 *
-	 * @link    https://docs.joomla.org/JTable/getKeyName
+	 * @link    http://docs.joomla.org/JTable/getKeyName
 	 * @since   11.1
 	 */
 	public function getKeyName($multiple = false)
@@ -497,7 +493,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  JDatabaseDriver  The internal database driver object.
 	 *
-	 * @link    https://docs.joomla.org/JTable/getDBO
+	 * @link    http://docs.joomla.org/JTable/getDBO
 	 * @since   11.1
 	 */
 	public function getDbo()
@@ -512,7 +508,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/setDBO
+	 * @link    http://docs.joomla.org/JTable/setDBO
 	 * @since   11.1
 	 */
 	public function setDBO($db)
@@ -562,7 +558,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  void
 	 *
-	 * @link    https://docs.joomla.org/JTable/reset
+	 * @link    http://docs.joomla.org/JTable/reset
 	 * @since   11.1
 	 */
 	public function reset()
@@ -652,7 +648,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True if successful. False if row not found.
 	 *
-	 * @link    https://docs.joomla.org/JTable/load
+	 * @link    http://docs.joomla.org/JTable/load
 	 * @since   11.1
 	 * @throws  InvalidArgumentException
 	 * @throws  RuntimeException
@@ -692,7 +688,6 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 				{
 					throw new InvalidArgumentException('Table has multiple primary keys specified, only one primary key value provided.');
 				}
-
 				$keys = array($this->getKeyName() => $keys);
 			}
 			else
@@ -752,7 +747,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True if the instance is sane and able to be stored in the database.
 	 *
-	 * @link    https://docs.joomla.org/JTable/check
+	 * @link    http://docs.joomla.org/JTable/check
 	 * @since   11.1
 	 */
 	public function check()
@@ -771,7 +766,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/store
+	 * @link    http://docs.joomla.org/JTable/store
 	 * @since   11.1
 	 */
 	public function store($updateNulls = false)
@@ -897,7 +892,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/save
+	 * @link    http://docs.joomla.org/JTable/save
 	 * @since   11.1
 	 */
 	public function save($src, $orderingFilter = '', $ignore = '')
@@ -946,7 +941,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/delete
+	 * @link    http://docs.joomla.org/JTable/delete
 	 * @since   11.1
 	 * @throws  UnexpectedValueException
 	 */
@@ -974,7 +969,6 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 			{
 				throw new UnexpectedValueException('Null primary key not allowed.');
 			}
-
 			$this->$key = $pk[$key];
 		}
 
@@ -1029,7 +1023,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/checkOut
+	 * @link    http://docs.joomla.org/JTable/checkOut
 	 * @since   11.1
 	 * @throws  UnexpectedValueException
 	 */
@@ -1071,8 +1065,8 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 		// Check the row out by primary key.
 		$query = $this->_db->getQuery(true)
 			->update($this->_tbl)
-			->set($this->_db->quoteName($this->getColumnAlias('checked_out')) . ' = ' . (int) $userId)
-			->set($this->_db->quoteName($this->getColumnAlias('checked_out_time')) . ' = ' . $this->_db->quote($time));
+			->set($this->_db->quoteName('checked_out') . ' = ' . (int) $userId)
+			->set($this->_db->quoteName('checked_out_time') . ' = ' . $this->_db->quote($time));
 		$this->appendPrimaryKeys($query, $pk);
 		$this->_db->setQuery($query);
 		$this->_db->execute();
@@ -1092,7 +1086,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/checkIn
+	 * @link    http://docs.joomla.org/JTable/checkIn
 	 * @since   11.1
 	 * @throws  UnexpectedValueException
 	 */
@@ -1131,8 +1125,8 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 		// Check the row in by primary key.
 		$query = $this->_db->getQuery(true)
 			->update($this->_tbl)
-			->set($this->_db->quoteName($this->getColumnAlias('checked_out')) . ' = 0')
-			->set($this->_db->quoteName($this->getColumnAlias('checked_out_time')) . ' = ' . $this->_db->quote($this->_db->getNullDate()));
+			->set($this->_db->quoteName('checked_out') . ' = 0')
+			->set($this->_db->quoteName('checked_out_time') . ' = ' . $this->_db->quote($this->_db->getNullDate()));
 		$this->appendPrimaryKeys($query, $pk);
 		$this->_db->setQuery($query);
 
@@ -1194,7 +1188,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/hit
+	 * @link    http://docs.joomla.org/JTable/hit
 	 * @since   11.1
 	 * @throws  UnexpectedValueException
 	 */
@@ -1233,7 +1227,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 		// Check the row in by primary key.
 		$query = $this->_db->getQuery(true)
 			->update($this->_tbl)
-			->set($this->_db->quoteName($this->getColumnAlias('hits')) . ' = (' . $this->_db->quoteName($this->getColumnAlias('hits')) . ' + 1)');
+			->set($this->_db->quoteName('hits') . ' = (' . $this->_db->quoteName('hits') . ' + 1)');
 		$this->appendPrimaryKeys($query, $pk);
 		$this->_db->setQuery($query);
 		$this->_db->execute();
@@ -1256,7 +1250,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True if checked out.
 	 *
-	 * @link    https://docs.joomla.org/JTable/isCheckedOut
+	 * @link    http://docs.joomla.org/JTable/isCheckedOut
 	 * @since   11.1
 	 */
 	public function isCheckedOut($with = 0, $against = null)
@@ -1293,7 +1287,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  mixed  Boolean false an failure or the next ordering value as an integer.
 	 *
-	 * @link    https://docs.joomla.org/JTable/getNextOrder
+	 * @link    http://docs.joomla.org/JTable/getNextOrder
 	 * @since   11.1
 	 * @throws  UnexpectedValueException
 	 */
@@ -1355,7 +1349,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  mixed  Boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/reorder
+	 * @link    http://docs.joomla.org/JTable/reorder
 	 * @since   11.1
 	 * @throws  UnexpectedValueException
 	 */
@@ -1418,7 +1412,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  mixed    Boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/move
+	 * @link    http://docs.joomla.org/JTable/move
 	 * @since   11.1
 	 * @throws  UnexpectedValueException
 	 */
@@ -1515,7 +1509,7 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 	 *
 	 * @return  boolean  True on success; false if $pks is empty.
 	 *
-	 * @link    https://docs.joomla.org/JTable/publish
+	 * @link    http://docs.joomla.org/JTable/publish
 	 * @since   11.1
 	 */
 	public function publish($pks = null, $state = 1, $userId = 0)
@@ -1562,12 +1556,12 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 			// Update the publishing state for rows with the given primary keys.
 			$query = $this->_db->getQuery(true)
 				->update($this->_tbl)
-				->set($this->_db->quoteName($this->getColumnAlias('published')) . ' = ' . (int) $state);
+				->set('published = ' . (int) $state);
 
 			// Determine if there is checkin support for the table.
 			if (property_exists($this, 'checked_out') || property_exists($this, 'checked_out_time'))
 			{
-				$query->where('(' . $this->getColumnAlias('checked_out') . ' = 0 OR ' . $this->getColumnAlias('checked_out') . ' = ' . (int) $userId . ')');
+				$query->where('(checked_out = 0 OR checked_out = ' . (int) $userId . ')');
 				$checkin = true;
 			}
 			else
@@ -1622,55 +1616,6 @@ abstract class JTable extends JObject implements JObservableInterface, JTableInt
 		$this->_locked = true;
 
 		return true;
-	}
-
-	/**
-	 * Method to return the real name of a "special" column such as ordering, hits, published
-	 * etc etc. In this way you are free to follow your db naming convention and use the
-	 * built in Joomla functions.
-	 *
-	 * @param   string  $column  Name of the "special" column (ie ordering, hits)
-	 *
-	 * @return  string  The string that identify the special
-	 *
-	 * @since   3.4
-	 */
-	public function getColumnAlias($column)
-	{
-		// Get the column data if set
-		if (isset($this->_columnAlias[$column]))
-		{
-			$return = $this->_columnAlias[$column];
-		}
-		else
-		{
-			$return = $column;
-		}
-
-		// Sanitize the name
-		$return = preg_replace('#[^A-Z0-9_]#i', '', $return);
-
-		return $return;
-	}
-
-	/**
-	 * Method to register a column alias for a "special" column.
-	 *
-	 * @param   string  $column       The "special" column (ie ordering)
-	 * @param   string  $columnAlias  The real column name (ie foo_ordering)
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	public function setColumnAlias($column, $columnAlias)
-	{
-		// Santize the column name alias
-		$column = strtolower($column);
-		$column = preg_replace('#[^A-Z0-9_]#i', '', $column);
-
-		// Set the column alias internally
-		$this->_columnAlias[$column] = $columnAlias;
 	}
 
 	/**

@@ -3,7 +3,7 @@
  * @package     Joomla.Libraries
  * @subpackage  Installer
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Extension object
  *
- * @since  3.1
+ * @package     Joomla.Libraries
+ * @subpackage  Installer
+ * @since       3.1
  */
 class JInstallerExtension extends JObject
 {
@@ -145,6 +147,8 @@ class JInstallerExtension extends JObject
 /**
  * Deprecated class placeholder. You should use JInstallerExtension instead.
  *
+ * @package     Joomla.Libraries
+ * @subpackage  Installer
  * @since       3.1
  * @deprecated  4.0
  * @codeCoverageIgnore

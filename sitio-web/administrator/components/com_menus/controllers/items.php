@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_menus
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,17 +12,12 @@ defined('_JEXEC') or die;
 /**
  * The Menu Item Controller
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_menus
+ * @since       1.6
  */
 class MenusControllerItems extends JControllerAdmin
 {
-	/**
-	 * Constructor
-	 *
-	 * @param   array  $config  Optional configuration array
-	 *
-	 * @since   1.6
-	 */
 	public function __construct($config = array())
 	{
 		parent::__construct($config);
@@ -30,14 +25,7 @@ class MenusControllerItems extends JControllerAdmin
 	}
 
 	/**
-	 * Proxy for getModel.
-	 *
-	 * @param   string  $name    The model name. Optional.
-	 * @param   string  $prefix  The class prefix. Optional.
-	 * @param   array   $config  Configuration array for model. Optional.
-	 *
-	 * @return  object  The model.
-	 *
+	 * Proxy for getModel
 	 * @since   1.6
 	 */
 	public function getModel($name = 'Item', $prefix = 'MenusModel', $config = array())
@@ -48,8 +36,7 @@ class MenusControllerItems extends JControllerAdmin
 	/**
 	 * Rebuild the nested set tree.
 	 *
-	 * @return  bool  False on failure or error, true on success.
-	 *
+	 * @return  bool	False on failure or error, true on success.
 	 * @since   1.6
 	 */
 	public function rebuild()
@@ -64,23 +51,21 @@ class MenusControllerItems extends JControllerAdmin
 		{
 			// Reorder succeeded.
 			$this->setMessage(JText::_('COM_MENUS_ITEMS_REBUILD_SUCCESS'));
-
 			return true;
 		}
 		else
 		{
 			// Rebuild failed.
 			$this->setMessage(JText::sprintf('COM_MENUS_ITEMS_REBUILD_FAILED'));
-
 			return false;
 		}
 	}
 
 	/**
 	 * Save the manual order inputs from the menu items list view
-	 *
+	 * 
 	 * @return      void
-	 *
+	 * 
 	 * @see         JControllerAdmin::saveorder()
 	 * @deprecated  4.0
 	 */
@@ -102,16 +87,13 @@ class MenusControllerItems extends JControllerAdmin
 		else
 		{
 			// Nothing to reorder
-			$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
-
+			$this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
 			return true;
 		}
 	}
 
 	/**
 	 * Method to set the home property for a list of items
-	 *
-	 * @return  void
 	 *
 	 * @since   1.6
 	 */
@@ -128,7 +110,7 @@ class MenusControllerItems extends JControllerAdmin
 
 		if (empty($cid))
 		{
-			JError::raiseWarning(500, JText::_($this->text_prefix . '_NO_ITEM_SELECTED'));
+			JError::raiseWarning(500, JText::_($this->text_prefix.'_NO_ITEM_SELECTED'));
 		}
 		else
 		{
@@ -142,22 +124,18 @@ class MenusControllerItems extends JControllerAdmin
 			if (!$model->setHome($cid, $value))
 			{
 				JError::raiseWarning(500, $model->getError());
-			}
-			else
-			{
+			} else {
 				if ($value == 1)
 				{
 					$ntext = 'COM_MENUS_ITEMS_SET_HOME';
 				}
-				else
-				{
+				else {
 					$ntext = 'COM_MENUS_ITEMS_UNSET_HOME';
 				}
-
 				$this->setMessage(JText::plural($ntext, count($cid)));
 			}
 		}
 
-		$this->setRedirect(JRoute::_('index.php?option=' . $this->option . '&view=' . $this->view_list, false));
+		$this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_list, false));
 	}
 }

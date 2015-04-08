@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_content
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -13,7 +13,7 @@ defined('_JEXEC') or die;
 JHtml::addIncludePath(JPATH_COMPONENT . '/helpers/html');
 
 
-JHtml::_('behavior.formvalidator');
+JHtml::_('behavior.formvalidation');
 JHtml::_('behavior.keepalive');
 JHtml::_('formbehavior.chosen', 'select');
 
@@ -24,6 +24,7 @@ $this->configFieldsets[0] = 'editorConfig';
 
 // Create shortcut to parameters.
 $params = $this->state->get('params');
+//$params = $params->toArray();
 
 $app = JFactory::getApplication();
 $input = $app->input;
@@ -62,25 +63,25 @@ if (isset($this->item->attribs['show_urls_images_backend']) && $this->item->attr
 	$params->show_urls_images_backend = $this->item->attribs['show_urls_images_backend'];
 }
 
-JFactory::getDocument()->addScriptDeclaration('
-	Joomla.submitbutton = function(task)
-	{
-		if (task == "article.cancel" || document.formvalidator.isValid(document.getElementById("item-form")))
-		{
-			' . $this->form->getField('articletext')->save() . '
-			if (window.opener && (task == "article.save" || task == "article.cancel"))
-			{
-				window.opener.document.closeEditWindow = self;
-				window.opener.setTimeout("window.document.closeEditWindow.close()", 1000);
-			}
-
-		Joomla.submitform(task, document.getElementById("item-form"));
-		}
-	};
-');
-
 ?>
 
+<script type="text/javascript">
+	Joomla.submitbutton = function(task)
+	{
+		if (task == 'article.cancel' || document.formvalidator.isValid(document.id('item-form')))
+		{
+			<?php echo $this->form->getField('articletext')->save(); ?>
+
+			if (window.opener && (task == 'article.save' || task == 'article.cancel'))
+			{
+				window.opener.document.closeEditWindow = self;
+				window.opener.setTimeout('window.document.closeEditWindow.close()', 1000);
+			}
+
+		Joomla.submitform(task, document.getElementById('item-form'));
+		}
+	}
+</script>
 <div class="container-popup">
 
 <div class="pull-right">
@@ -92,7 +93,7 @@ JFactory::getDocument()->addScriptDeclaration('
 <div class="clearfix"> </div>
 <hr class="hr-condensed" />
 
-<form action="<?php echo JRoute::_('index.php?option=com_content&layout=modal&tmpl=component&id=' . (int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
+<form action="<?php echo JRoute::_('index.php?option=com_content&layout=modal&tmpl=component&id='.(int) $this->item->id); ?>" method="post" name="adminForm" id="item-form" class="form-validate">
 <?php echo JLayoutHelper::render('joomla.edit.title_alias', $this); ?>
 
 	<div class="form-horizontal">

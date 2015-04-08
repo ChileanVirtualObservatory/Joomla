@@ -3,18 +3,18 @@
  * @package     Joomla.Site
  * @subpackage  com_content
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * HTML View class for the Content component
  *
- * @since  1.5
+ * @package     Joomla.Site
+ * @subpackage  com_content
+ * @since       1.5
  */
 class ContentViewCategory extends JViewCategory
 {
@@ -91,7 +91,7 @@ class ContentViewCategory extends JViewCategory
 				$item->parent_slug = null;
 			}
 
-			$item->catslug = $item->category_alias ? ($item->catid . ':' . $item->category_alias) : $item->catid;
+			$item->catslug = $item->category_alias ? ($item->catid.':'.$item->category_alias) : $item->catid;
 			$item->event   = new stdClass;
 
 			$dispatcher = JEventDispatcher::getInstance();
@@ -145,6 +145,8 @@ class ContentViewCategory extends JViewCategory
 		// This makes it much easier for the designer to just interrogate the arrays.
 		if (($params->get('layout_type') == 'blog') || ($this->getLayout() == 'blog'))
 		{
+			//$max = count($this->items);
+
 			foreach ($this->items as $i => $item)
 			{
 				if ($i < $numLeading)
@@ -173,7 +175,7 @@ class ContentViewCategory extends JViewCategory
 
 			if ($order == 0 && $this->columns > 1)
 			{
-				// Call order down helper
+				// call order down helper
 				$this->intro_items = ContentHelperQuery::orderDownColumns($this->intro_items, $this->columns);
 			}
 		}
@@ -237,7 +239,7 @@ class ContentViewCategory extends JViewCategory
 
 		if (!is_object($this->category->metadata))
 		{
-			$this->category->metadata = new Registry($this->category->metadata);
+			$this->category->metadata = new JRegistry($this->category->metadata);
 		}
 
 		if (($app->get('MetaAuthor') == '1') && $this->category->get('author', ''))

@@ -3,18 +3,18 @@
  * @package     Joomla.Libraries
  * @subpackage  HTML
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * Searchtools elements.
  *
- * @since  3.2
+ * @package     Joomla.Libraries
+ * @subpackage  HTML
+ * @since       3.2
  */
 abstract class JHtmlSearchtools
 {
@@ -76,7 +76,7 @@ abstract class JHtmlSearchtools
 			$options['formSelector'] = $selector;
 
 			// Generate options with default values
-			$options = static::optionsToRegistry($options);
+			$options = static::options2Jregistry($options);
 
 			$doc = JFactory::getDocument();
 			$script = "
@@ -99,21 +99,21 @@ abstract class JHtmlSearchtools
 	/**
 	 * Function to receive & pre-process javascript options
 	 *
-	 * @param   mixed  $options  Associative array/Registry object with options
+	 * @param   mixed  $options  Associative array/JRegistry object with options
 	 *
-	 * @return  Registry         Options converted to Registry object
+	 * @return  JRegistry        Options converted to JRegistry object
 	 */
-	private static function optionsToRegistry($options)
+	private static function options2Jregistry($options)
 	{
 		// Support options array
 		if (is_array($options))
 		{
-			$options = new Registry($options);
+			$options = new JRegistry($options);
 		}
 
-		if (!($options instanceof Registry))
+		if (!($options instanceof Jregistry))
 		{
-			$options = new Registry;
+			$options = new JRegistry;
 		}
 
 		return $options;
@@ -134,8 +134,7 @@ abstract class JHtmlSearchtools
 	 *
 	 * @return  string
 	 */
-	public static function sort($title, $order, $direction = 'asc', $selected = 0, $task = null, $new_direction = 'asc', $tip = '', $icon = null,
-		$formName = 'adminForm')
+	public static function sort($title, $order, $direction = 'asc', $selected = 0, $task = null, $new_direction = 'asc', $tip = '', $icon = null, $formName = 'adminForm')
 	{
 		$direction = strtolower($direction);
 		$orderIcons = array('icon-arrow-up-3', 'icon-arrow-down-3');

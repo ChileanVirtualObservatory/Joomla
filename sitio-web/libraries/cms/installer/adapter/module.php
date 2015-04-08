@@ -3,28 +3,64 @@
  * @package     Joomla.Libraries
  * @subpackage  Installer
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
+jimport('joomla.base.adapterinstance');
 jimport('joomla.filesystem.folder');
 
 /**
  * Module installer
  *
- * @since  3.1
+ * @package     Joomla.Libraries
+ * @subpackage  Installer
+ * @since       3.1
  */
-class JInstallerAdapterModule extends JInstallerAdapter
+class JInstallerAdapterModule extends JAdapterInstance
 {
 	/**
-	 * The install client ID
+	 * Install function routing
 	 *
-	 * @var    integer
-	 * @since  3.4
+	 * @var    string
+	 * @since  3.1
 	 */
-	protected $clientId;
+	protected $route = 'Install';
+
+	/**
+	 * The installation manifest XML object
+	 *
+	 * @var    SimpleXMLElement
+	 * @since  3.1
+	 */
+	protected $manifest = null;
+
+	/**
+	 * A path to the PHP file that the scriptfile declaration in
+	 * the manifest refers to.
+	 *
+	 * @var    string
+	 * @since  3.1
+	 */
+	protected $manifest_script = null;
+
+	/**
+	 * Extension name
+	 *
+	 * @var    string
+	 * @since  3.1
+	 */
+	protected $name = null;
+
+	/**
+	 * Extension element
+	 *
+	 * @var    string
+	 * @since  3.1
+	 */
+	protected $element = null;
 
 	/**
 	 * <scriptfile> element of the extension manifest
@@ -35,382 +71,538 @@ class JInstallerAdapterModule extends JInstallerAdapter
 	protected $scriptElement = null;
 
 	/**
-	 * Method to check if the extension is already present in the database
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 * @throws  RuntimeException
-	 */
-	protected function checkExistingExtension()
-	{
-		try
-		{
-			$this->currentExtensionId = $this->extension->find(
-				array(
-					'element'   => $this->element,
-					'type'      => $this->type,
-					'client_id' => $this->clientId
-				)
-			);
-		}
-		catch (RuntimeException $e)
-		{
-			// Install failed, roll back changes
-			throw new RuntimeException(
-				JText::sprintf(
-					'JLIB_INSTALLER_ABORT_ROLLBACK',
-					JText::_('JLIB_INSTALLER_' . $this->route),
-					$e->getMessage()
-				)
-			);
-		}
-	}
-
-	/**
-	 * Method to copy the extension's base files from the <files> tag(s) and the manifest file
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 * @throws  RuntimeException
-	 */
-	protected function copyBaseFiles()
-	{
-		// Copy all necessary files
-		if ($this->parent->parseFiles($this->getManifest()->files, -1) === false)
-		{
-			throw new RuntimeException(JText::_('JLIB_INSTALLER_ABORT_MOD_COPY_FILES'));
-		}
-
-		// If there is a manifest script, let's copy it.
-		if ($this->manifest_script)
-		{
-			$path['src']  = $this->parent->getPath('source') . '/' . $this->manifest_script;
-			$path['dest'] = $this->parent->getPath('extension_root') . '/' . $this->manifest_script;
-
-			if (!file_exists($path['dest']) || $this->parent->isOverwrite())
-			{
-				if (!$this->parent->copyFiles(array($path)))
-				{
-					// Install failed, rollback changes
-					throw new RuntimeException(JText::_('JLIB_INSTALLER_ABORT_MOD_INSTALL_MANIFEST'));
-				}
-			}
-		}
-	}
-
-	/**
-	 * Method to finalise the installation processing
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 * @throws  RuntimeException
-	 */
-	protected function finaliseInstall()
-	{
-		// Clobber any possible pending updates
-		$update = JTable::getInstance('update');
-		$uid    = $update->find(
-			array(
-				'element'   => $this->element,
-				'type'      => 'module',
-				'client_id' => $this->clientId
-			)
-		);
-
-		if ($uid)
-		{
-			$update->delete($uid);
-		}
-
-		// Lastly, we will copy the manifest file to its appropriate place.
-		if ($this->route != 'discover_install')
-		{
-			if (!$this->parent->copyManifest(-1))
-			{
-				// Install failed, rollback changes
-				throw new RuntimeException(JText::_('JLIB_INSTALLER_ABORT_MOD_INSTALL_COPY_SETUP'));
-			}
-		}
-	}
-
-	/**
-	 * Get the filtered extension element from the manifest
-	 *
-	 * @param   string  $element  Optional element name to be converted
-	 *
-	 * @return  string  The filtered element
-	 *
-	 * @since   3.4
-	 */
-	public function getElement($element = null)
-	{
-		if (!$element)
-		{
-			if (count($this->getManifest()->files->children()))
-			{
-				foreach ($this->getManifest()->files->children() as $file)
-				{
-					if ((string) $file->attributes()->module)
-					{
-						$element = strtolower((string) $file->attributes()->module);
-
-						break;
-					}
-				}
-			}
-		}
-
-		return $element;
-	}
-
-	/**
 	 * Custom loadLanguage method
 	 *
 	 * @param   string  $path  The path where we find language files
 	 *
 	 * @return  void
 	 *
-	 * @since   3.4
+	 * @since   3.1
 	 */
 	public function loadLanguage($path = null)
 	{
 		$source = $this->parent->getPath('source');
-		$client = $this->parent->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE;
 
 		if (!$source)
 		{
-			$this->parent->setPath('source', $client . '/modules/' . $this->parent->extension->element);
+			$this->parent
+				->setPath(
+				'source',
+				($this->parent->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/modules/' . $this->parent->extension->element
+			);
 		}
 
-		$this->setManifest($this->parent->getManifest());
+		$this->manifest = $this->parent->getManifest();
 
-		if ($this->getManifest()->files)
+		if ($this->manifest->files)
 		{
-			$extension = $this->getElement();
+			$element = $this->manifest->files;
+			$extension = '';
+
+			if (count($element->children()))
+			{
+				foreach ($element->children() as $file)
+				{
+					if ((string) $file->attributes()->module)
+					{
+						$extension = strtolower((string) $file->attributes()->module);
+						break;
+					}
+				}
+			}
 
 			if ($extension)
 			{
+				$lang = JFactory::getLanguage();
 				$source = $path ? $path : ($this->parent->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/modules/' . $extension;
-				$folder = (string) $this->getManifest()->files->attributes()->folder;
+				$folder = (string) $element->attributes()->folder;
 
 				if ($folder && file_exists($path . '/' . $folder))
 				{
 					$source = $path . '/' . $folder;
 				}
 
-				$client = (string) $this->getManifest()->attributes()->client;
-				$this->doLoadLanguage($extension, $source, constant('JPATH_' . strtoupper($client)));
+				$client = (string) $this->manifest->attributes()->client;
+				$lang->load($extension . '.sys', $source, null, false, true)
+					|| $lang->load($extension . '.sys', constant('JPATH_' . strtoupper($client)), null, false, true);
 			}
 		}
 	}
 
 	/**
-	 * Method to parse optional tags in the manifest
+	 * Custom install method
 	 *
-	 * @return  void
+	 * @return  boolean  True on success
 	 *
-	 * @since   3.4
+	 * @since   3.1
 	 */
-	protected function parseOptionalTags()
+	public function install()
 	{
-		// Parse optional tags
-		$this->parent->parseMedia($this->getManifest()->media, $this->clientId);
-		$this->parent->parseLanguages($this->getManifest()->languages, $this->clientId);
-	}
+		// Get a database connector object
+		$db = $this->parent->getDbo();
 
-	/**
-	 * Prepares the adapter for a discover_install task
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	public function prepareDiscoverInstall()
-	{
-		$client = JApplicationHelper::getClientInfo($this->parent->extension->client_id);
-		$manifestPath = $client->path . '/modules/' . $this->parent->extension->element . '/' . $this->parent->extension->element . '.xml';
-		$this->parent->manifest = $this->parent->isManifest($manifestPath);
-		$this->parent->setPath('manifest', $manifestPath);
-		$this->setManifest($this->parent->getManifest());
-	}
+		// Get the extension manifest object
+		$this->manifest = $this->parent->getManifest();
 
-	/**
-	 * Method to do any prechecks and setup the install paths for the extension
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 * @throws  RuntimeException
-	 */
-	protected function setupInstallPaths()
-	{
+		/*
+		 * ---------------------------------------------------------------------------------------------
+		 * Manifest Document Setup Section
+		 * ---------------------------------------------------------------------------------------------
+		 */
+
+		// Set the extensions name
+		$name = (string) $this->manifest->name;
+		$name = JFilterInput::getInstance()->clean($name, 'string');
+		$this->set('name', $name);
+
+		// Get the module description
+		$description = (string) $this->manifest->description;
+
+		if ($description)
+		{
+			$this->parent->set('message', JText::_($description));
+		}
+		else
+		{
+			$this->parent->set('message', '');
+		}
+
+		/*
+		 * ---------------------------------------------------------------------------------------------
+		 * Target Application Section
+		 * ---------------------------------------------------------------------------------------------
+		 */
+
 		// Get the target application
-		$cname = (string) $this->getManifest()->attributes()->client;
-
-		if ($cname)
+		if ($cname = (string) $this->manifest->attributes()->client)
 		{
 			// Attempt to map the client to a base path
 			$client = JApplicationHelper::getClientInfo($cname, true);
 
 			if ($client === false)
 			{
-				throw new RuntimeException(
-					JText::sprintf(
-						'JLIB_INSTALLER_ABORT_MOD_UNKNOWN_CLIENT',
-						JText::_('JLIB_INSTALLER_' . $this->route),
-						$client->name
-					)
-				);
+				$this->parent
+					->abort(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_UNKNOWN_CLIENT', JText::_('JLIB_INSTALLER_' . $this->route), $client->name));
+
+				return false;
 			}
 
 			$basePath = $client->path;
-			$this->clientId = $client->id;
+			$clientId = $client->id;
 		}
 		else
 		{
 			// No client attribute was found so we assume the site as the client
 			$basePath = JPATH_SITE;
-			$this->clientId = 0;
+			$clientId = 0;
 		}
 
 		// Set the installation path
-		if (empty($this->element))
+		$element = '';
+
+		if (count($this->manifest->files->children()))
 		{
-			throw new RuntimeException(
-				JText::sprintf(
-					'JLIB_INSTALLER_ABORT_MOD_INSTALL_NOFILE',
-					JText::_('JLIB_INSTALLER_' . $this->route)
-				)
-			);
+			foreach ($this->manifest->files->children() as $file)
+			{
+				if ((string) $file->attributes()->module)
+				{
+					$element = (string) $file->attributes()->module;
+					$this->set('element', $element);
+
+					break;
+				}
+			}
 		}
 
-		$this->parent->setPath('extension_root', $basePath . '/modules/' . $this->element);
-	}
-
-	/**
-	 * Method to store the extension to the database
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 * @throws  RuntimeException
-	 */
-	protected function storeExtension()
-	{
-		// Discover installs are stored a little differently
-		if ($this->route == 'discover_install')
+		if (!empty($element))
 		{
-			$manifest_details = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
+			$this->parent->setPath('extension_root', $basePath . '/modules/' . $element);
+		}
+		else
+		{
+			$this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_INSTALL_NOFILE', JText::_('JLIB_INSTALLER_' . $this->route)));
 
-			$this->extension->manifest_cache = json_encode($manifest_details);
-			$this->extension->state = 0;
-			$this->extension->name = $manifest_details['name'];
-			$this->extension->enabled = 1;
-			$this->extension->params = $this->parent->getParams();
+			return false;
+		}
 
-			if (!$this->extension->store())
+		/*
+		 * Check to see if a module by the same name is already installed
+		 * If it is, then update the table because if the files aren't there
+		 * we can assume that it was (badly) uninstalled
+		 * If it isn't, add an entry to extensions
+		 */
+		$query = $db->getQuery(true)
+			->select($db->quoteName('extension_id'))
+			->from($db->quoteName('#__extensions'))
+			->where($db->quoteName('element') . ' = ' . $db->quote($element))
+			->where($db->quoteName('client_id') . ' = ' . (int) $clientId);
+		$db->setQuery($query);
+
+		try
+		{
+			$db->execute();
+		}
+		catch (RuntimeException $e)
+		{
+			// Install failed, roll back changes
+			$this->parent
+				->abort(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_ROLLBACK', JText::_('JLIB_INSTALLER_' . $this->route), $db->stderr(true)));
+
+			return false;
+		}
+
+		$id = $db->loadResult();
+
+		/*
+		 * If the module directory already exists, then we will assume that the
+		 * module is already installed or another module is using that
+		 * directory.
+		 * Check that this is either an issue where its not overwriting or it is
+		 * set to upgrade anyway
+		 */
+
+		if (file_exists($this->parent->getPath('extension_root')) && (!$this->parent->isOverwrite() || $this->parent->isUpgrade()))
+		{
+			// Look for an update function or update tag
+			$updateElement = $this->manifest->update;
+
+			// Upgrade manually set or update function available or update tag detected
+			if ($this->parent->isUpgrade() || ($this->parent->manifestClass && method_exists($this->parent->manifestClass, 'update'))
+				|| $updateElement)
 			{
-				// Install failed, roll back changes
-				throw new RuntimeException(JText::_('JLIB_INSTALLER_ERROR_MOD_DISCOVER_STORE_DETAILS'));
+				// Force this one
+				$this->parent->setOverwrite(true);
+				$this->parent->setUpgrade(true);
+
+				if ($id)
+				{
+					// If there is a matching extension mark this as an update; semantics really
+					$this->route = 'Update';
+				}
+			}
+			elseif (!$this->parent->isOverwrite())
+			{
+				// Overwrite is set
+				// We didn't have overwrite set, find an update function or find an update tag so lets call it safe
+				$this->parent
+					->abort(
+					JText::sprintf(
+						'JLIB_INSTALLER_ABORT_MOD_INSTALL_DIRECTORY', JText::_('JLIB_INSTALLER_' . $this->route),
+						$this->parent->getPath('extension_root')
+					)
+				);
+
+				return false;
+			}
+		}
+
+		/*
+		 * ---------------------------------------------------------------------------------------------
+		 * Installer Trigger Loading
+		 * ---------------------------------------------------------------------------------------------
+		 */
+
+		// If there is an manifest class file, let's load it; we'll copy it later (don't have destination yet)
+		$this->scriptElement = $this->manifest->scriptfile;
+		$manifestScript = (string) $this->manifest->scriptfile;
+
+		if ($manifestScript)
+		{
+			$manifestScriptFile = $this->parent->getPath('source') . '/' . $manifestScript;
+
+			if (is_file($manifestScriptFile))
+			{
+				// Load the file
+				include_once $manifestScriptFile;
 			}
 
-			return;
+			// Set the class name
+			$classname = $element . 'InstallerScript';
+
+			if (class_exists($classname))
+			{
+				// Create a new instance.
+				$this->parent->manifestClass = new $classname($this);
+
+				// And set this so we can copy it later.
+				$this->set('manifest_script', $manifestScript);
+			}
 		}
+
+		// Run preflight if possible (since we know we're not an update)
+		ob_start();
+		ob_implicit_flush(false);
+
+		if ($this->parent->manifestClass && method_exists($this->parent->manifestClass, 'preflight'))
+		{
+			if ($this->parent->manifestClass->preflight($this->route, $this) === false)
+			{
+				// Preflight failed, rollback changes
+				$this->parent->abort(JText::_('JLIB_INSTALLER_ABORT_MOD_INSTALL_CUSTOM_INSTALL_FAILURE'));
+
+				return false;
+			}
+		}
+
+		// Create msg object; first use here
+		$msg = ob_get_contents();
+		ob_end_clean();
+
+		/*
+		 * ---------------------------------------------------------------------------------------------
+		 * Filesystem Processing Section
+		 * ---------------------------------------------------------------------------------------------
+		 */
+
+		// If the module directory does not exist, lets create it
+		$created = false;
+
+		if (!file_exists($this->parent->getPath('extension_root')))
+		{
+			if (!$created = JFolder::create($this->parent->getPath('extension_root')))
+			{
+				$this->parent
+					->abort(
+					JText::sprintf(
+						'JLIB_INSTALLER_ABORT_MOD_INSTALL_CREATE_DIRECTORY', JText::_('JLIB_INSTALLER_' . $this->route),
+						$this->parent->getPath('extension_root')
+					)
+				);
+
+				return false;
+			}
+		}
+
+		/*
+		 * Since we created the module directory and will want to remove it if
+		 * we have to roll back the installation, let's add it to the
+		 * installation step stack
+		 */
+
+		if ($created)
+		{
+			$this->parent->pushStep(array('type' => 'folder', 'path' => $this->parent->getPath('extension_root')));
+		}
+
+		// Copy all necessary files
+		if ($this->parent->parseFiles($this->manifest->files, -1) === false)
+		{
+			// Install failed, roll back changes
+			$this->parent->abort();
+
+			return false;
+		}
+
+		// If there is a manifest script, let's copy it.
+		if ($this->get('manifest_script'))
+		{
+			$path['src'] = $this->parent->getPath('source') . '/' . $this->get('manifest_script');
+			$path['dest'] = $this->parent->getPath('extension_root') . '/' . $this->get('manifest_script');
+
+			if (!file_exists($path['dest']) || $this->parent->isOverwrite())
+			{
+				if (!$this->parent->copyFiles(array($path)))
+				{
+					// Install failed, rollback changes
+					$this->parent->abort(JText::_('JLIB_INSTALLER_ABORT_MOD_INSTALL_MANIFEST'));
+
+					return false;
+				}
+			}
+		}
+
+		// Parse optional tags
+		$this->parent->parseMedia($this->manifest->media, $clientId);
+		$this->parent->parseLanguages($this->manifest->languages, $clientId);
+
+		/*
+		 * ---------------------------------------------------------------------------------------------
+		 * Database Processing Section
+		 * ---------------------------------------------------------------------------------------------
+		 */
+
+		$row = JTable::getInstance('extension');
 
 		// Was there a module already installed with the same name?
-		if ($this->currentExtensionId)
+		if ($id)
 		{
-			if (!$this->parent->isOverwrite())
-			{
-				// Install failed, roll back changes
-				throw new RuntimeException(
-					JText::sprintf(
-						'JLIB_INSTALLER_ABORT_MOD_INSTALL_ALLREADY_EXISTS',
-						JText::_('JLIB_INSTALLER_' . $this->route),
-						$this->name
-					)
-				);
-			}
-
 			// Load the entry and update the manifest_cache
-			$this->extension->load($this->currentExtensionId);
+			$row->load($id);
 
 			// Update name
-			$this->extension->name = $this->name;
+			$row->name = $this->get('name');
 
 			// Update manifest
-			$this->extension->manifest_cache = $this->parent->generateManifestCache();
+			$row->manifest_cache = $this->parent->generateManifestCache();
 
-			if (!$this->extension->store())
+			if (!$row->store())
 			{
 				// Install failed, roll back changes
-				throw new RuntimeException(
-					JText::sprintf(
-						'JLIB_INSTALLER_ABORT_MOD_ROLLBACK',
-						JText::_('JLIB_INSTALLER_' . $this->route),
-						$this->extension->getError()
-					)
-				);
+				$this->parent
+					->abort(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_ROLLBACK', JText::_('JLIB_INSTALLER_' . $this->route), $db->stderr(true)));
+
+				return false;
 			}
 		}
 		else
 		{
-			$this->extension->name    = $this->name;
-			$this->extension->type    = 'module';
-			$this->extension->element = $this->element;
+			$row->set('name', $this->get('name'));
+			$row->set('type', 'module');
+			$row->set('element', $this->get('element'));
 
 			// There is no folder for modules
-			$this->extension->folder    = '';
-			$this->extension->enabled   = 1;
-			$this->extension->protected = 0;
-			$this->extension->access    = $this->clientId == 1 ? 2 : 0;
-			$this->extension->client_id = $this->clientId;
-			$this->extension->params    = $this->parent->getParams();
+			$row->set('folder', '');
+			$row->set('enabled', 1);
+			$row->set('protected', 0);
+			$row->set('access', $clientId == 1 ? 2 : 0);
+			$row->set('client_id', $clientId);
+			$row->set('params', $this->parent->getParams());
 
 			// Custom data
-			$this->extension->custom_data    = '';
-			$this->extension->manifest_cache = $this->parent->generateManifestCache();
+			$row->set('custom_data', '');
+			$row->set('manifest_cache', $this->parent->generateManifestCache());
 
-			if (!$this->extension->store())
+			if (!$row->store())
 			{
 				// Install failed, roll back changes
-				throw new RuntimeException(
-					JText::sprintf(
-						'JLIB_INSTALLER_ABORT_MOD_ROLLBACK',
-						JText::_('JLIB_INSTALLER_' . $this->route),
-						$this->extension->getError()
-					)
-				);
+				$this->parent
+					->abort(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_ROLLBACK', JText::_('JLIB_INSTALLER_' . $this->route), $db->stderr(true)));
+
+				return false;
 			}
 
 			// Since we have created a module item, we add it to the installation step stack
 			// so that if we have to rollback the changes we can undo it.
-			$this->parent->pushStep(
-				array(
-					'type' => 'extension',
-					'extension_id' => $this->extension->extension_id
-				)
-			);
+			$this->parent->pushStep(array('type' => 'extension', 'extension_id' => $row->extension_id));
 
-			// Create unpublished module
-			$name = preg_replace('#[\*?]#', '', JText::_($this->name));
-
-			/** @var JTableModule $module */
-			$module            = JTable::getInstance('module');
-			$module->title     = $name;
-			$module->content   = '';
-			$module->module    = $this->element;
-			$module->access    = '1';
-			$module->showtitle = '1';
-			$module->params    = '';
-			$module->client_id = $this->clientId;
-			$module->language  = '*';
+			// Create unpublished module in jos_modules
+			$name = preg_replace('#[\*?]#', '', JText::_($this->get('name')));
+			$module = JTable::getInstance('module');
+			$module->set('title', $name);
+			$module->set('content', '');
+			$module->set('module', $this->get('element'));
+			$module->set('access', '1');
+			$module->set('showtitle', '1');
+			$module->set('params', '');
+			$module->set('client_id', $clientId);
+			$module->set('language', '*');
 
 			$module->store();
 		}
+
+		// Let's run the queries for the module
+		if (strtolower($this->route) == 'install')
+		{
+			$result = $this->parent->parseSQLFiles($this->manifest->install->sql);
+
+			if ($result === false)
+			{
+				// Install failed, rollback changes
+				$this->parent
+					->abort(
+					JText::sprintf('JLIB_INSTALLER_ABORT_MOD_INSTALL_SQL_ERROR', JText::_('JLIB_INSTALLER_' . $this->route), $db->stderr(true))
+				);
+
+				return false;
+			}
+
+			// Set the schema version to be the latest update version
+			if ($this->manifest->update)
+			{
+				$this->parent->setSchemaVersion($this->manifest->update->schemas, $row->extension_id);
+			}
+		}
+		elseif (strtolower($this->route) == 'update')
+		{
+			if ($this->manifest->update)
+			{
+				$result = $this->parent->parseSchemaUpdates($this->manifest->update->schemas, $row->extension_id);
+
+				if ($result === false)
+				{
+					// Install failed, rollback changes
+					$this->parent->abort(JText::sprintf('JLIB_INSTALLER_ABORT_MOD_UPDATE_SQL_ERROR', $db->stderr(true)));
+
+					return false;
+				}
+			}
+		}
+
+		// Run the custom method based on the route
+		ob_start();
+		ob_implicit_flush(false);
+
+		if ($this->parent->manifestClass && method_exists($this->parent->manifestClass, $this->route))
+		{
+			if ($this->parent->manifestClass->{$this->route}($this) === false)
+			{
+				// Install failed, rollback changes
+				$this->parent->abort(JText::_('JLIB_INSTALLER_ABORT_MOD_INSTALL_CUSTOM_INSTALL_FAILURE'));
+
+				return false;
+			}
+		}
+
+		// Append messages
+		$msg .= ob_get_contents();
+		ob_end_clean();
+
+		/**
+		 * ---------------------------------------------------------------------------------------------
+		 * Finalization and Cleanup Section
+		 * ---------------------------------------------------------------------------------------------
+		 */
+
+		// Lastly, we will copy the manifest file to its appropriate place.
+		if (!$this->parent->copyManifest(-1))
+		{
+			// Install failed, rollback changes
+			$this->parent->abort(JText::_('JLIB_INSTALLER_ABORT_MOD_INSTALL_COPY_SETUP'));
+
+			return false;
+		}
+
+		// And now we run the postflight
+		ob_start();
+		ob_implicit_flush(false);
+
+		if ($this->parent->manifestClass && method_exists($this->parent->manifestClass, 'postflight'))
+		{
+			$this->parent->manifestClass->postflight($this->route, $this);
+		}
+
+		// Append messages
+		$msg .= ob_get_contents();
+		ob_end_clean();
+
+		if ($msg != '')
+		{
+			$this->parent->set('extension_message', $msg);
+		}
+
+		return $row->get('extension_id');
+	}
+
+	/**
+	 * Custom update method
+	 *
+	 * This is really a shell for the install system
+	 *
+	 * @return  boolean  True on success.
+	 *
+	 * @since   3.1
+	 */
+	public function update()
+	{
+		// Set the overwrite setting
+		$this->parent->setOverwrite(true);
+		$this->parent->setUpgrade(true);
+
+		// Set the route for the install
+		$this->route = 'update';
+
+		// Go to install which handles updates properly
+		return $this->install();
 	}
 
 	/**
@@ -430,41 +622,82 @@ class JInstallerAdapterModule extends JInstallerAdapter
 
 		foreach ($site_list as $module)
 		{
-			if (file_exists(JPATH_SITE . "/modules/$module/$module.xml"))
-			{
-				$manifest_details = JInstaller::parseXMLInstallFile(JPATH_SITE . "/modules/$module/$module.xml");
-				$extension = JTable::getInstance('extension');
-				$extension->set('type', 'module');
-				$extension->set('client_id', $site_info->id);
-				$extension->set('element', $module);
-				$extension->set('folder', '');
-				$extension->set('name', $module);
-				$extension->set('state', -1);
-				$extension->set('manifest_cache', json_encode($manifest_details));
-				$extension->set('params', '{}');
-				$results[] = clone $extension;
-			}
+			$manifest_details = JInstaller::parseXMLInstallFile(JPATH_SITE . "/modules/$module/$module.xml");
+			$extension = JTable::getInstance('extension');
+			$extension->set('type', 'module');
+			$extension->set('client_id', $site_info->id);
+			$extension->set('element', $module);
+			$extension->set('folder', '');
+			$extension->set('name', $module);
+			$extension->set('state', -1);
+			$extension->set('manifest_cache', json_encode($manifest_details));
+			$extension->set('params', '{}');
+			$results[] = clone $extension;
 		}
 
 		foreach ($admin_list as $module)
 		{
-			if (file_exists(JPATH_ADMINISTRATOR . "/modules/$module/$module.xml"))
-			{
-				$manifest_details = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . "/modules/$module/$module.xml");
-				$extension = JTable::getInstance('extension');
-				$extension->set('type', 'module');
-				$extension->set('client_id', $admin_info->id);
-				$extension->set('element', $module);
-				$extension->set('folder', '');
-				$extension->set('name', $module);
-				$extension->set('state', -1);
-				$extension->set('manifest_cache', json_encode($manifest_details));
-				$extension->set('params', '{}');
-				$results[] = clone $extension;
-			}
+			$manifest_details = JInstaller::parseXMLInstallFile(JPATH_ADMINISTRATOR . "/modules/$module/$module.xml");
+			$extension = JTable::getInstance('extension');
+			$extension->set('type', 'module');
+			$extension->set('client_id', $admin_info->id);
+			$extension->set('element', $module);
+			$extension->set('folder', '');
+			$extension->set('name', $module);
+			$extension->set('state', -1);
+			$extension->set('manifest_cache', json_encode($manifest_details));
+			$extension->set('params', '{}');
+			$results[] = clone $extension;
 		}
 
 		return $results;
+	}
+
+	/**
+	 * Custom discover_install method
+	 *
+	 * @return  mixed  Extension ID on success, boolean false on failure
+	 *
+	 * @since   3.1
+	 */
+	public function discover_install()
+	{
+		// Modules are like templates, and are one of the easiest
+		// If its not in the extensions table we just add it
+		$client = JApplicationHelper::getClientInfo($this->parent->extension->client_id);
+		$manifestPath = $client->path . '/modules/' . $this->parent->extension->element . '/' . $this->parent->extension->element . '.xml';
+		$this->parent->manifest = $this->parent->isManifest($manifestPath);
+		$description = (string) $this->parent->manifest->description;
+
+		if ($description)
+		{
+			$this->parent->set('message', JText::_($description));
+		}
+		else
+		{
+			$this->parent->set('message', '');
+		}
+
+		$this->parent->setPath('manifest', $manifestPath);
+		$manifest_details = JInstaller::parseXMLInstallFile($this->parent->getPath('manifest'));
+
+		// TODO: Re-evaluate this; should we run installation triggers? postflight perhaps?
+		$this->parent->extension->manifest_cache = json_encode($manifest_details);
+		$this->parent->extension->state = 0;
+		$this->parent->extension->name = $manifest_details['name'];
+		$this->parent->extension->enabled = 1;
+		$this->parent->extension->params = $this->parent->getParams();
+
+		if ($this->parent->extension->store())
+		{
+			return $this->parent->extension->get('extension_id');
+		}
+		else
+		{
+			JLog::add(JText::_('JLIB_INSTALLER_ERROR_MOD_DISCOVER_STORE_DETAILS'), JLog::WARNING, 'jerror');
+
+			return false;
+		}
 	}
 
 	/**
@@ -507,12 +740,15 @@ class JInstallerAdapterModule extends JInstallerAdapter
 	 */
 	public function uninstall($id)
 	{
+		$row = null;
 		$retval = true;
-		$db     = $this->db;
+		$db = $this->parent->getDbo();
 
 		// First order of business will be to load the module object table from the database.
 		// This should give us the necessary information to proceed.
-		if (!$this->extension->load((int) $id) || !strlen($this->extension->element))
+		$row = JTable::getInstance('extension');
+
+		if (!$row->load((int) $id) || !strlen($row->element))
 		{
 			JLog::add(JText::_('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_ERRORUNKOWNEXTENSION'), JLog::WARNING, 'jerror');
 
@@ -521,25 +757,20 @@ class JInstallerAdapterModule extends JInstallerAdapter
 
 		// Is the module we are trying to uninstall a core one?
 		// Because that is not a good idea...
-		if ($this->extension->protected)
+		if ($row->protected)
 		{
-			JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_WARNCOREMODULE', $this->extension->name), JLog::WARNING, 'jerror');
+			JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_WARNCOREMODULE', $row->name), JLog::WARNING, 'jerror');
 
 			return false;
 		}
 
 		// Get the extension root path
-		$element = $this->extension->element;
-		$client  = JApplicationHelper::getClientInfo($this->extension->client_id);
+		$element = $row->element;
+		$client = JApplicationHelper::getClientInfo($row->client_id);
 
 		if ($client === false)
 		{
-			$this->parent->abort(
-				JText::sprintf(
-					'JLIB_INSTALLER_ERROR_MOD_UNINSTALL_UNKNOWN_CLIENT',
-					$this->extension->client_id
-				)
-			);
+			$this->parent->abort(JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_UNKNOWN_CLIENT', $row->client_id));
 
 			return false;
 		}
@@ -551,14 +782,14 @@ class JInstallerAdapterModule extends JInstallerAdapter
 		// Get the module's manifest objecct
 		// We do findManifest to avoid problem when uninstalling a list of extensions: getManifest cache its manifest file.
 		$this->parent->findManifest();
-		$this->setManifest($this->parent->getManifest());
+		$this->manifest = $this->parent->getManifest();
 
 		// Attempt to load the language file; might have uninstall strings
-		$this->loadLanguage(($this->extension->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/modules/' . $element);
+		$this->loadLanguage(($row->client_id ? JPATH_ADMINISTRATOR : JPATH_SITE) . '/modules/' . $element);
 
 		// If there is an manifest class file, let's load it
-		$this->scriptElement = $this->getManifest()->scriptfile;
-		$manifestScript      = (string) $this->getManifest()->scriptfile;
+		$this->scriptElement = $this->manifest->scriptfile;
+		$manifestScript = (string) $this->manifest->scriptfile;
 
 		if ($manifestScript)
 		{
@@ -583,16 +814,24 @@ class JInstallerAdapterModule extends JInstallerAdapter
 			}
 		}
 
-		try
+		ob_start();
+		ob_implicit_flush(false);
+
+		// Run uninstall if possible
+		if ($this->parent->manifestClass && method_exists($this->parent->manifestClass, 'uninstall'))
 		{
-			$this->triggerManifestScript('uninstall');
-		}
-		catch (RuntimeException $e)
-		{
-			// Ignore errors for now
+			$this->parent->manifestClass->uninstall($this);
 		}
 
-		if (!($this->getManifest() instanceof SimpleXMLElement))
+		$msg = ob_get_contents();
+		ob_end_clean();
+
+		if ($msg != '')
+		{
+			$this->parent->set('extension_message', $msg);
+		}
+
+		if (!($this->manifest instanceof SimpleXMLElement))
 		{
 			// Make sure we delete the folders
 			JFolder::delete($this->parent->getPath('extension_root'));
@@ -602,34 +841,32 @@ class JInstallerAdapterModule extends JInstallerAdapter
 		}
 
 		// Let's run the uninstall queries for the module
-		try
-		{
-			$this->parseQueries();
-		}
-		catch (RuntimeException $e)
+		$result = $this->parent->parseSQLFiles($this->manifest->uninstall->sql);
+
+		if ($result === false)
 		{
 			// Install failed, rollback changes
-			JLog::add($e->getMessage(), JLog::WARNING, 'jerror');
+			JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_SQL_ERROR', $db->stderr(true)), JLog::WARNING, 'jerror');
 			$retval = false;
 		}
 
 		// Remove the schema version
 		$query = $db->getQuery(true)
 			->delete('#__schemas')
-			->where('extension_id = ' . $this->extension->extension_id);
+			->where('extension_id = ' . $row->extension_id);
 		$db->setQuery($query);
 		$db->execute();
 
 		// Remove other files
-		$this->parent->removeFiles($this->getManifest()->media);
-		$this->parent->removeFiles($this->getManifest()->languages, $this->extension->client_id);
+		$this->parent->removeFiles($this->manifest->media);
+		$this->parent->removeFiles($this->manifest->languages, $row->client_id);
 
 		// Let's delete all the module copies for the type we are uninstalling
 		$query->clear()
 			->select($db->quoteName('id'))
 			->from($db->quoteName('#__modules'))
-			->where($db->quoteName('module') . ' = ' . $db->quote($this->extension->element))
-			->where($db->quoteName('client_id') . ' = ' . (int) $this->extension->client_id);
+			->where($db->quoteName('module') . ' = ' . $db->quote($row->element))
+			->where($db->quoteName('client_id') . ' = ' . (int) $row->client_id);
 		$db->setQuery($query);
 
 		try
@@ -665,27 +902,28 @@ class JInstallerAdapterModule extends JInstallerAdapter
 			}
 
 			// Wipe out any instances in the modules table
-			/** @var JTableModule $module */
-			$module = JTable::getInstance('Module');
+			$query = $db->getQuery(true)
+				->delete($db->quoteName('#__modules'))
+				->where($db->quoteName('id') . ' IN (' . $modID . ')');
+			$db->setQuery($query);
 
-			foreach ($modules as $modInstanceId)
+			try
 			{
-				$module->load($modInstanceId);
-
-				if (!$module->delete())
-				{
-					JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_EXCEPTION', $module->getError()), JLog::WARNING, 'jerror');
-					$retval = false;
-				}
+				$db->execute();
+			}
+			catch (RuntimeException $e)
+			{
+				JLog::add(JText::sprintf('JLIB_INSTALLER_ERROR_MOD_UNINSTALL_EXCEPTION', $db->stderr(true)), JLog::WARNING, 'jerror');
+				$retval = false;
 			}
 		}
 
 		// Now we will no longer need the module object, so let's delete it and free up memory
-		$this->extension->delete($this->extension->extension_id);
+		$row->delete($row->extension_id);
 		$query = $db->getQuery(true)
 			->delete($db->quoteName('#__modules'))
-			->where($db->quoteName('module') . ' = ' . $db->quote($this->extension->element))
-			->where($db->quote('client_id') . ' = ' . $this->extension->client_id);
+			->where($db->quoteName('module') . ' = ' . $db->quote($row->element))
+			->where($db->quote('client_id') . ' = ' . $row->client_id);
 		$db->setQuery($query);
 
 		try
@@ -697,6 +935,8 @@ class JInstallerAdapterModule extends JInstallerAdapter
 		{
 			// Ignore the error...
 		}
+
+		unset($row);
 
 		// Remove the installation folder
 		if (!JFolder::delete($this->parent->getPath('extension_root')))
@@ -774,6 +1014,8 @@ class JInstallerAdapterModule extends JInstallerAdapter
 /**
  * Deprecated class placeholder. You should use JInstallerAdapterModule instead.
  *
+ * @package     Joomla.Libraries
+ * @subpackage  Installer
  * @since       3.1
  * @deprecated  4.0
  * @codeCoverageIgnore

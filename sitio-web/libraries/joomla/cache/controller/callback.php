@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Cache
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Joomla! Cache callback type object
  *
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Cache
+ * @since       11.1
  */
 class JCacheControllerCallback extends JCacheController
 {
@@ -46,7 +48,7 @@ class JCacheControllerCallback extends JCacheController
 	 *
 	 * @param   mixed    $callback    Callback or string shorthand for a callback
 	 * @param   array    $args        Callback arguments
-	 * @param   mixed    $id          Cache id
+	 * @param   string   $id          Cache id
 	 * @param   boolean  $wrkarounds  True to use wrkarounds
 	 * @param   array    $woptions    Workaround options
 	 *
@@ -56,6 +58,7 @@ class JCacheControllerCallback extends JCacheController
 	 */
 	public function get($callback, $args = array(), $id = false, $wrkarounds = false, $woptions = array())
 	{
+
 		// Normalize callback
 		if (is_array($callback))
 		{
@@ -100,7 +103,6 @@ class JCacheControllerCallback extends JCacheController
 		if ($data === false)
 		{
 			$locktest = $this->cache->lock($id);
-
 			if ($locktest->locked == true && $locktest->locklooped == true)
 			{
 				$data = $this->cache->get($id);
@@ -111,18 +113,20 @@ class JCacheControllerCallback extends JCacheController
 
 		if ($data !== false)
 		{
+
 			$cached = unserialize(trim($data));
 			$coptions['mergehead'] = isset($woptions['mergehead']) ? $woptions['mergehead'] : 0;
 			$output = ($wrkarounds == false) ? $cached['output'] : JCache::getWorkarounds($cached['output'], $coptions);
 			$result = $cached['result'];
-
 			if ($locktest->locked == true)
 			{
 				$this->cache->unlock($id);
 			}
+
 		}
 		else
 		{
+
 			if (!is_array($args))
 			{
 				$Args = !empty($args) ? array(&$args) : array();
@@ -141,10 +145,7 @@ class JCacheControllerCallback extends JCacheController
 			{
 				$document = JFactory::getDocument();
 				$coptions['modulemode'] = 1;
-				if (method_exists($document, 'getHeadData'))
-				{
-					$coptions['headerbefore'] = $document->getHeadData();
-				}	
+				$coptions['headerbefore'] = $document->getHeadData();
 			}
 			else
 			{
@@ -170,7 +171,6 @@ class JCacheControllerCallback extends JCacheController
 
 			// Store the cache data
 			$this->cache->store(serialize($cached), $id);
-
 			if ($locktest->locked == true)
 			{
 				$this->cache->unlock($id);
@@ -178,7 +178,6 @@ class JCacheControllerCallback extends JCacheController
 		}
 
 		echo $output;
-
 		return $result;
 	}
 

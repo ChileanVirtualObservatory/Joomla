@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_checkin
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Checkin Model
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_checkin
+ * @since       1.6
  */
 class CheckinModelCheckin extends JModelList
 {
@@ -23,8 +25,7 @@ class CheckinModelCheckin extends JModelList
 	/**
 	 * Method to auto-populate the model state.
 	 *
-	 * Note: Calling getState in this method will result in recursion.
-	 *
+	 * @Note. Calling getState in this method will result in recursion.
 	 * @param   string  $ordering   An optional ordering field.
 	 * @param   string  $direction  An optional direction (asc|desc).
 	 *
@@ -44,7 +45,7 @@ class CheckinModelCheckin extends JModelList
 	/**
 	 * Checks in requested tables
 	 *
-	 * @param   array  $ids  An array of table names. Optional.
+	 * @param   array    $ids  An array of table names. Optional.
 	 *
 	 * @return  integer  Checked in item count
 	 *
@@ -61,12 +62,12 @@ class CheckinModelCheckin extends JModelList
 			return;
 		}
 
-		// This int will hold the checked item count.
+		// this int will hold the checked item count
 		$results = 0;
 
 		foreach ($ids as $tn)
 		{
-			// Make sure we get the right tables based on prefix.
+			// make sure we get the right tables based on prefix
 			if (stripos($tn, $app->get('dbprefix')) !== 0)
 			{
 				continue;
@@ -86,13 +87,11 @@ class CheckinModelCheckin extends JModelList
 				->where('checked_out > 0');
 
 			$db->setQuery($query);
-
 			if ($db->execute())
 			{
 				$results = $results + $db->getAffectedRows();
 			}
 		}
-
 		return $results;
 	}
 
@@ -109,14 +108,13 @@ class CheckinModelCheckin extends JModelList
 		{
 			$this->getItems();
 		}
-
 		return $this->total;
 	}
 
 	/**
 	 * Get tables
 	 *
-	 * @return  array  Checked in table names as keys and checked in item count as values.
+	 * @return  array  Checked in table names as keys and checked in item count as values
 	 *
 	 * @since   1.6
 	 */
@@ -128,12 +126,12 @@ class CheckinModelCheckin extends JModelList
 			$db     = $this->_db;
 			$tables = $db->getTableList();
 
-			// This array will hold table name as key and checked in item count as value.
+			// this array will hold table name as key and checked in item count as value
 			$results = array();
 
 			foreach ($tables as $i => $tn)
 			{
-				// Make sure we get the right tables based on prefix.
+				// make sure we get the right tables based on prefix
 				if (stripos($tn, $app->get('dbprefix')) !== 0)
 				{
 					unset($tables[$i]);

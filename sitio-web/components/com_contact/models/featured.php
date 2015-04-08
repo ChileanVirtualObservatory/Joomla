@@ -3,89 +3,54 @@
  * @package     Joomla.Site
  * @subpackage  com_contact
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
-use Joomla\Registry\Registry;
-
 /**
- * Featured contact model class.
- *
- * @since  1.6.0
+ * @package     Joomla.Site
+ * @subpackage  com_contact
  */
 class ContactModelFeatured extends JModelList
 {
 	/**
 	 * Category items data
 	 *
-	 * @var         array
-	 * @since       1.6.0-beta1
-	 * @deprecated  4.0  Variable not used since 1.6.0-beta8
+	 * @var array
 	 */
 	protected $_item = null;
 
-	/**
-	 * Who knows what this was for? It has never been used
-	 *
-	 * @var          array
-	 * @since        1.6.0-beta1
-	 * @deprecated   4.0  Variable not used ever
-	 */
 	protected $_articles = null;
 
-	/**
-	 * Get the siblings of the category
-	 *
-	 * @var          array
-	 * @since        1.6.0-beta1
-	 * @deprecated   4.0  Variable not used since 1.6.0-beta8
-	 */
 	protected $_siblings = null;
 
-	/**
-	 * Get the children of the category
-	 *
-	 * @var          array
-	 * @since        1.6.0-beta1
-	 * @deprecated   4.0  Variable not used since 1.6.0-beta8
-	 */
 	protected $_children = null;
 
-	/**
-	 * Get the parent of the category
-	 *
-	 * @var          array
-	 * @since        1.6.0-beta1
-	 * @deprecated   4.0  Variable not used since 1.6.0-beta8
-	 */
 	protected $_parent = null;
 
 	/**
 	 * The category that applies.
 	 *
-	 * @access      protected
-	 * @var         object
-	 * @deprecated   4.0  Variable not used ever
+	 * @access    protected
+	 * @var        object
 	 */
 	protected $_category = null;
 
 	/**
-	 * The list of other contact categories.
+	 * The list of other cotnact categories.
 	 *
 	 * @access    protected
-	 * @var       array
-	 * @deprecated   4.0  Variable not used ever
+	 * @var        array
 	 */
 	protected $_categories = null;
 
 	/**
 	 * Constructor.
 	 *
-	 * @param   array   $config  An optional associative array of configuration settings.
-	 *
+	 * @param   array  An optional associative array of configuration settings.
+	 * @see     JController
 	 * @since   1.6
 	 */
 	public function __construct($config = array())
@@ -122,7 +87,7 @@ class ContactModelFeatured extends JModelList
 			$item = & $items[$i];
 			if (!isset($this->_params))
 			{
-				$params = new Registry;
+				$params = new JRegistry;
 				$params->loadString($item->params);
 				$item->params = $params;
 			}
@@ -135,7 +100,6 @@ class ContactModelFeatured extends JModelList
 	 * Method to build an SQL query to load the list data.
 	 *
 	 * @return  string    An SQL query
-	 *
 	 * @since   1.6
 	 */
 	protected function getListQuery()
@@ -154,24 +118,20 @@ class ContactModelFeatured extends JModelList
 			->where('a.featured=1')
 			->join('INNER', '#__categories AS c ON c.id = a.catid')
 			->where('c.access IN (' . $groups . ')');
-
 		// Filter by category.
 		if ($categoryId = $this->getState('category.id'))
 		{
 			$query->where('a.catid = ' . (int) $categoryId);
 		}
-
-		// Change for sqlsrv... aliased c.published to cat_published
+		//sqlsrv change... aliased c.published to cat_published
 		// Join to check for category published state in parent categories up the tree
 		$query->select('c.published as cat_published, CASE WHEN badcats.id is null THEN c.published ELSE 0 END AS parents_published');
 		$subquery = 'SELECT cat.id as id FROM #__categories AS cat JOIN #__categories AS parent ';
 		$subquery .= 'ON cat.lft BETWEEN parent.lft AND parent.rgt ';
 		$subquery .= 'WHERE parent.extension = ' . $db->quote('com_contact');
-
 		// Find any up-path categories that are not published
 		// If all categories are published, badcats.id will be null, and we just use the contact state
 		$subquery .= ' AND parent.published != 1 GROUP BY cat.id ';
-
 		// Select state to unpublished if up-path category is unpublished
 		$publishedWhere = 'CASE WHEN badcats.id is null THEN a.published ELSE 0 END';
 		$query->join('LEFT OUTER', '(' . $subquery . ') AS badcats ON badcats.id = c.id');
@@ -207,11 +167,6 @@ class ContactModelFeatured extends JModelList
 	 * Method to auto-populate the model state.
 	 *
 	 * Note. Calling getState in this method will result in recursion.
-	 *
-	 * @param   string  $ordering   An optional ordering field.
-	 * @param   string  $direction  An optional direction (asc|desc).
-	 *
-	 * @return  void
 	 *
 	 * @since   1.6
 	 */

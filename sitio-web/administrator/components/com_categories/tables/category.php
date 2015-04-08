@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_categories
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Category table
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_categories
+ * @since       1.6
  */
 class CategoriesTableCategory extends JTableCategory
 {
@@ -24,7 +26,7 @@ class CategoriesTableCategory extends JTableCategory
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @see     https://docs.joomla.org/JTableNested/delete
+	 * @see     http://docs.joomla.org/JTableNested/delete
 	 * @since   2.5
 	 */
 	public function delete($pk = null, $children = false)

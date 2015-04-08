@@ -3,7 +3,7 @@
  * @package     Joomla.Libraries
  * @subpackage  HTML
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Utility class for JavaScript behaviors
  *
- * @since  1.5
+ * @package     Joomla.Libraries
+ * @subpackage  HTML
+ * @since       1.5
  */
 abstract class JHtmlBehavior
 {
@@ -85,6 +87,7 @@ abstract class JHtmlBehavior
 			return;
 		}
 
+		JHtml::_('jquery.framework');
 		JHtml::_('script', 'system/core.js', false, true);
 		static::$loaded[__METHOD__] = true;
 
@@ -135,13 +138,9 @@ abstract class JHtmlBehavior
 	 * @return  void
 	 *
 	 * @since   1.5
-	 *
-	 * @Deprecated 3.4 Use formvalidator instead
 	 */
 	public static function formvalidation()
 	{
-		JLog::add('The use of formvalidation is deprecated use formvalidator instead.', JLog::WARNING, 'deprecated');
-
 		// Only load once
 		if (isset(static::$loaded[__METHOD__]))
 		{
@@ -151,34 +150,7 @@ abstract class JHtmlBehavior
 		// Include MooTools framework
 		static::framework();
 
-		// Load the new jQuery code
-		static::formvalidator();
-	}
-
-	/**
-	 * Add unobtrusive JavaScript support for form validation.
-	 *
-	 * To enable form validation the form tag must have class="form-validate".
-	 * Each field that needs to be validated needs to have class="validate".
-	 * Additional handlers can be added to the handler for username, password,
-	 * numeric and email. To use these add class="validate-email" and so on.
-	 *
-	 * @return  void
-	 *
-	 * @since   3.4
-	 */
-	public static function formvalidator()
-	{
-		// Only load once
-		if (isset(static::$loaded[__METHOD__]))
-		{
-			return;
-		}
-
-		// Include core
-		static::core();
-
-		// Include jQuery
+		// Include jQuery Framework
 		JHtml::_('jquery.framework');
 
 		// Add validate.js language strings
@@ -239,10 +211,10 @@ abstract class JHtmlBehavior
 		{
 			return;
 		}
-		// Include core
-		static::core();
+		// Include MooTools framework
+		static::framework();
 
-		JHtml::_('script', 'system/combobox.js', false, true);
+		JHtml::_('script', 'system/combobox.js', true, true);
 		static::$loaded[__METHOD__] = true;
 	}
 
@@ -308,9 +280,8 @@ abstract class JHtmlBehavior
 				var title = $(this).attr('title');
 				if (title) {
 					var parts = title.split('::', 2);
-					var mtelement = document.id(this);
-					mtelement.store('tip:title', parts[0]);
-					mtelement.store('tip:text', parts[1]);
+					$(this).data('tip:title', parts[0]);
+					$(this).data('tip:text', parts[1]);
 				}
 			});
 			var JTooltips = new Tips($('$selector').get(), $options);
@@ -404,10 +375,7 @@ abstract class JHtmlBehavior
 			SqueezeBox.assign($('" . $selector . "').get(), {
 				parse: 'rel'
 			});
-		});
-		function jModalClose() {
-			SqueezeBox.close();
-		}"
+		});"
 		);
 
 		// Set static array
@@ -433,18 +401,15 @@ abstract class JHtmlBehavior
 			return;
 		}
 
-		// Include core
-		static::core();
-
 		// Include jQuery
 		JHtml::_('jquery.framework');
 
-		JHtml::_('script', 'system/multiselect.js', false, true);
+		JHtml::_('script', 'system/multiselect.js', true, true);
 
 		// Attach multiselect to document
 		JFactory::getDocument()->addScriptDeclaration(
-			"jQuery(document).ready(function() {
-				Joomla.JMultiSelect('" . $id . "');
+			"window.addEvent('domready', function() {
+				new Joomla.JMultiSelect('" . $id . "');
 			});"
 		);
 
@@ -685,13 +650,10 @@ abstract class JHtmlBehavior
 			return;
 		}
 
-		// Include core
-		static::core();
-
 		// Include jQuery
 		JHtml::_('jquery.framework');
 
-		JHtml::_('script', 'system/highlighter.js', false, true);
+		JHtml::_('script', 'system/highlighter.js', true, true);
 
 		$terms = str_replace('"', '\"', $terms);
 
@@ -735,8 +697,8 @@ abstract class JHtmlBehavior
 			return;
 		}
 
-		// Include core
-		static::core();
+		// Include MooTools framework
+		static::framework();
 
 		// Include jQuery
 		JHtml::_('jquery.framework');

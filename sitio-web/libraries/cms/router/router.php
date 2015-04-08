@@ -3,57 +3,27 @@
  * @package     Joomla.Libraries
  * @subpackage  Router
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
 /**
- * Mask for the raw routing mode
- *
- * @deprecated  4.0
+ * Set the available masks for the routing mode
  */
 const JROUTER_MODE_RAW = 0;
-
-/**
- * Mask for the SEF routing mode
- *
- * @deprecated  4.0
- */
 const JROUTER_MODE_SEF = 1;
 
 /**
  * Class to create and parse routes
  *
- * @since  1.5
+ * @package     Joomla.Libraries
+ * @subpackage  Router
+ * @since       1.5
  */
 class JRouter
 {
-	/**
-	 * Mask for the before process stage
-	 *
-	 * @var    string
-	 * @since  3.4
-	 */
-	const PROCESS_BEFORE = 'preprocess';
-
-	/**
-	 * Mask for the during process stage
-	 *
-	 * @var    string
-	 * @since  3.4
-	 */
-	const PROCESS_DURING = '';
-
-	/**
-	 * Mask for the after process stage
-	 *
-	 * @var    string
-	 * @since  3.4
-	 */
-	const PROCESS_AFTER = 'postprocess';
-
 	/**
 	 * The rewrite mode
 	 *
@@ -95,12 +65,8 @@ class JRouter
 	 * @since  1.5
 	 */
 	protected $rules = array(
-		'buildpreprocess' => array(),
 		'build' => array(),
-		'buildpostprocess' => array(),
-		'parsepreprocess' => array(),
-		'parse' => array(),
-		'parsepostprocess' => array()
+		'parse' => array()
 	);
 
 	/**
@@ -111,12 +77,8 @@ class JRouter
 	 * @deprecated  4.0 Will convert to $rules
 	 */
 	protected $_rules = array(
-		'buildpreprocess' => array(),
 		'build' => array(),
-		'buildpostprocess' => array(),
-		'parsepreprocess' => array(),
-		'parse' => array(),
-		'parsepostprocess' => array()
+		'parse' => array()
 	);
 
 	/**
@@ -215,12 +177,8 @@ class JRouter
 	 */
 	public function parse(&$uri)
 	{
-		// Do the preprocess stage of the URL build process
-		$vars = $this->processParseRules($uri, self::PROCESS_BEFORE);
-
 		// Process the parsed variables based on custom defined rules
-		// This is the main parse stage
-		$vars += $this->_processParseRules($uri);
+		$vars = $this->_processParseRules($uri);
 
 		// Parse RAW URL
 		if ($this->_mode == JROUTER_MODE_RAW)
@@ -233,9 +191,6 @@ class JRouter
 		{
 			$vars += $this->_parseSefRoute($uri);
 		}
-
-		// Do the postprocess stage of the URL build process
-		$vars += $this->processParseRules($uri, self::PROCESS_AFTER);
 
 		return array_merge($this->getVars(), $vars);
 	}
@@ -261,11 +216,7 @@ class JRouter
 		// Create the URI object
 		$uri = $this->createURI($url);
 
-		// Do the preprocess stage of the URL build process
-		$this->processBuildRules($uri, self::PROCESS_BEFORE);
-
-		// Process the uri information based on custom defined rules.
-		// This is the main build stage
+		// Process the uri information based on custom defined rules
 		$this->_processBuildRules($uri);
 
 		// Build RAW URL
@@ -279,9 +230,6 @@ class JRouter
 		{
 			$this->_buildSefRoute($uri);
 		}
-
-		// Do the postprocess stage of the URL build process
-		$this->processBuildRules($uri, self::PROCESS_AFTER);
 
 		$this->cache[$key] = clone $uri;
 
@@ -392,46 +340,28 @@ class JRouter
 	 * Attach a build rule
 	 *
 	 * @param   callback  $callback  The function to be called
-	 * @param   string    $stage     The stage of the build process that
-	 *                               this should be added to. Possible values:
-	 *                               'preprocess', '' for the main build process,
-	 *                               'postprocess'
 	 *
 	 * @return  void
 	 *
 	 * @since   1.5
 	 */
-	public function attachBuildRule($callback, $stage = self::PROCESS_DURING)
+	public function attachBuildRule($callback)
 	{
-		if (!array_key_exists('build' . $stage, $this->_rules))
-		{
-			throw new InvalidArgumentException(sprintf('The %s stage is not registered. (%s)', $stage, __METHOD__));
-		}
-
-		$this->_rules['build' . $stage][] = $callback;
+		$this->_rules['build'][] = $callback;
 	}
 
 	/**
 	 * Attach a parse rule
 	 *
 	 * @param   callback  $callback  The function to be called.
-	 * @param   string    $stage     The stage of the parse process that
-	 *                               this should be added to. Possible values:
-	 *                               'preprocess', '' for the main parse process,
-	 *                               'postprocess'
 	 *
 	 * @return  void
 	 *
 	 * @since   1.5
 	 */
-	public function attachParseRule($callback, $stage = self::PROCESS_DURING)
+	public function attachParseRule($callback)
 	{
-		if (!array_key_exists('parse' . $stage, $this->_rules))
-		{
-			throw new InvalidArgumentException(sprintf('The %s stage is not registered. (%s)', $stage, __METHOD__));
-		}
-
-		$this->_rules['parse' . $stage][] = $callback;
+		$this->_rules['parse'][] = $callback;
 	}
 
 	/**
@@ -442,7 +372,7 @@ class JRouter
 	 * @return  boolean
 	 *
 	 * @since   1.5
-	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
+	 * @deprecated  4.0  Use parseRawRoute() instead
 	 */
 	protected function _parseRawRoute(&$uri)
 	{
@@ -454,14 +384,13 @@ class JRouter
 	 *
 	 * @param   JUri  &$uri  The raw route
 	 *
-	 * @return  array  Array of variables
+	 * @return  boolean
 	 *
 	 * @since   3.2
-	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
 	 */
 	protected function parseRawRoute(&$uri)
 	{
-		return array();
+		return false;
 	}
 
 	/**
@@ -472,7 +401,7 @@ class JRouter
 	 * @return  string  Internal URI
 	 *
 	 * @since   1.5
-	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
+	 * @deprecated  4.0  Use parseSefRoute() instead
 	 */
 	protected function _parseSefRoute(&$uri)
 	{
@@ -484,14 +413,13 @@ class JRouter
 	 *
 	 * @param   JUri  &$uri  The sef URI
 	 *
-	 * @return  array  Array of variables
+	 * @return  string  Internal URI
 	 *
 	 * @since   3.2
-	 * @deprecated  4.0  Attach your logic as rule to the main parse stage
 	 */
 	protected function parseSefRoute(&$uri)
 	{
-		return array();
+		return false;
 	}
 
 	/**
@@ -502,7 +430,7 @@ class JRouter
 	 * @return  string  Raw Route
 	 *
 	 * @since   1.5
-	 * @deprecated  4.0  Attach your logic as rule to the main build stage
+	 * @deprecated  4.0  Use buildRawRoute() instead
 	 */
 	protected function _buildRawRoute(&$uri)
 	{
@@ -517,7 +445,6 @@ class JRouter
 	 * @return  string  Raw Route
 	 *
 	 * @since   3.2
-	 * @deprecated  4.0  Attach your logic as rule to the main build stage
 	 */
 	protected function buildRawRoute(&$uri)
 	{
@@ -531,7 +458,7 @@ class JRouter
 	 * @return  string  The SEF route
 	 *
 	 * @since   1.5
-	 * @deprecated  4.0  Attach your logic as rule to the main build stage
+	 * @deprecated  4.0  Use buildSefRoute() instead
 	 */
 	protected function _buildSefRoute(&$uri)
 	{
@@ -546,7 +473,6 @@ class JRouter
 	 * @return  string  The SEF route
 	 *
 	 * @since   3.2
-	 * @deprecated  4.0  Attach your logic as rule to the main build stage
 	 */
 	protected function buildSefRoute(&$uri)
 	{
@@ -570,25 +496,17 @@ class JRouter
 	/**
 	 * Process the parsed router variables based on custom defined rules
 	 *
-	 * @param   JUri    &$uri   The URI to parse
-	 * @param   string  $stage  The stage that should be processed.
-	 *                          Possible values: 'preprocess', 'postprocess'
-	 *                          and '' for the main parse stage
+	 * @param   JUri  &$uri  The URI to parse
 	 *
 	 * @return  array  The array of processed URI variables
 	 *
 	 * @since   3.2
 	 */
-	protected function processParseRules(&$uri, $stage = self::PROCESS_DURING)
+	protected function processParseRules(&$uri)
 	{
-		if (!array_key_exists('parse' . $stage, $this->_rules))
-		{
-			throw new InvalidArgumentException(sprintf('The %s stage is not registered. (%s)', $stage, __METHOD__));
-		}
-
 		$vars = array();
 
-		foreach ($this->_rules['parse' . $stage] as $rule)
+		foreach ($this->_rules['parse'] as $rule)
 		{
 			$vars += call_user_func_array($rule, array(&$this, &$uri));
 		}
@@ -614,23 +532,15 @@ class JRouter
 	/**
 	 * Process the build uri query data based on custom defined rules
 	 *
-	 * @param   JUri    &$uri   The URI
-	 * @param   string  $stage  The stage that should be processed.
-	 *                          Possible values: 'preprocess', 'postprocess'
-	 *                          and '' for the main build stage
+	 * @param   JUri  &$uri  The URI
 	 *
 	 * @return  void
 	 *
 	 * @since   3.2
 	 */
-	protected function processBuildRules(&$uri, $stage = self::PROCESS_DURING)
+	protected function processBuildRules(&$uri)
 	{
-		if (!array_key_exists('build' . $stage, $this->_rules))
-		{
-			throw new InvalidArgumentException(sprintf('The %s stage is not registered. (%s)', $stage, __METHOD__));
-		}
-
-		foreach ($this->_rules['build' . $stage] as $rule)
+		foreach ($this->_rules['build'] as $rule)
 		{
 			call_user_func_array($rule, array(&$this, &$uri));
 		}
@@ -645,7 +555,6 @@ class JRouter
 	 *
 	 * @since   1.5
 	 * @deprecated  4.0  Use createURI() instead
-	 * @codeCoverageIgnore
 	 */
 	protected function _createURI($url)
 	{
@@ -663,14 +572,15 @@ class JRouter
 	 */
 	protected function createURI($url)
 	{
-		if (!is_array($url) && substr($url, 0, 1) != '&')
+		if (is_array($url))
 		{
-			return new JUri($url);
+			$uri = new JUri('index.php');
+			$uri->setQuery($url);
+
+			return $uri;
 		}
-
-		$uri = new JUri('index.php');
-
-		if (is_string($url))
+		// Create full URL if we are only appending variables to it
+		elseif (substr($url, 0, 1) == '&')
 		{
 			$vars = array();
 
@@ -680,25 +590,22 @@ class JRouter
 			}
 
 			parse_str($url, $vars);
-		}
-		else
-		{
-			$vars = $url;
-		}
 
-		$vars = array_merge($this->getVars(), $vars);
+			$vars = array_merge($this->getVars(), $vars);
 
-		foreach ($vars as $key => $var)
-		{
-			if ($var == "")
+			foreach ($vars as $key => $var)
 			{
-				unset($vars[$key]);
+				if ($var == "")
+				{
+					unset($vars[$key]);
+				}
 			}
+
+			$url = 'index.php?' . JUri::buildQuery($vars);
 		}
 
-		$uri->setQuery($vars);
-
-		return $uri;
+		// Decompose link into url component parts
+		return new JUri($url);
 	}
 
 	/**
@@ -710,7 +617,6 @@ class JRouter
 	 *
 	 * @since   1.5
 	 * @deprecated  4.0  This should be performed in the component router instead
-	 * @codeCoverageIgnore
 	 */
 	protected function _encodeSegments($segments)
 	{
@@ -748,7 +654,6 @@ class JRouter
 	 *
 	 * @since   1.5
 	 * @deprecated  4.0  This should be performed in the component router instead
-	 * @codeCoverageIgnore
 	 */
 	protected function _decodeSegments($segments)
 	{

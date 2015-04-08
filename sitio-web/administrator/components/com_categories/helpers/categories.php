@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_categories
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Categories helper.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_categories
+ * @since       1.6
  */
 class CategoriesHelper
 {
@@ -91,14 +93,6 @@ class CategoriesHelper
 		return $result;
 	}
 
-	/**
-	 * Gets a list of associations for a given item.
-	 *
-	 * @param   integer  $pk         Content item key.
-	 * @param   string   $extension  Optional extension name.
-	 *
-	 * @return  array of associations. 
-	 */
 	public static function getAssociations($pk, $extension = 'com_content')
 	{
 		$associations = array();

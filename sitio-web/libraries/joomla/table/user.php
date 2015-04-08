@@ -3,18 +3,18 @@
  * @package     Joomla.Platform
  * @subpackage  Table
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * Users table
  *
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Table
+ * @since       11.1
  */
 class JTableUser extends JTable
 {
@@ -126,7 +126,7 @@ class JTableUser extends JTable
 	{
 		if (array_key_exists('params', $array) && is_array($array['params']))
 		{
-			$registry = new Registry;
+			$registry = new JRegistry;
 			$registry->loadArray($array['params']);
 			$array['params'] = (string) $registry;
 		}
@@ -150,6 +150,7 @@ class JTableUser extends JTable
 
 			// Set the titles for the user groups.
 			$this->groups = $this->_db->loadAssocList('id', 'id');
+
 		}
 
 		return $return;
@@ -170,17 +171,15 @@ class JTableUser extends JTable
 			$this->id = null;
 		}
 
-		$filterInput = JFilterInput::getInstance();
-
 		// Validate user information
-		if ($filterInput->clean($this->name, 'TRIM') == '')
+		if (trim($this->name) == '')
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_PLEASE_ENTER_YOUR_NAME'));
 
 			return false;
 		}
 
-		if ($filterInput->clean($this->username, 'TRIM') == '')
+		if (trim($this->username) == '')
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_PLEASE_ENTER_A_USER_NAME'));
 
@@ -188,14 +187,14 @@ class JTableUser extends JTable
 		}
 
 		if (preg_match('#[<>"\'%;()&\\\\]|\\.\\./#', $this->username) || strlen(utf8_decode($this->username)) < 2
-			|| $filterInput->clean($this->username, 'TRIM') !== $this->username)
+			|| trim($this->username) != $this->username)
 		{
 			$this->setError(JText::sprintf('JLIB_DATABASE_ERROR_VALID_AZ09', 2));
 
 			return false;
 		}
 
-		if (($filterInput->clean($this->email, 'TRIM') == "") || !JMailHelper::isEmailAddress($this->email))
+		if ((trim($this->email) == "") || !JMailHelper::isEmailAddress($this->email))
 		{
 			$this->setError(JText::_('JLIB_DATABASE_ERROR_VALID_MAIL'));
 
@@ -286,7 +285,7 @@ class JTableUser extends JTable
 	 *
 	 * @return  boolean  True on success.
 	 *
-	 * @link    https://docs.joomla.org/JTable/store
+	 * @link    http://docs.joomla.org/JTable/store
 	 * @since   11.1
 	 */
 	public function store($updateNulls = false)

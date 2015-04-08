@@ -37,7 +37,7 @@ $db->setQuery("SELECT manifest_cache FROM #__extensions WHERE element='com_djima
 $version = json_decode($db->loadResult());
 $version = $version->version;
 
-define('DJIMAGESLIDERFOOTER', '<div style="text-align: center; margin: 10px 0;">DJ-ImageSlider (version '.$version.'), &copy; 2010-'.JFactory::getDate()->format('Y').' Copyright by <a target="_blank" href="http://dj-extensions.com">DJ-Extensions.com</a>, All Rights Reserved.<br /><a target="_blank" href="http://dj-extensions.com"><img src="'.JURI::base().'components/com_djimageslider/assets/logo.png" alt="DJ-Extensions.com" style="margin: 20px 0 0;" /></a></div>');
+define('DJIMAGESLIDERFOOTER', '<div style="text-align: center; margin: 10px 0;">DJ-ImageSlider (version '.$version.'), &copy; 2010-2013 Copyright by <a target="_blank" href="http://dj-extensions.com">DJ-Extensions.com</a>, All Rights Reserved.<br /><a target="_blank" href="http://dj-extensions.com"><img src="'.JURI::base().'components/com_djimageslider/assets/logo.png" alt="DJ-Extensions.com" style="margin: 20px 0 0;" /></a></div>');
 
 $controller	= JControllerLegacy::getInstance('djimageslider');
 

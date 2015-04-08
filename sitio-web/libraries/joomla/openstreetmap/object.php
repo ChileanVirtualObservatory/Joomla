@@ -3,25 +3,25 @@
  * @package     Joomla.Platform
  * @subpackage  Openstreetmap
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die();
 
-use Joomla\Registry\Registry;
-
 /**
  * Openstreetmap API object class for the Joomla Platform
  *
- * @since  13.1
+ * @package     Joomla.Platform
+ * @subpackage  Openstreetmap
+ * @since       13.1
  */
 abstract class JOpenstreetmapObject
 {
 	/**
 	 * Options for the Openstreetmap object.
 	 *
-	 * @var    Registry
+	 * @var    JRegistry
 	 * @since  13.1
 	 */
 	protected $options;
@@ -45,15 +45,15 @@ abstract class JOpenstreetmapObject
 	/**
 	 * Constructor
 	 *
-	 * @param   Registry             &$options  Openstreetmap options object.
+	 * @param   JRegistry            &$options  Openstreetmap options object.
 	 * @param   JHttp                $client    The HTTP client object.
 	 * @param   JOpenstreetmapOauth  $oauth     Openstreetmap oauth client
 	 *
 	 * @since   13.1
 	 */
-	public function __construct(Registry &$options = null, JHttp $client = null, JOpenstreetmapOauth $oauth = null)
+	public function __construct(JRegistry &$options = null, JHttp $client = null, JOpenstreetmapOauth $oauth = null)
 	{
-		$this->options = isset($options) ? $options : new Registry;
+		$this->options = isset($options) ? $options : new JRegistry;
 		$this->client = isset($client) ? $client : new JHttp($this->options);
 		$this->oauth = $oauth;
 	}

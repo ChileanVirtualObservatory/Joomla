@@ -3,18 +3,18 @@
  * @package     Joomla.Libraries
  * @subpackage  Language
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('JPATH_PLATFORM') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * Utitlity class for associations in multilang
  *
- * @since  3.1
+ * @package     Joomla.Libraries
+ * @subpackage  Language
+ * @since       3.1
  */
 class JLanguageAssociations
 {
@@ -32,8 +32,6 @@ class JLanguageAssociations
 	 * @return  array                The associated items
 	 *
 	 * @since   3.1
-	 *
-	 * @throws  Exception
 	 */
 	public static function getAssociations($extension, $tablename, $context, $id, $pk = 'id', $aliasField = 'alias', $catField = 'catid')
 	{
@@ -42,7 +40,7 @@ class JLanguageAssociations
 		$query = $db->getQuery(true)
 			->select($db->quoteName('c2.language'))
 			->from($db->quoteName($tablename, 'c'))
-			->join('INNER', $db->quoteName('#__associations', 'a') . ' ON a.id = c.' . $db->quoteName($pk) . ' AND a.context=' . $db->quote($context))
+			->join('INNER', $db->quoteName('#__associations', 'a') . ' ON a.id = c.id AND a.context=' . $db->quote($context))
 			->join('INNER', $db->quoteName('#__associations', 'a2') . ' ON a.key = a2.key')
 			->join('INNER', $db->quoteName($tablename, 'c2') . ' ON a2.id = c2.' . $db->quoteName($pk));
 
@@ -67,10 +65,7 @@ class JLanguageAssociations
 		// Use catid field ?
 		if (!empty($catField))
 		{
-			$query->join(
-					'INNER',
-					$db->quoteName('#__categories', 'ca') . ' ON ' . $db->quoteName('c2.' . $catField) . ' = ca.id AND ca.extension = ' . $db->quote($extension)
-				)
+			$query->join('INNER', $db->quoteName('#__categories', 'ca') . ' ON ' . $db->quoteName('c2.' . $catField) . ' = ca.id AND ca.extension = ' . $db->quote($extension))
 				->select(
 					$query->concatenate(
 						array('ca.id', 'ca.alias'),
@@ -132,7 +127,7 @@ class JLanguageAssociations
 
 				if (!empty($plugin))
 				{
-					$params = new Registry($plugin->params);
+					$params = new JRegistry($plugin->params);
 					$enabled  = (boolean) $params->get('item_associations', true);
 				}
 

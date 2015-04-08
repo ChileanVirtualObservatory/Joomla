@@ -3,29 +3,29 @@
  * @package     Joomla.Platform
  * @subpackage  HTTP
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * HTTP transport class interface.
  *
- * @since  11.3
+ * @package     Joomla.Platform
+ * @subpackage  HTTP
+ * @since       11.3
  */
 interface JHttpTransport
 {
 	/**
 	 * Constructor.
 	 *
-	 * @param   Registry  $options  Client options object.
+	 * @param   JRegistry  $options  Client options object.
 	 *
 	 * @since   11.3
 	 */
-	public function __construct(Registry $options);
+	public function __construct(JRegistry $options);
 
 	/**
 	 * Send a request to the server and return a JHttpResponse object with the response.

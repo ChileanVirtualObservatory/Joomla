@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  com_search
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,42 +12,34 @@ defined('_JEXEC') or die;
 /**
  * Search Component Controller
  *
- * @since  1.5
+ * @package     Joomla.Site
+ * @subpackage  com_search
+ * @since       1.5
  */
 class SearchController extends JControllerLegacy
 {
 	/**
 	 * Method to display a view.
 	 *
-	 * @param   bool  $cachable   If true, the view output will be cached
-	 * @param   bool  $urlparams  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
+	 * @param   boolean			If true, the view output will be cached
+	 * @param   array  An array of safe url parameters and their variable types, for valid values see {@link JFilterInput::clean()}.
 	 *
-	 * @return  JControllerLegacy This object to support chaining.
-	 *
+	 * @return  JController		This object to support chaining.
 	 * @since   1.5
 	 */
 	public function display($cachable = false, $urlparams = false)
 	{
-		// Force it to be the search view
-		$this->input->set('view', 'search');
+		$this->input->set('view', 'search'); // force it to be the search view
 
 		return parent::display($cachable, $urlparams);
 	}
 
-	/**
-	 * Search
-	 *
-	 * @return void
-	 *
-	 * @throws Exception
-	 */
 	public function search()
 	{
-		// Slashes cause errors, <> get stripped anyway later on. # causes problems.
+		// slashes cause errors, <> get stripped anyway later on. # causes problems.
 		$badchars = array('#', '>', '<', '\\');
 		$searchword = trim(str_replace($badchars, '', $this->input->getString('searchword', null, 'post')));
-
-		// If searchword enclosed in double quotes, strip quotes and do exact match
+		// if searchword enclosed in double quotes, strip quotes and do exact match
 		if (substr($searchword, 0, 1) == '"' && substr($searchword, -1) == '"')
 		{
 			$post['searchword'] = substr($searchword, 1, -1);
@@ -57,7 +49,6 @@ class SearchController extends JControllerLegacy
 		{
 			$post['searchword'] = $searchword;
 		}
-
 		$post['ordering']     = $this->input->getWord('ordering', null, 'post');
 		$post['searchphrase'] = $this->input->getWord('searchphrase', 'all', 'post');
 		$post['limit']        = $this->input->getUInt('limit', null, 'post');
@@ -68,7 +59,6 @@ class SearchController extends JControllerLegacy
 		}
 
 		$areas = $this->input->post->get('areas', null, 'array');
-
 		if ($areas)
 		{
 			foreach ($areas as $area)
@@ -105,6 +95,6 @@ class SearchController extends JControllerLegacy
 		$uri->setQuery($post);
 		$uri->setVar('option', 'com_search');
 
-		$this->setRedirect(JRoute::_('index.php' . $uri->toString(array('query', 'fragment')), false));
+		$this->setRedirect(JRoute::_('index.php'.$uri->toString(array('query', 'fragment')), false));
 	}
 }

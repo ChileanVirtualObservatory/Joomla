@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_config
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Components helper for com_config
  *
- * @since  3.0
+ * @package     Joomla.Administrator
+ * @subpackage  com_config
+ * @since       3.0
  */
 class ConfigHelperConfig extends JHelperContent
 {
@@ -52,10 +54,10 @@ class ConfigHelperConfig extends JHelperContent
 	}
 
 	/**
-	 * Returns an array of all components with configuration options.
-	 * Optionally return only those components for which the current user has 'core.manage' rights.
+	 * Returns an array of all components with configuration options. By only
+	 * components for which the current user has 'core.manage' rights are returned.
 	 *
-	 * @param   boolean  $authCheck  True to restrict to components where current user has 'core.manage' rights.
+	 * @param   boolean  $authCheck
 	 *
 	 * @return  array
 	 *
@@ -84,7 +86,7 @@ class ConfigHelperConfig extends JHelperContent
 	/**
 	 * Load the sys language for the given component.
 	 *
-	 * @param   array  $components  Array of component names.
+	 * @param   string  $components
 	 *
 	 * @return  void
 	 *

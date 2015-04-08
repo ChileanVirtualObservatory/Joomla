@@ -3,25 +3,25 @@
  * @package     Joomla.Platform
  * @subpackage  Plugin
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * JPlugin Class
  *
- * @since  1.5
+ * @package     Joomla.Platform
+ * @subpackage  Plugin
+ * @since       1.5
  */
 abstract class JPlugin extends JEvent
 {
 	/**
-	 * A Registry object holding the parameters for the plugin
+	 * A JRegistry object holding the parameters for the plugin
 	 *
-	 * @var    Registry
+	 * @var    JRegistry
 	 * @since  1.5
 	 */
 	public $params = null;
@@ -65,13 +65,13 @@ abstract class JPlugin extends JEvent
 		// Get the parameters.
 		if (isset($config['params']))
 		{
-			if ($config['params'] instanceof Registry)
+			if ($config['params'] instanceof JRegistry)
 			{
 				$this->params = $config['params'];
 			}
 			else
 			{
-				$this->params = new Registry;
+				$this->params = new JRegistry;
 				$this->params->loadString($config['params']);
 			}
 		}

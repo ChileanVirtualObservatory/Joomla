@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Cache
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Abstract cache storage handler
  *
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Cache
+ * @since       11.1
  */
 class JCacheStorage
 {
@@ -86,6 +88,7 @@ class JCacheStorage
 		{
 			$this->_threshold = $this->_now - $this->_lifetime;
 		}
+
 	}
 
 	/**
@@ -111,7 +114,6 @@ class JCacheStorage
 		{
 			$conf = JFactory::getConfig();
 			$handler = $conf->get('cache_handler');
-
 			if (empty($handler))
 			{
 				throw new UnexpectedValueException('Cache Storage Handler not set.');
@@ -129,12 +131,10 @@ class JCacheStorage
 		$handler = strtolower(preg_replace('/[^A-Z0-9_\.-]/i', '', $handler));
 
 		$class = 'JCacheStorage' . ucfirst($handler);
-
 		if (!class_exists($class))
 		{
 			// Search for the class file in the JCacheStorage include paths.
 			jimport('joomla.filesystem.path');
-
 			if ($path = JPath::find(self::addIncludePath(), strtolower($handler) . '.php'))
 			{
 				include_once $path;
@@ -178,7 +178,6 @@ class JCacheStorage
 		{
 			include_once JPATH_PLATFORM . '/joomla/cache/storage/helper.php';
 		}
-
 		return;
 	}
 
@@ -314,7 +313,6 @@ class JCacheStorage
 	{
 		$name = md5($this->_application . '-' . $id . '-' . $this->_language);
 		$this->rawname = $this->_hash . '-' . $name;
-
 		return $this->_hash . '-cache-' . $group . '-' . $name;
 	}
 

@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  com_newsfeeds
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Routing class from com_newsfeeds
  *
- * @since  3.3
+ * @package     Joomla.Site
+ * @subpackage  com_newsfeeds
+ * @since       3.3
  */
 class NewsfeedsRouter extends JComponentRouterBase
 {
@@ -30,16 +32,18 @@ class NewsfeedsRouter extends JComponentRouterBase
 		$segments = array();
 
 		// Get a menu item based on Itemid or currently active
+		$app	= JFactory::getApplication();
+		$menu	= $app->getMenu();
 		$params = JComponentHelper::getParams('com_newsfeeds');
 		$advanced = $params->get('sef_advanced_link', 0);
 
 		if (empty($query['Itemid']))
 		{
-			$menuItem = $this->menu->getActive();
+			$menuItem = $menu->getActive();
 		}
 		else
 		{
-			$menuItem = $this->menu->getItem($query['Itemid']);
+			$menuItem = $menu->getItem($query['Itemid']);
 		}
 
 		$mView = (empty($menuItem->query['view'])) ? null : $menuItem->query['view'];
@@ -176,7 +180,9 @@ class NewsfeedsRouter extends JComponentRouterBase
 		}
 
 		// Get the active menu item.
-		$item	= $this->menu->getActive();
+		$app	= JFactory::getApplication();
+		$menu	= $app->getMenu();
+		$item	= $menu->getActive();
 		$params = JComponentHelper::getParams('com_newsfeeds');
 		$advanced = $params->get('sef_advanced_link', 0);
 
@@ -246,34 +252,21 @@ class NewsfeedsRouter extends JComponentRouterBase
 }
 
 /**
- * newsfeedsBuildRoute
+ * Newsfeeds router functions
  *
  * These functions are proxys for the new router interface
  * for old SEF extensions.
  *
- * @param   array  &$query  The segments of the URL to parse.
- *
- * @return array
- *
  * @deprecated  4.0  Use Class based routers instead
  */
-function newsfeedsBuildRoute(&$query)
+function NewsfeedsBuildRoute(&$query)
 {
 	$router = new NewsfeedsRouter;
 
 	return $router->build($query);
 }
 
-/**
- * newsfeedsParseRoute
- *
- * @param   array  $segments  The segments of the URL to parse.
- *
- * @return array
- *
- * @deprecated  4.0  Use Class based routers instead
- */
-function newsfeedsParseRoute($segments)
+function NewsfeedsParseRoute($segments)
 {
 	$router = new NewsfeedsRouter;
 

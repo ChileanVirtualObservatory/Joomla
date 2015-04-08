@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_modules
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Module controller class.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_modules
+ * @since       1.6
  */
 class ModulesControllerModule extends JControllerForm
 {
@@ -29,7 +31,6 @@ class ModulesControllerModule extends JControllerForm
 
 		// Get the result of the parent method. If an error, just return it.
 		$result = parent::add();
-
 		if ($result instanceof Exception)
 		{
 			return $result;
@@ -37,13 +38,9 @@ class ModulesControllerModule extends JControllerForm
 
 		// Look for the Extension ID.
 		$extensionId = $app->input->get('eid', 0, 'int');
-
 		if (empty($extensionId))
 		{
-			$redirectUrl = 'index.php?option=' . $this->option . '&view=' . $this->view_item . '&layout=edit';
-
-			$this->setRedirect(JRoute::_($redirectUrl, false));
-
+			$this->setRedirect(JRoute::_('index.php?option='.$this->option.'&view='.$this->view_item.'&layout=edit', false));
 			return JError::raiseWarning(500, JText::_('COM_MODULES_ERROR_INVALID_EXTENSION'));
 		}
 
@@ -88,7 +85,7 @@ class ModulesControllerModule extends JControllerForm
 	 */
 	protected function allowSave($data, $key = 'id')
 	{
-		// Use custom position if selected
+		// use custom position if selected
 		if (isset($data['custom_position']))
 		{
 			if (empty($data['position']))
@@ -146,9 +143,7 @@ class ModulesControllerModule extends JControllerForm
 		$model	= $this->getModel('Module', '', array());
 
 		// Preset the redirect
-		$redirectUrl = 'index.php?option=com_modules&view=modules' . $this->getRedirectToListAppend();
-
-		$this->setRedirect(JRoute::_($redirectUrl, false));
+		$this->setRedirect(JRoute::_('index.php?option=com_modules&view=modules'.$this->getRedirectToListAppend(), false));
 
 		return parent::batch($model);
 	}
@@ -181,39 +176,4 @@ class ModulesControllerModule extends JControllerForm
 
 		$app->setUserState('com_modules.add.module.params', null);
 	}
-
-	/**
-	 * Save fuction for com_modules
-	 *
-	 * @see JControllerForm::save()
-	 */
-	public function save($key = null, $urlVar = null)
-	{
-		if (!JSession::checkToken())
-		{
-			JFactory::getApplication()->redirect('index.php', JText::_('JINVALID_TOKEN'));
-		}
-
-		if (JFactory::getDocument()->getType() == 'json')
-		{
-			$model = $this->getModel();
-			$data  = $this->input->post->get('jform', array(), 'array');
-			$item = $model->getItem($this->input->get('id'));
-			$properties = $item->getProperties();
-
-			// Replace changed properties
-			$data = array_replace_recursive($properties, $data);
-
-			// Add new data to input before process by parent save()
-			$this->input->post->set('jform', $data);
-
-			// Add path of forms directory
-			JForm::addFormPath(JPATH_ADMINISTRATOR . '/components/com_modules/models/forms');
-
-		}
-
-		parent::save($key, $urlVar);
-
-	}
-
 }

@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_finder
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Stemmer base class for the Finder indexer package.
  *
- * @since  2.5
+ * @package     Joomla.Administrator
+ * @subpackage  com_finder
+ * @since       2.5
  */
 class FinderIndexerTaxonomy
 {
@@ -79,7 +81,6 @@ class FinderIndexerTaxonomy
 		 * out which case is true and deal with it.
 		 */
 		$branch = new JObject;
-
 		if (empty($result))
 		{
 			// Prepare the branch object.
@@ -159,7 +160,6 @@ class FinderIndexerTaxonomy
 		 * out which case is true and deal with it.
 		 */
 		$node = new JObject;
-
 		if (empty($result))
 		{
 			// Prepare the node object.

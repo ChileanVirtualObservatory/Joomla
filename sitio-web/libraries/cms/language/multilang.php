@@ -3,7 +3,7 @@
  * @package     Joomla.Libraries
  * @subpackage  Language
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Utitlity class for multilang
  *
- * @since  2.5.4
+ * @package     Joomla.Libraries
+ * @subpackage  Language
+ * @since       2.5.4
  */
 class JLanguageMultilang
 {

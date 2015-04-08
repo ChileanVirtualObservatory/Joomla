@@ -3,7 +3,7 @@
  * @package     Joomla.Libraries
  * @subpackage  Form
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -14,7 +14,9 @@ JFormHelper::loadFieldClass('text');
 /**
  * Form Field class for the Joomla! CMS.
  *
- * @since  1.6
+ * @package     Joomla.Libraries
+ * @subpackage  Form
+ * @since       1.6
  */
 class JFormFieldModulePosition extends JFormFieldText
 {
@@ -138,7 +140,7 @@ class JFormFieldModulePosition extends JFormFieldText
 		$script = array();
 		$script[] = '	function jSelectPosition_' . $this->id . '(name) {';
 		$script[] = '		document.getElementById("' . $this->id . '").value = name;';
-		$script[] = '		jModalClose();';
+		$script[] = '		SqueezeBox.close();';
 		$script[] = '	}';
 
 		// Add the script to the document head.
@@ -146,14 +148,12 @@ class JFormFieldModulePosition extends JFormFieldText
 
 		// Setup variables for display.
 		$html = array();
-		$link = 'index.php?option=com_modules&view=positions&layout=modal&tmpl=component&function=jSelectPosition_' . $this->id
-			. '&amp;client_id=' . $this->clientId;
+		$link = 'index.php?option=com_modules&view=positions&layout=modal&tmpl=component&function=jSelectPosition_' . $this->id . '&amp;client_id=' . $this->clientId;
 
 		// The current user display field.
 		$html[] = '<div class="input-append">';
 		$html[] = parent::getInput()
-			. '<a class="btn modal" title="' . JText::_('COM_MODULES_CHANGE_POSITION_TITLE') . '"  href="' . $link
-			. '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'
+			. '<a class="btn modal" title="' . JText::_('COM_MODULES_CHANGE_POSITION_TITLE') . '"  href="' . $link . '" rel="{handler: \'iframe\', size: {x: 800, y: 450}}">'
 			. JText::_('COM_MODULES_CHANGE_POSITION_BUTTON') . '</a>';
 		$html[] = '</div>';
 

@@ -1,0 +1,53 @@
+
+body {
+	color:#6a6a6a;
+	font-family: Open sans;	font-size: 17px;
+}
+
+.dj-image-hover {
+	color:#6a6a6a;
+}
+
+.container-fluid {
+	}
+
+
+	
+
+		.lcr.scheme3 #jm-content {
+	    margin-right: 240px; 
+	    margin-left: -1200px;
+	}
+		
+
+@media (min-width: 1200px) {	
+					.lcr.scheme3 #jm-content {
+		    margin-right: 300px; 
+		    margin-left: -1500px;
+		}
+						
+	}	
+@media (min-width: 768px) and (max-width: 979px) {
+					.lcr.scheme3 #jm-content {
+		    margin-right: 186px; 
+		    margin-left: -930px;
+		}
+						
+		
+}
+	
+
+.jm-module h3.jm-title {
+	font-family: roboto slab;	font-size: 34px;
+}
+
+.dj-main li a.dj-up_a {
+	font-family: Oswald;	font-size: 18px;
+}
+
+.page-header h2,
+h2.item-title,
+.tag-category h2 {
+	font-family: roboto condensed;	font-size: 40px;
+}
+

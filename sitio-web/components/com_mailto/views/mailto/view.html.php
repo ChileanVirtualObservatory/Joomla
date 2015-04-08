@@ -3,32 +3,25 @@
  * @package     Joomla.Site
  * @subpackage  com_mailto
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
 defined('_JEXEC') or die;
 
 /**
- * Class for Mail.
- * 
+ * @package     Joomla.Site
+ * @subpackage  com_mailto
  * @since       1.5
  */
 class MailtoViewMailto extends JViewLegacy
 {
 	/**
-	 * Execute and display a template script.
-	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  mixed  A string if successful, otherwise a Error object.
-	 *
-	 * @since   1.5
+	 * @since  1.5
 	 */
 	public function display($tpl = null)
 	{
 		$data = $this->getData();
-
 		if ($data === false)
 		{
 			return false;
@@ -36,17 +29,13 @@ class MailtoViewMailto extends JViewLegacy
 
 		$this->set('data', $data);
 
-		return parent::display($tpl);
+		parent::display($tpl);
 	}
 
 	/**
-	 * Get the form data
-	 *
-	 * @return  object
-	 *
 	 * @since  1.5
 	 */
-	protected function &getData()
+	function &getData()
 	{
 		$user = JFactory::getUser();
 		$app  = JFactory::getApplication();
@@ -59,8 +48,8 @@ class MailtoViewMailto extends JViewLegacy
 		if ($data->link == '')
 		{
 			JError::raiseError(403, JText::_('COM_MAILTO_LINK_IS_MISSING'));
-
-			return false;
+			$false = false;
+			return $false;
 		}
 
 		// Load with previous data, if it exists

@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Database
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,8 +12,10 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Oracle database driver
  *
- * @see    http://php.net/pdo
- * @since  12.1
+ * @package     Joomla.Platform
+ * @subpackage  Database
+ * @see         http://php.net/pdo
+ * @since       12.1
  */
 class JDatabaseDriverOracle extends JDatabaseDriverPdo
 {
@@ -174,16 +176,16 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	}
 
 	/**
-	 * Returns the current date format
-	 * This method should be useful in the case that
-	 * somebody actually wants to use a different
-	 * date format and needs to check what the current
-	 * one is to see if it needs to be changed.
-	 *
-	 * @return string The current date format
-	 *
-	 * @since 12.1
-	 */
+     * Returns the current date format
+     * This method should be useful in the case that
+     * somebody actually wants to use a different
+     * date format and needs to check what the current
+     * one is to see if it needs to be changed.
+     *
+     * @return string The current date format
+     *
+     * @since 12.1
+     */
 	public function getDateFormat()
 	{
 		return $this->dateformat;
@@ -214,7 +216,6 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 
 		// Sanitize input to an array and iterate over the list.
 		settype($tables, 'array');
-
 		foreach ($tables as $table)
 		{
 			$query->bind(':tableName', $table);
@@ -341,7 +342,6 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		}
 
 		$query->from('all_tables');
-
 		if ($databaseName)
 		{
 			$query->where('owner = :database')
@@ -398,19 +398,19 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 	}
 
 	/**
-	 * Sets the Oracle Date Format for the session
-	 * Default date format for Oracle is = DD-MON-RR
-	 * The default date format for this driver is:
-	 * 'RRRR-MM-DD HH24:MI:SS' since it is the format
-	 * that matches the MySQL one used within most Joomla
-	 * tables.
-	 *
-	 * @param   string  $dateFormat  Oracle Date Format String
-	 *
-	 * @return boolean
-	 *
-	 * @since  12.1
-	 */
+     * Sets the Oracle Date Format for the session
+     * Default date format for Oracle is = DD-MON-RR
+     * The default date format for this driver is:
+     * 'RRRR-MM-DD HH24:MI:SS' since it is the format
+     * that matches the MySQL one used within most Joomla
+     * tables.
+     *
+     * @param   string  $dateFormat  Oracle Date Format String
+     *
+     * @return boolean
+     *
+     * @since  12.1
+     */
 	public function setDateFormat($dateFormat = 'DD-MON-RR')
 	{
 		$this->connect();
@@ -423,7 +423,6 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		}
 
 		$this->setQuery("ALTER SESSION SET NLS_TIMESTAMP_FORMAT = '$dateFormat'");
-
 		if (!$this->execute())
 		{
 			return false;
@@ -537,7 +536,6 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 		while ($startPos < $n)
 		{
 			$ip = strpos($query, $prefix, $startPos);
-
 			if ($ip === false)
 			{
 				break;
@@ -565,39 +563,31 @@ class JDatabaseDriverOracle extends JDatabaseDriverPdo
 			{
 				$k = strpos($query, $quoteChar, $j);
 				$escaped = false;
-
 				if ($k === false)
 				{
 					break;
 				}
-
 				$l = $k - 1;
-
 				while ($l >= 0 && $query{$l} == '\\')
 				{
 					$l--;
 					$escaped = !$escaped;
 				}
-
 				if ($escaped)
 				{
 					$j = $k + 1;
 					continue;
 				}
-
 				break;
 			}
-
 			if ($k === false)
 			{
 				// Error in the query - no end quote; ignore it
 				break;
 			}
-
 			$literal .= substr($query, $startPos, $k - $startPos + 1);
 			$startPos = $k + 1;
 		}
-
 		if ($startPos < $n)
 		{
 			$literal .= substr($query, $startPos, $n - $startPos);

@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_installer
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Extension Manager Templates Model
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_installer
+ * @since       1.6
  */
 class InstallerModelWarnings extends JModelList
 {
@@ -35,7 +37,6 @@ class InstallerModelWarnings extends JModelList
 	{
 		$val = trim($val);
 		$last = strtolower($val{strlen($val) - 1});
-
 		switch ($last)
 		{
 			// The 'G' modifier is available since PHP 5.1.0
@@ -60,15 +61,12 @@ class InstallerModelWarnings extends JModelList
 	public function getItems()
 	{
 		static $messages;
-
 		if ($messages)
 		{
 			return $messages;
 		}
-
 		$messages = array();
 		$file_uploads = ini_get('file_uploads');
-
 		if (!$file_uploads)
 		{
 			$messages[] = array('message' => JText::_('COM_INSTALLER_MSG_WARNINGS_FILEUPLOADSDISABLED'),
@@ -76,7 +74,6 @@ class InstallerModelWarnings extends JModelList
 		}
 
 		$upload_dir = ini_get('upload_tmp_dir');
-
 		if (!$upload_dir)
 		{
 			$messages[] = array('message' => JText::_('COM_INSTALLER_MSG_WARNINGS_PHPUPLOADNOTSET'),
@@ -93,7 +90,6 @@ class InstallerModelWarnings extends JModelList
 
 		$config = JFactory::getConfig();
 		$tmp_path = $config->get('tmp_path');
-
 		if (!$tmp_path)
 		{
 			$messages[] = array('message' => JText::_('COM_INSTALLER_MSG_WARNINGS_JOOMLATMPNOTSET'),
@@ -109,7 +105,6 @@ class InstallerModelWarnings extends JModelList
 		}
 
 		$memory_limit = $this->return_bytes(ini_get('memory_limit'));
-
 		if ($memory_limit < (8 * 1024 * 1024) && $memory_limit != -1)
 		{
 			// 8MB

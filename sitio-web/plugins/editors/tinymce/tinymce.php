@@ -3,7 +3,7 @@
  * @package     Joomla.Plugin
  * @subpackage  Editors.tinymce
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * TinyMCE Editor Plugin
  *
- * @since  1.5
+ * @package     Joomla.Plugin
+ * @subpackage  Editors.tinymce
+ * @since       1.5
  */
 class PlgEditorTinymce extends JPlugin
 {
@@ -46,38 +48,16 @@ class PlgEditorTinymce extends JPlugin
 	 */
 	public function onInit()
 	{
-		$app      = JFactory::getApplication();
 		$language = JFactory::getLanguage();
 		$mode     = (int) $this->params->get('mode', 1);
 		$theme    = 'modern';
+		$skin     = $this->params->get('skin', '0');
 
-		// List the skins
-		$skindirs = glob(JPATH_ROOT . '/media/editors/tinymce/skins' . '/*', GLOB_ONLYDIR);
-
-		// Set the selected skin
-		if ($app->isSite())
+		switch ($skin)
 		{
-			if ((int) $this->params->get('skin', 0) < count($skindirs))
-			{
-				$skin = 'skin : "' . basename($skindirs[(int) $this->params->get('skin', 0)]) . '",';
-			}
-			else
-			{
+			case '0':
+			default:
 				$skin = 'skin : "lightgray",';
-			}
-		}
-
-		// Set the selected administrator skin
-		elseif ($app->isAdmin())
-		{
-			if ((int) $this->params->get('skin_admin', 0) < count($skindirs))
-			{
-				$skin = 'skin : "' . basename($skindirs[(int) $this->params->get('skin_admin', 0)]) . '",';
-			}
-			else
-			{
-				$skin = 'skin : "lightgray",';
-			}
 		}
 
 		$entity_encoding = $this->params->get('entity_encoding', 'raw');
@@ -224,20 +204,12 @@ class PlgEditorTinymce extends JPlugin
 			$image_advtab = "false";
 		}
 
-		// The param is true for vertical resizing only, false or both
+		// The param is true false, so we turn true to both rather than showing vertical resize only
 		$resizing = $this->params->get('resizing', '1');
-		$resize_horizontal = $this->params->get('resize_horizontal', '1');
 
 		if ($resizing || $resizing == 'true')
 		{
-			if ($resize_horizontal || $resize_horizontal == 'true')
-			{
-				$resizing = 'resize: "both",';
-			}
-			else
-			{
-				$resizing = 'resize: true,';
-			}
+			$resizing = 'resize: "both",';
 		}
 		else
 		{
@@ -249,20 +221,7 @@ class PlgEditorTinymce extends JPlugin
 		$toolbar3_add   = array();
 		$toolbar4_add   = array();
 		$elements       = array();
-		$plugins        = array(
-			'autolink',
-			'lists',
-			'image',
-			'charmap',
-			'print',
-			'preview',
-			'anchor',
-			'pagebreak',
-			'code',
-			'save',
-			'textcolor',
-			'colorpicker',
-			'importcss');
+		$plugins        = array('autolink', 'lists', 'image', 'charmap', 'print', 'preview', 'anchor', 'pagebreak', 'code', 'save', 'textcolor', 'colorpicker', 'importcss');
 		$toolbar1_add[] = 'bold';
 		$toolbar1_add[] = 'italic';
 		$toolbar1_add[] = 'underline';
@@ -500,34 +459,10 @@ class PlgEditorTinymce extends JPlugin
 			}
 			else
 			{
-				$templates = 'templates: [';
-
-				foreach (glob(JPATH_ROOT . '/media/editors/tinymce/templates/*.html') as $filename)
-				{
-					$filename = basename($filename, '.html');
-
-					if ($filename !== 'index')
-					{
-						$lang = JFactory::getLanguage();
-						$title = $filename;
-						$description = ' ';
-
-						if ($lang->hasKey('PLG_TINY_TEMPLATE_' . strtoupper($filename) . '_TITLE'))
-						{
-							$title = JText::_('PLG_TINY_TEMPLATE_' . strtoupper($filename) . '_TITLE');
-						}
-
-						if ($lang->hasKey('PLG_TINY_TEMPLATE_' . strtoupper($filename) . '_DESC'))
-						{
-							$description = JText::_('PLG_TINY_TEMPLATE_' . strtoupper($filename) . '_DESC');
-						}
-
-						$templates .= '{title: \'' . $title . '\', description: \'' . $description . '\', url:\''
-									. JUri::root() . 'media/editors/tinymce/templates/' . $filename . '.html\'},';
-					}
-				}
-
-				$templates .= '],';
+				$templates = "templates: [
+					{title: 'Layout', description: 'HTMLLayout', url:'" . JUri::root() . "media/editors/tinymce/templates/layout1.html'},
+					{title: 'Simple snippet', description: 'Simple HTML snippet', url:'" . JUri::root() . "media/editors/tinymce/templates/snippet1.html'}
+				],";
 			}
 		}
 		else
@@ -616,13 +551,13 @@ class PlgEditorTinymce extends JPlugin
 		$mobileVersion = $this->params->get('mobile', 0);
 
 		$load = "\t<script type=\"text/javascript\" src=\"" .
-			JUri::root() . $this->_basePath .
-			"/tinymce.min.js\"></script>\n";
+				JUri::root() . $this->_basePath .
+				"/tinymce.min.js\"></script>\n";
 
 		/**
 		 * Shrink the buttons if not on a mobile or if mobile view is off.
 		 * If mobile view is on force into simple mode and enlarge the buttons
-		 **/
+		**/
 		if (!$this->app->client->mobile)
 		{
 			$smallButtons = 'toolbar_items_size: "small",';
@@ -641,7 +576,7 @@ class PlgEditorTinymce extends JPlugin
 		{
 			case 0: /* Simple mode*/
 				$return = $load .
-					"\t<script type=\"text/javascript\">
+				"\t<script type=\"text/javascript\">
 					tinymce.init({
 						// General
 						directionality: \"$text_direction\",
@@ -668,14 +603,14 @@ class PlgEditorTinymce extends JPlugin
 						document_base_url : \"" . JUri::root() . "\"
 					});
 				</script>";
-				break;
+			break;
 
 			case 1:
 			default: /* Advanced mode*/
 				$toolbar1 = "bold italic underline strikethrough | alignleft aligncenter alignright alignjustify | formatselect | bullist numlist";
 				$toolbar2 = "outdent indent | undo redo | link unlink anchor image code | hr table | subscript superscript | charmap";
 				$return = $load .
-					"\t<script type=\"text/javascript\">
+				"\t<script type=\"text/javascript\">
 				tinyMCE.init({
 					// General
 					directionality: \"$text_direction\",
@@ -715,11 +650,11 @@ class PlgEditorTinymce extends JPlugin
 
 				});
 				</script>";
-				break;
+			break;
 
 			case 2: /* Extended mode*/
 				$return = $load .
-					"\t<script type=\"text/javascript\">
+				"\t<script type=\"text/javascript\">
 				tinyMCE.init({
 					// General
 					directionality: \"$text_direction\",
@@ -779,7 +714,7 @@ class PlgEditorTinymce extends JPlugin
 
 				});
 				</script>";
-				break;
+			break;
 		}
 
 		return $return;

@@ -2,7 +2,7 @@
 
 /**
  * @package   	JCE
- * @copyright 	Copyright (c) 2009-2014 Ryan Demmer. All rights reserved.
+ * @copyright 	Copyright (c) 2009-2013 Ryan Demmer. All rights reserved.
  * @license   	GNU/GPL 2 or later - http://www.gnu.org/licenses/old-licenses/gpl-2.0.html
  * JCE is free software. This version may have been modified pursuant
  * to the GNU General Public License, and as distributed it includes or
@@ -20,7 +20,7 @@ class JoomlalinksMenu extends JObject {
      *
      * @access	protected
      */
-    public function __construct($options = array()) {
+    function __construct($options = array()) {
         
     }
 
@@ -34,7 +34,7 @@ class JoomlalinksMenu extends JObject {
      * @return	JCE  The editor object.
      * @since	1.5
      */
-    public static function getInstance() {
+    function getInstance() {
         static $instance;
 
         if (!is_object($instance)) {
@@ -43,11 +43,11 @@ class JoomlalinksMenu extends JObject {
         return $instance;
     }
 
-    public function getOption() {
+    function getOption() {
         return $this->_option;
     }
 
-    public function getList() {
+    function getList() {
         $wf = WFEditorPlugin::getInstance();
 
         if ($wf->checkAccess('links.joomlalinks.menu', 1)) {
@@ -55,7 +55,7 @@ class JoomlalinksMenu extends JObject {
         }
     }
 
-    public function getLinks($args) {
+    function getLinks($args) {
         $items = array();
         $view = isset($args->view) ? $args->view : '';
         switch ($view) {
@@ -80,12 +80,8 @@ class JoomlalinksMenu extends JObject {
                 foreach ($menus as $menu) {
 
                     $class = array();
-                    
-                    if (defined('JPATH_PLATFORM')) {
-                        $params = new JRegistry($menu->params);
-                    } else {
-                        $params = new JParameter($menu->params);
-                    }
+
+                    $params = defined('JPATH_PLATFORM') ? new JRegistry($menu->params) : new JParameter($menu->params);
 
                     switch ($menu->type) {
                         case 'separator':
@@ -115,19 +111,14 @@ class JoomlalinksMenu extends JObject {
                     } else {
                         $class[] = 'file';
                     }
-
+                    
                     if ($params->get('secure')) {
                         $link = self::toSSL($link);
-                    }
-                    
-                    // language
-                    if (isset($menu->language)) {
-                        $link .= $this->getLangauge($menu->language);
                     }
 
                     $items[] = array(
                         'id' => $children ? 'index.php?option=com_menu&view=menu&id=' . $menu->id : $link,
-                        'url' => self::route($link),
+                        'url' => $link,
                         'name' => $title . ' / ' . $menu->alias,
                         'class' => implode(' ', $class)
                     );
@@ -144,26 +135,17 @@ class JoomlalinksMenu extends JObject {
                     $title = isset($menu->name) ? $menu->name : $menu->title;
 
                     // get params
-                    if (defined('JPATH_PLATFORM')) {
-                        $params = new JRegistry($menu->params);
-                    } else {
-                        $params = new JParameter($menu->params);
-                    }
+                    $params = defined('JPATH_PLATFORM') ? new JRegistry($menu->params) : new JParameter($menu->params);
 
                     // resolve link
                     $link = self::_resolveLink($menu);
                     
-                    // language
-                    if (isset($menu->language)) {
-                        $link .= $this->getLangauge($menu->language);
-                    }
-
                     if ($params->get('secure')) {
                         $link = self::toSSL($link);
                     }
 
                     $items[] = array(
-                        'id' => self::route($link),
+                        'id' => $link,
                         'name' => $title . ' / ' . $menu->alias,
                         'class' => $children ? 'folder menu' : 'file'
                     );
@@ -172,7 +154,7 @@ class JoomlalinksMenu extends JObject {
         }
         return $items;
     }
-
+    
     /**
      * Convert link to SSL
      * @param type $link
@@ -191,7 +173,7 @@ class JoomlalinksMenu extends JObject {
             // Build the URL.
             $link = 'https://' . $prefix . '/' . $link;
         }
-
+        
         return $link;
     }
 
@@ -223,9 +205,9 @@ class JoomlalinksMenu extends JObject {
         $query = $db->getQuery(true);
 
         if (is_object($query)) {
-            $query->select('*')->from('#__menu_types')->order('title');
+            $query->select('*')->from('#__menu_types');
         } else {
-            $query = 'SELECT * FROM #__menu_types ORDER By title';
+            $query = 'SELECT * FROM #__menu_types';
         }
 
         $db->setQuery($query, 0);
@@ -326,46 +308,12 @@ class JoomlalinksMenu extends JObject {
                     . ' AND m.access <= ' . (int) $user->get('aid')
                     . ' AND m.parent = ' . (int) $parent
                     . $where
-                    . ' ORDER BY m.lft ASC'
+                    . ' ORDER BY m.id'
             ;
         }
 
         $db->setQuery($query, 0);
         return $db->loadObjectList();
-    }
-
-    private function getLangauge($language) {
-        $db = JFactory::getDBO();
-        $query = $db->getQuery(true);
-
-        $link = '';
-
-        if (is_object($query)) {
-            $query->select('a.sef AS sef');
-            $query->select('a.lang_code AS lang_code');
-            $query->from('#__languages AS a');
-            $db->setQuery($query);
-            $langs = $db->loadObjectList();
-
-            foreach ($langs as $lang) {
-                if ($language == $lang->lang_code) {
-                    $language = $lang->sef;
-                    $link .= '&lang=' . $language;
-                }
-            }
-        }
-
-        return $link;
-    }
-
-    private static function route($url) {
-        $wf = WFEditorPlugin::getInstance();
-
-        if ($wf->getParam('links.joomlalinks.sef_url', 0)) {
-            $url = WFLinkExtension::route($url);
-        }
-
-        return $url;
     }
 
 }

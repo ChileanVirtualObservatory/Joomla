@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  com_contact
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * Routing class from com_contact
  *
- * @since  3.3
+ * @package     Joomla.Site
+ * @subpackage  com_contact
+ * @since       3.3
  */
 class ContactRouter extends JComponentRouterBase
 {
@@ -30,16 +32,18 @@ class ContactRouter extends JComponentRouterBase
 		$segments = array();
 
 		// Get a menu item based on Itemid or currently active
+		$app = JFactory::getApplication();
+		$menu = $app->getMenu();
 		$params = JComponentHelper::getParams('com_contact');
 		$advanced = $params->get('sef_advanced_link', 0);
 
 		if (empty($query['Itemid']))
 		{
-			$menuItem = $this->menu->getActive();
+			$menuItem = $menu->getActive();
 		}
 		else
 		{
-			$menuItem = $this->menu->getItem($query['Itemid']);
+			$menuItem = $menu->getItem($query['Itemid']);
 		}
 
 		$mView = (empty($menuItem->query['view'])) ? null : $menuItem->query['view'];
@@ -176,7 +180,9 @@ class ContactRouter extends JComponentRouterBase
 		}
 
 		// Get the active menu item.
-		$item = $this->menu->getActive();
+		$app = JFactory::getApplication();
+		$menu = $app->getMenu();
+		$item = $menu->getActive();
 		$params = JComponentHelper::getParams('com_contact');
 		$advanced = $params->get('sef_advanced_link', 0);
 
@@ -253,10 +259,6 @@ class ContactRouter extends JComponentRouterBase
  * These functions are proxys for the new router interface
  * for old SEF extensions.
  *
- * @param   array  &$query  An array of URL arguments
- *
- * @return  array  The URL arguments to use to assemble the subsequent URL.
- *
  * @deprecated  4.0  Use Class based routers instead
  */
 function ContactBuildRoute(&$query)
@@ -266,18 +268,6 @@ function ContactBuildRoute(&$query)
 	return $router->build($query);
 }
 
-/**
- * Contact router functions
- *
- * These functions are proxys for the new router interface
- * for old SEF extensions.
- *
- * @param   array  &$segments  The segments of the URL to parse.
- *
- * @return  array  The URL attributes to be used by the application.
- *
- * @deprecated  4.0  Use Class based routers instead
- */
 function ContactParseRoute($segments)
 {
 	$router = new ContactRouter;

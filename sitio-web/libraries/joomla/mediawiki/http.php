@@ -3,33 +3,33 @@
  * @package     Joomla.Platform
  * @subpackage  MediaWiki
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
 defined('JPATH_PLATFORM') or die;
 
-use Joomla\Registry\Registry;
-
 /**
  * HTTP client class for connecting to a MediaWiki instance.
  *
- * @since  12.3
+ * @package     Joomla.Platform
+ * @subpackage  MediaWiki
+ * @since       12.3
  */
 class JMediawikiHttp extends JHttp
 {
 	/**
      * Constructor.
      *
-     * @param   Registry        $options    Client options object.
+     * @param   JRegistry       $options    Client options object.
      * @param   JHttpTransport  $transport  The HTTP transport object.
      *
      * @since   12.3
      */
-	public function __construct(Registry $options = null, JHttpTransport $transport = null)
+	public function __construct(JRegistry $options = null, JHttpTransport $transport = null)
 	{
 		// Override the JHttp contructor to use JHttpTransportStream.
-		$this->options = isset($options) ? $options : new Registry;
+		$this->options = isset($options) ? $options : new JRegistry;
 		$this->transport = isset($transport) ? $transport : new JHttpTransportStream($this->options);
 
 		// Make sure the user agent string is defined.
@@ -42,15 +42,14 @@ class JMediawikiHttp extends JHttp
 	/**
 	 * Method to send the GET command to the server.
 	 *
-	 * @param   string   $url      Path to the resource.
-	 * @param   array    $headers  An array of name-value pairs to include in the header of the request.
-	 * @param   integer  $timeout  Read timeout in seconds.
+	 * @param   string  $url      Path to the resource.
+	 * @param   array   $headers  An array of name-value pairs to include in the header of the request.
 	 *
 	 * @return  JHttpResponse
 	 *
 	 * @since   12.3
 	 */
-	public function get($url, array $headers = null, $timeout = null)
+	public function get($url, array $headers = null)
 	{
 		// Look for headers set in the options.
 		$temp = (array) $this->options->get('headers');
@@ -63,28 +62,21 @@ class JMediawikiHttp extends JHttp
 			}
 		}
 
-		// Look for timeout set in the options.
-		if ($timeout === null && $this->options->exists('api.timeout'))
-		{
-			$timeout = $this->options->get('api.timeout');
-		}
-
-		return $this->transport->request('GET', new JUri($url), null, $headers, $timeout, $this->options->get('api.useragent'));
+		return $this->transport->request('GET', new JUri($url), null, $headers, $this->options->get('api.timeout'), $this->options->get('api.useragent'));
 	}
 
 	/**
 	 * Method to send the POST command to the server.
 	 *
-	 * @param   string   $url      Path to the resource.
-	 * @param   mixed    $data     Either an associative array or a string to be sent with the request.
-	 * @param   array    $headers  An array of name-value pairs to include in the header of the request
-	 * @param   integer  $timeout  Read timeout in seconds.
+	 * @param   string  $url      Path to the resource.
+	 * @param   mixed   $data     Either an associative array or a string to be sent with the request.
+	 * @param   array   $headers  An array of name-value pairs to include in the header of the request.
 	 *
 	 * @return  JHttpResponse
 	 *
 	 * @since   12.3
 	 */
-	public function post($url, $data, array $headers = null, $timeout = null)
+	public function post($url, $data, array $headers = null)
 	{
 		// Look for headers set in the options.
 		$temp = (array) $this->options->get('headers');
@@ -97,12 +89,6 @@ class JMediawikiHttp extends JHttp
 			}
 		}
 
-		// Look for timeout set in the options.
-		if ($timeout === null && $this->options->exists('api.timeout'))
-		{
-			$timeout = $this->options->get('api.timeout');
-		}
-
-		return $this->transport->request('POST', new JUri($url), $data, $headers, $timeout, $this->options->get('api.useragent'));
+		return $this->transport->request('POST', new JUri($url), $data, $headers, $this->options->get('api.timeout'), $this->options->get('api.useragent'));
 	}
 }

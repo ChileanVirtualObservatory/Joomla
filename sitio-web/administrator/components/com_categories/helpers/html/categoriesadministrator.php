@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_categories
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -14,7 +14,10 @@ JLoader::register('CategoriesHelper', JPATH_ADMINISTRATOR . '/components/com_cat
 /**
  * Administrator category HTML
  *
- * @since  3.2
+ * @package     Joomla.Administrator
+ * @subpackage  com_categories
+ *
+ * @since       3.2
  */
 abstract class JHtmlCategoriesAdministrator
 {
@@ -73,16 +76,7 @@ abstract class JHtmlCategoriesAdministrator
 						$item->title
 					);
 
-					$item->link = JHtml::_(
-						'tooltip',
-						implode(' ', $tooltipParts),
-						null,
-						null,
-						$text,
-						$url,
-						null,
-						'hasTooltip label label-association label-' . $item->lang_sef
-					);
+					$item->link = JHtml::_('tooltip', implode(' ', $tooltipParts), null, null, $text, $url, null, 'hasTooltip label label-association label-' . $item->lang_sef);
 				}
 			}
 

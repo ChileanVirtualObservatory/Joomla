@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Document
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * JDocument head renderer
  *
- * @since  11.1
+ * @package     Joomla.Platform
+ * @subpackage  Document
+ * @since       11.1
  */
 class JDocumentRendererHead extends JDocumentRenderer
 {
@@ -70,7 +72,6 @@ class JDocumentRendererHead extends JDocumentRenderer
 
 		// Generate base tag (need to happen early)
 		$base = $document->getBase();
-
 		if (!empty($base))
 		{
 			$buffer .= $tab . '<base href="' . $document->getBase() . '" />' . $lnEnd;
@@ -94,7 +95,6 @@ class JDocumentRendererHead extends JDocumentRenderer
 
 		// Don't add empty descriptions
 		$documentDescription = $document->getDescription();
-
 		if ($documentDescription)
 		{
 			$buffer .= $tab . '<meta name="description" content="' . htmlspecialchars($documentDescription) . '" />' . $lnEnd;
@@ -102,7 +102,6 @@ class JDocumentRendererHead extends JDocumentRenderer
 
 		// Don't add empty generators
 		$generator = $document->getGenerator();
-
 		if ($generator)
 		{
 			$buffer .= $tab . '<meta name="generator" content="' . htmlspecialchars($generator) . '" />' . $lnEnd;
@@ -114,12 +113,10 @@ class JDocumentRendererHead extends JDocumentRenderer
 		foreach ($document->_links as $link => $linkAtrr)
 		{
 			$buffer .= $tab . '<link href="' . $link . '" ' . $linkAtrr['relType'] . '="' . $linkAtrr['relation'] . '"';
-
 			if ($temp = JArrayHelper::toString($linkAtrr['attribs']))
 			{
 				$buffer .= ' ' . $temp;
 			}
-
 			$buffer .= ' />' . $lnEnd;
 		}
 
@@ -154,7 +151,7 @@ class JDocumentRendererHead extends JDocumentRenderer
 			// This is for full XHTML support.
 			if ($document->_mime != 'text/html')
 			{
-				$buffer .= $tab . $tab . '/*<![CDATA[*/' . $lnEnd;
+				$buffer .= $tab . $tab . '<![CDATA[' . $lnEnd;
 			}
 
 			$buffer .= $content . $lnEnd;
@@ -162,9 +159,8 @@ class JDocumentRendererHead extends JDocumentRenderer
 			// See above note
 			if ($document->_mime != 'text/html')
 			{
-				$buffer .= $tab . $tab . '/*]]>*/' . $lnEnd;
+				$buffer .= $tab . $tab . ']]>' . $lnEnd;
 			}
-
 			$buffer .= $tab . '</style>' . $lnEnd;
 		}
 
@@ -202,7 +198,7 @@ class JDocumentRendererHead extends JDocumentRenderer
 			// This is for full XHTML support.
 			if ($document->_mime != 'text/html')
 			{
-				$buffer .= $tab . $tab . '//<![CDATA[' . $lnEnd;
+				$buffer .= $tab . $tab . '<![CDATA[' . $lnEnd;
 			}
 
 			$buffer .= $content . $lnEnd;
@@ -210,9 +206,8 @@ class JDocumentRendererHead extends JDocumentRenderer
 			// See above note
 			if ($document->_mime != 'text/html')
 			{
-				$buffer .= $tab . $tab . '//]]>' . $lnEnd;
+				$buffer .= $tab . $tab . ']]>' . $lnEnd;
 			}
-
 			$buffer .= $tab . '</script>' . $lnEnd;
 		}
 
@@ -220,21 +215,16 @@ class JDocumentRendererHead extends JDocumentRenderer
 		if (count(JText::script()))
 		{
 			$buffer .= $tab . '<script type="text/javascript">' . $lnEnd;
-
-			if ($document->_mime != 'text/html')
-			{
-				$buffer .= $tab . $tab . '//<![CDATA[' . $lnEnd;
-			}
-
 			$buffer .= $tab . $tab . '(function() {' . $lnEnd;
-			$buffer .= $tab . $tab . $tab . 'Joomla.JText.load(' . json_encode(JText::script()) . ');' . $lnEnd;
+			$buffer .= $tab . $tab . $tab . 'var strings = ' . json_encode(JText::script()) . ';' . $lnEnd;
+			$buffer .= $tab . $tab . $tab . 'if (typeof Joomla == \'undefined\') {' . $lnEnd;
+			$buffer .= $tab . $tab . $tab . $tab . 'Joomla = {};' . $lnEnd;
+			$buffer .= $tab . $tab . $tab . $tab . 'Joomla.JText = strings;' . $lnEnd;
+			$buffer .= $tab . $tab . $tab . '}' . $lnEnd;
+			$buffer .= $tab . $tab . $tab . 'else {' . $lnEnd;
+			$buffer .= $tab . $tab . $tab . $tab . 'Joomla.JText.load(strings);' . $lnEnd;
+			$buffer .= $tab . $tab . $tab . '}' . $lnEnd;
 			$buffer .= $tab . $tab . '})();' . $lnEnd;
-
-			if ($document->_mime != 'text/html')
-			{
-				$buffer .= $tab . $tab . '//]]>' . $lnEnd;
-			}
-
 			$buffer .= $tab . '</script>' . $lnEnd;
 		}
 

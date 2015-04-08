@@ -1,6 +1,6 @@
 <?php
 /**
- * @version $Id: default.php 21 2015-01-14 18:40:46Z szymon $
+ * @version $Id: default.php 20 2014-04-14 15:57:45Z szymon $
  * @package DJ-ImageSlider
  * @subpackage DJ-ImageSlider Component
  * @copyright Copyright (C) 2012 DJ-Extensions.com, All rights reserved.
@@ -51,7 +51,7 @@ defined('_JEXEC') or die ('Restricted access'); ?>
 								</a>
 							<?php } ?>
 						<?php } ?>
-						<?php if($params->get('slider_source') && ($params->get('show_title') || ($params->get('show_desc') && !empty($slide->description) || ($params->get('show_readmore') && $slide->link)))) { ?>
+						<?php if($params->get('slider_source') && ($params->get('show_title') || ($params->get('show_desc') && !empty($slide->description)))) { ?>
 						<!-- Slide description area: START -->
 						<div class="slide-desc">
 						  <div class="slide-desc-in">	

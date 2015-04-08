@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Access
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,7 +12,9 @@ defined('JPATH_PLATFORM') or die;
 /**
  * JAccessRule class.
  *
- * @since  11.4
+ * @package     Joomla.Platform
+ * @subpackage  Access
+ * @since       11.4
  */
 class JAccessRule
 {
@@ -153,6 +155,7 @@ class JAccessRule
 						break;
 					}
 				}
+
 			}
 		}
 

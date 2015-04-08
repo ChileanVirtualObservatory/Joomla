@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Database
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,8 +12,10 @@ defined('JPATH_PLATFORM') or die;
 /**
  * Joomla Platform Database Interface
  *
- * @since  11.2
-*/
+ * @package     Joomla.Platform
+ * @subpackage  Database
+ * @since       11.2
+ */
 interface JDatabaseInterface
 {
 	/**
@@ -29,7 +31,9 @@ interface JDatabaseInterface
 /**
  * Joomla Platform Database Driver Class
  *
- * @since  12.1
+ * @package     Joomla.Platform
+ * @subpackage  Database
+ * @since       12.1
  *
  * @method      string  q()   q($text, $escape = true)  Alias for quote method
  * @method      string  qn()  qn($name, $as = null)     Alias for quoteName method
@@ -261,6 +265,7 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 		// If we already have a database connector instance for these options then just use that.
 		if (empty(self::$instances[$signature]))
 		{
+
 			// Derive the class name from the driver.
 			$class = 'JDatabaseDriver' . ucfirst(strtolower($options['driver']));
 
@@ -602,7 +607,6 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 		{
 			return 'CREATE DATABASE ' . $this->quoteName($options->db_name) . ' CHARACTER SET `utf8`';
 		}
-
 		return 'CREATE DATABASE ' . $this->quoteName($options->db_name);
 	}
 
@@ -916,7 +920,6 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 	public function getUTFSupport()
 	{
 		JLog::add('JDatabaseDriver::getUTFSupport() is deprecated. Use JDatabaseDriver::hasUTFSupport() instead.', JLog::WARNING, 'deprecated');
-
 		return $this->hasUTFSupport();
 	}
 
@@ -1603,7 +1606,6 @@ abstract class JDatabaseDriver extends JDatabase implements JDatabaseInterface
 				{
 					break;
 				}
-
 				$l = $k - 1;
 
 				while ($l >= 0 && $sql{$l} == '\\')

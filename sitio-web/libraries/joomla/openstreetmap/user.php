@@ -3,7 +3,7 @@
  * @package     Joomla.Platform
  * @subpackage  Openstreetmap
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -12,8 +12,10 @@ defined('JPATH_PLATFORM') or die();
 /**
  * Openstreetmap API User class for the Joomla Platform
  *
- * @since  13.1
- */
+ * @package     Joomla.Platform
+ * @subpackage  Openstreetmap
+ * @since       13.1
+*/
 class JOpenstreetmapUser extends JOpenstreetmapObject
 {
 	/**

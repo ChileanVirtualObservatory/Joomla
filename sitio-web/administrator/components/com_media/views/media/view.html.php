@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_media
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -15,19 +15,12 @@ JHtml::_('jquery.framework');
 /**
  * HTML View class for the Media component
  *
- * @since  1.0
+ * @package     Joomla.Administrator
+ * @subpackage  com_media
+ * @since       1.0
  */
 class MediaViewMedia extends JViewLegacy
 {
-	/**
-	 * Execute and display a template script.
-	 *
-	 * @param   string  $tpl  The name of the template file to parse; automatically searches through the template paths.
-	 *
-	 * @return  mixed  A string if successful, otherwise a Error object.
-	 *
-	 * @since   1.0
-	 */
 	public function display($tpl = null)
 	{
 		$app	= JFactory::getApplication();
@@ -47,7 +40,12 @@ class MediaViewMedia extends JViewLegacy
 		JHtml::_('behavior.framework', true);
 
 		JHtml::_('script', 'media/mediamanager.js', true, true);
-
+		/*
+		JHtml::_('stylesheet', 'media/mediamanager.css', array(), true);
+		if ($lang->isRTL()) :
+			JHtml::_('stylesheet', 'media/mediamanager_rtl.css', array(), true);
+		endif;
+		*/
 		JHtml::_('behavior.modal');
 		$document->addScriptDeclaration("
 		window.addEvent('domready', function()
@@ -55,12 +53,11 @@ class MediaViewMedia extends JViewLegacy
 			document.preview = SqueezeBox;
 		});");
 
+		// JHtml::_('script', 'system/mootree.js', true, true, false, false);
 		JHtml::_('stylesheet', 'system/mootree.css', array(), true);
-
-		if ($lang->isRTL())
-		{
+		if ($lang->isRTL()) :
 			JHtml::_('stylesheet', 'media/mootree_rtl.css', array(), true);
-		}
+		endif;
 
 		if (DIRECTORY_SEPARATOR == '\\')
 		{
@@ -72,8 +69,8 @@ class MediaViewMedia extends JViewLegacy
 		}
 
 		$js = "
-			var basepath = '" . $base . "';
-			var viewstyle = '" . $style . "';
+			var basepath = '".$base."';
+			var viewstyle = '".$style."';
 		";
 		$document->addScriptDeclaration($js);
 
@@ -101,8 +98,6 @@ class MediaViewMedia extends JViewLegacy
 
 	/**
 	 * Add the page title and toolbar.
-	 *
-	 * @return  void
 	 *
 	 * @since   1.6
 	 */
@@ -158,20 +153,10 @@ class MediaViewMedia extends JViewLegacy
 		JToolbarHelper::help('JHELP_CONTENT_MEDIA_MANAGER');
 	}
 
-	/**
-	 * Display a folder level
-	 *
-	 * @param   array  $folder  Array with folder data
-	 *
-	 * @return  string
-	 *
-	 * @since   1.0
-	 */
-	protected function getFolderLevel($folder)
+	function getFolderLevel($folder)
 	{
 		$this->folders_id = null;
 		$txt = null;
-
 		if (isset($folder['children']) && count($folder['children']))
 		{
 			$tmp = $this->folders;
@@ -179,7 +164,6 @@ class MediaViewMedia extends JViewLegacy
 			$txt = $this->loadTemplate('folders');
 			$this->folders = $tmp;
 		}
-
 		return $txt;
 	}
 }

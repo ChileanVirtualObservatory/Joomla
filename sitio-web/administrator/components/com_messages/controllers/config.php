@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_messages
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,16 +12,14 @@ defined('_JEXEC') or die;
 /**
  * Messages Component Message Model
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_messages
+ * @since       1.6
  */
 class MessagesControllerConfig extends JControllerLegacy
 {
 	/**
 	 * Method to save a record.
-	 *
-	 * @return  boolean
-	 *
-	 * @since   1.6
 	 */
 	public function save()
 	{
@@ -34,14 +32,11 @@ class MessagesControllerConfig extends JControllerLegacy
 
 		// Validate the posted data.
 		$form	= $model->getForm();
-
 		if (!$form)
 		{
 			JError::raiseError(500, $model->getError());
-
 			return false;
 		}
-
 		$data = $model->validate($form, $data);
 
 		// Check for validation errors.
@@ -56,16 +51,13 @@ class MessagesControllerConfig extends JControllerLegacy
 				if ($errors[$i] instanceof Exception)
 				{
 					$app->enqueueMessage($errors[$i]->getMessage(), 'warning');
-				}
-				else
-				{
+				} else {
 					$app->enqueueMessage($errors[$i], 'warning');
 				}
 			}
 
 			// Redirect back to the main list.
 			$this->setRedirect(JRoute::_('index.php?option=com_messages&view=messages', false));
-
 			return false;
 		}
 
@@ -75,7 +67,6 @@ class MessagesControllerConfig extends JControllerLegacy
 			// Redirect back to the main list.
 			$this->setMessage(JText::sprintf('JERROR_SAVE_FAILED', $model->getError()), 'warning');
 			$this->setRedirect(JRoute::_('index.php?option=com_messages&view=messages', false));
-
 			return false;
 		}
 

@@ -3,7 +3,7 @@
  * @package     Joomla.Libraries
  * @subpackage  Schema
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE
  */
 
@@ -17,7 +17,9 @@ jimport('joomla.filesystem.folder');
  * the database when this database was created or updated. This enables the
  * Installation Manager to check that the current database schema is up to date.
  *
- * @since  2.5
+ * @package     Joomla.Libraries
+ * @subpackage  Schema
+ * @since       2.5
  */
 class JSchemaChangeset
 {
@@ -193,7 +195,7 @@ class JSchemaChangeset
 		// Get the folder from the database name
 		$sqlFolder = $this->db->name;
 
-		if ($sqlFolder == 'mysqli' || $sqlFolder == 'pdomysql')
+		if ($sqlFolder == 'mysqli')
 		{
 			$sqlFolder = 'mysql';
 		}

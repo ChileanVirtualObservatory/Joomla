@@ -3,7 +3,7 @@
  * @package     Joomla.Administrator
  * @subpackage  com_users
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -12,7 +12,9 @@ defined('_JEXEC') or die;
 /**
  * User view level controller class.
  *
- * @since  1.6
+ * @package     Joomla.Administrator
+ * @subpackage  com_users
+ * @since       1.6
  */
 class UsersControllerLevel extends JControllerForm
 {
@@ -27,11 +29,10 @@ class UsersControllerLevel extends JControllerForm
 	 *
 	 * Overrides JControllerForm::allowSave to check the core.admin permission.
 	 *
-	 * @param   array   $data  An array of input data.
-	 * @param   string  $key   The name of the key for the primary key.
+	 * @param   array   An array of input data.
+	 * @param   string  The name of the key for the primary key.
 	 *
 	 * @return  boolean
-	 *
 	 * @since   1.6
 	 */
 	protected function allowSave($data, $key = 'id')
@@ -40,13 +41,7 @@ class UsersControllerLevel extends JControllerForm
 	}
 
 	/**
-	 * Removes an item.
-	 *
-	 * Overrides JControllerAdmin::delete to check the core.admin permission.
-	 *
-	 * @return  boolean  Returns true on success, false on failure.
-	 *
-	 * @since   1.6
+	 * Method to remove a record.
 	 */
 	public function delete()
 	{

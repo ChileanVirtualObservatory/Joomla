@@ -3,7 +3,7 @@
  * @package     Joomla.Site
  * @subpackage  mod_breadcrumbs
  *
- * @copyright   Copyright (C) 2005 - 2015 Open Source Matters, Inc. All rights reserved.
+ * @copyright   Copyright (C) 2005 - 2014 Open Source Matters, Inc. All rights reserved.
  * @license     GNU General Public License version 2 or later; see LICENSE.txt
  */
 
@@ -21,7 +21,7 @@ class ModBreadCrumbsHelper
 	/**
 	 * Retrieve breadcrumb items
 	 *
-	 * @param   \Joomla\Registry\Registry  &$params  module parameters
+	 * @param   JRegistry  &$params  module parameters
 	 *
 	 * @return array
 	 */
@@ -31,18 +31,6 @@ class ModBreadCrumbsHelper
 		$app		= JFactory::getApplication();
 		$pathway	= $app->getPathway();
 		$items		= $pathway->getPathWay();
-		$lang = JFactory::getLanguage();
-		$menu = $app->getMenu();
-
-		// Look for the home menu
-		if (JLanguageMultilang::isEnabled())
-		{
-			$home = $menu->getDefault($lang->getTag());
-		}
-		else
-		{
-			$home  = $menu->getDefault();
-		}
 
 		$count = count($items);
 
@@ -60,7 +48,7 @@ class ModBreadCrumbsHelper
 		{
 			$item = new stdClass;
 			$item->name = htmlspecialchars($params->get('homeText', JText::_('MOD_BREADCRUMBS_HOME')));
-			$item->link = JRoute::_('index.php?Itemid=' . $home->id);
+			$item->link = JRoute::_('index.php?Itemid=' . $app->getMenu()->getDefault()->id);
 			array_unshift($crumbs, $item);
 		}
 
